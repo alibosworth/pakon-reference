@@ -48,6 +48,23 @@ illuminates while the film transport is running, so the bright calibration pass
 must be taken with the motor moving: the calibration is driven, not a
 motor-off measurement. [INFERRED] from the lamp/transport behaviour.
 
+### The per-column gain formula (partial)
+
+The per-column gain computation was reverse-engineered from the OEM
+`CiConfigFixedPatternCorrection` routine. The known form is:
+
+```
+gain[column] = (125 · 2^32) / (bright[column] − dark[column] − <prefix terms>)
+```
+
+with a dark target near 300 and a bright target near 64000, and the result
+clamped to a maximum. **This is a partial formula**: the `<prefix terms>` in
+the denominator and the exact clamp value are not independently established
+here, so it is not yet implementable as written. What is solid is the constant
+`125 · 2^32` (= `0x7d00000000`), which was independently cross-confirmed
+against the same constant in Stefan Dierauf's libpakon, and the dark/bright
+targets. [DOCUMENTED, partial; June 2026]
+
 ## Colour vs. calibration
 
 This CCD-level calibration (gain/offset/exposure/fixed-pattern) is distinct from
