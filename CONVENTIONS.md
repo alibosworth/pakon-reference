@@ -44,6 +44,46 @@ file that fact was derived from is not. Numeric constants that constitute an
 interoperability fact (register addresses, a formula's coefficients, a
 protocol opcode) are facts, not artifacts, and belong here.
 
+## Scope: what things do, not how the OEM coded it
+
+The dividing line for what belongs here is **WHAT vs HOW** — behaviour and
+algorithm versus code structure:
+
+- **In scope — behaviour and algorithm** that a black-box reimplementation
+  would want to reproduce: how the scanner behaves and its protocol; the
+  processing maths; and the OEM software's *processing choices that affect the
+  output* (for example, whether the inversion is tuned by film type or speed,
+  how per-film contrast classes are selected, how roll-adaptive scene balance
+  works, the order of the processing stages).
+- **In scope — a parameter's exact value when it materially changes the
+  output**: a matrix coefficient, a per-film adjustment, a LUT shape. These are
+  the difference between matching the OEM result and not.
+- **Out of scope — code-structure artifacts with no external effect**: internal
+  function/class names, flag bitmasks, enum values, purely-internal buffer
+  sizes. These describe how Kodak's *program* was written, not what the scanner
+  or the processing does. Cite them as the *source* of a behavioural fact; do
+  not document them as facts.
+
+The test: could someone reproduce this behaviour by observing inputs and
+outputs, without reading Kodak's code? If yes, it is a documentable fact. If it
+is only visible by reading the code (a name, a bitmask, an enum number), it is
+a source, not a fact.
+
+### The "A note about the Pakon implementation" callout
+
+Facts about what the OEM host software *does* (as opposed to what the scanner
+hardware does) are real and useful — a reimplementation that wants
+OEM-matching results needs them — but they must never be mistaken for hardware
+or protocol facts. Quarantine them in a clearly labelled callout:
+
+> **A note about the Pakon implementation.** The OEM software does X …
+
+so the reader always knows they are reading an observation about Kodak's
+processing choices, not a property of the scanner. Apply the confidence markers
+as usual; behavioural claims about the OEM software are frequently [INFERRED]
+and should be marked so honestly (a plausible-sounding tuning rule may be
+wrong until verified).
+
 ## Model names
 
 `F-135`, `F-135+` (the "Plus" / "Hybrid"), `F-235`, `F-335`. "F-X35" refers to
