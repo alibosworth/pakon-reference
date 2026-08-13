@@ -57,7 +57,7 @@ their own firmware and are not loaded over USB at power-on. [INFERRED] from the
 shared personality and the bridge architecture. [CONFIRMED on hardware,
 August 2026] a real F-135+ cold-enumerates `0f05:f235`, and the F-135's
 `Pakon7.hex` image (replayed from a firmware-load capture) brings it up as
-operational `0f05:f135` — the Plus and the F-135 use the same FX2 image.
+operational `0f05:f135`: the Plus and the F-135 use the same FX2 image.
 
 ## The firmware download
 

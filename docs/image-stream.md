@@ -73,6 +73,7 @@ scan modes. The visible width is `stride / 3` when there is no IR lane and
 | Lowest, no IR | 3000 | RGB | 1000 px |
 | Lowest, IR on | 4000 | RGB + IR block | 1000 px |
 
+Measured in the pakon-macos project by Jorge Rangel: https://github.com/jorshhh/pakon-macos.
 An 8000-sample row (2000 px × 4, RGB + IR) is observed on the F-135 with IR
 on, and is the expected, but not yet measured, F-135+ highest-resolution
 IR-on layout. [INFERRED for the F-135+ case]
@@ -107,7 +108,9 @@ least-significant bit of one fixed word per line; finding that word recovers the
 true row origin and makes the channel assignment phase-independent. The
 `R, G, B` channel identity stated above is the **marker-aligned** order: before
 row-origin recovery, an arbitrarily chunked capture has a floating phase, and
-phase-zero readings historically produced a spurious `B, R, G` assignment.
-[CONFIRMED on hardware, August 2026] applied in an open-source decoder and
-verified phase-invariant across many simulated capture starts. (Independently
-documented by the libpakon project.)
+phase-zero readings historically produced a spurious `B, R, G` assignment. This
+marker-bit behaviour is a property of the scanner firmware; using it for
+row-origin recovery was first shown to this author by Stefan Dierauf. It was
+applied in a decoder (the pakon-macos project by Jorge Rangel:
+https://github.com/jorshhh/pakon-macos) and [CONFIRMED on hardware,
+August 2026] phase-invariant across many simulated capture starts.

@@ -38,9 +38,10 @@ and the driver INF unless noted. PIC firmware lives in
   indistinguishable over USB), but different controller boards. The Plus PICs
   are PIC18 (vs PIC16), sit at bus addresses `0x40`/`0x44` (vs `0x20`/`0x24`),
   add a thermoelectric CCD cooler (TEC, commands `0xD0`/`0xD1`), and integrate
-  DX reading into PICL+. [CONFIRMED on hardware, August 2026] — the shared FX2
+  DX reading into PICL+. [CONFIRMED on hardware, August 2026]: the shared FX2
   firmware, the inverted presence probes, and the Plus init (TEC, per-channel
-  exposure) were all verified by open-source code driving a real F-135+; see
+  exposure) were all verified by the pakon-macos project by Jorge Rangel: https://github.com/jorshhh/pakon-macos,
+  driving a real F-135+; see
   [ppb-protocol.md](ppb-protocol.md) and
   [usb-identity-and-firmware.md](usb-identity-and-firmware.md).
 - **F-235 / F-335:** a different, multi-board architecture with dedicated motor,

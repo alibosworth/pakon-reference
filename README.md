@@ -28,25 +28,33 @@ because it contains Kodak software artifacts, decompilation output, and
 firmware; this repository carries only the derived facts, and each document is
 dated to when the underlying research established it.
 
-Timeline of the underlying work (from the private repository's commit
-history):
+Timeline of the underlying work:
 
-- **March 8, 2026** — first findings: USB/PPB protocol, driver architecture,
+- **March 8, 2026**: first findings: USB/PPB protocol, driver architecture,
   the Ansel colour pipeline, Digital ICE.
-- **March 13–19, 2026** — image stream / planar format, DX barcode tables,
+- **March 13–19, 2026**: image stream / planar format, DX barcode tables,
   ICC profiles and colour spaces.
-- **April 26–27, 2026** — driver-level captures of a real F-135+
+- **April 26–27, 2026**: driver-level captures of a real F-135+
   (serial 16402) across four resolution/IR configurations (the capture files
   embed their own timestamps).
-- **May 2, 2026** — firmware file inventory, F-135+ PICL Plus disassembly,
-  IOCTL capture decode.
-- **August 12–13, 2026** — the first F-135+ driven end to end by open-source
-  code (the pakon-macos project), verifying much of the corpus on live
-  hardware and settling several open questions. Facts confirmed on hardware
-  are marked and dated accordingly.
+- **May 2, 2026**: firmware file inventory, F-135+ PICL Plus disassembly,
+  IOCTL capture decode. Stefan Dierauf granted access to his libpakon project
+  (a private codebase); the F-135+ was first driven live using it, moving the
+  work from analysis of captures to interacting with the scanner directly.
+- **August 12–13, 2026**: the F-135+ driven end to end in the pakon-macos
+  project by Jorge Rangel (https://github.com/jorshhh/pakon-macos), verifying
+  much of the corpus on live hardware and settling several open questions.
+  Beyond verification, driving
+  the scanner produced genuinely new facts that transmit-only captures could
+  not: the **reply (RX) direction** of the protocol (reply-frame structure, the
+  `0x88` READ marker byte, first-open-only handshake replies), the
+  **per-resolution image strides** and that IR-off scans carry no IR lane, and
+  the **motor run/stop register** behaviour. Facts confirmed on hardware are
+  marked and dated accordingly.
 
-Cross-confirmation with independent projects (libpakon, pakon-macos, the
-FX35 Windows driver) is cited throughout where it exists. Facts verified on
+Cross-confirmation with independent projects (pakon-macos, the FX35 Windows
+driver, and Stefan Dierauf's libpakon) is cited throughout where it exists.
+Facts verified on
 real hardware in August 2026 are marked `[CONFIRMED on hardware, August 2026]`.
 Every fact carries a confidence marker and a source; see
 [CONVENTIONS.md](CONVENTIONS.md).
@@ -65,17 +73,25 @@ Every fact carries a confidence marker and a source; see
 | [docs/dx-barcode.md](docs/dx-barcode.md) | The DX film barcode subsystem across the model family |
 | [docs/scanner-family.md](docs/scanner-family.md) | What differs between the F-135, F-135+, F-235, and F-335 |
 
-## Related projects
+## Related projects and credit
 
-- [pakon-macos](https://github.com/jorshhh/pakon-macos) — open-source
-  cross-platform driver and web app (F-135 and F-135+ verified working)
-- [libpakon](https://github.com/sdierauf/libpakon) — independent C++ driver
-  and "Pakon Studio" app
-- [FX35](https://github.com/ktkaufman03/FX35) — modernised open-source
-  Windows driver
+Independently licensed projects; facts verified in or contributed by them are
+credited inline. This reference documents *facts* (not their code), so their
+software licenses do not extend to it.
+
+- [FX35](https://github.com/ktkaufman03/FX35) by Kai Kaufman: modernised
+  open-source Windows driver; the driver-level captures used here were made
+  with a logging-instrumented build of it.
+- libpakon by Stefan Dierauf: an independent C++ driver and "Pakon Studio"
+  app (private); the marker-bit row-origin technique was shown to this author
+  by its author.
+- [pakon-macos](https://github.com/jorshhh/pakon-macos) by Jorge Rangel
+  (AGPL-3.0): open-source cross-platform driver and web app; the F-135 and
+  F-135+ were verified working here, and the hardware-only facts above were
+  derived by driving a real scanner with it.
 
 ## License
 
-[CC BY 4.0](LICENSE) — use it for anything, including commercial work, with
+[CC BY 4.0](LICENSE): use it for anything, including commercial work, with
 attribution. The point of this repository is that nobody should have to pay
 for, or re-derive, the facts.

@@ -96,6 +96,13 @@ pure per-channel processing cannot express: the actual dye-mask correction.
 Output-colourspace encoding (sRGB or a rendering profile) is a final, separate
 step.
 
+One point in this space is verified: measured linear-domain Dmin
+normalisation, then the LUT, then sRGB, with the matrix omitted entirely,
+reproduces the OEM positive closely on real scans. [CONFIRMED on hardware,
+August 2026, in the pakon-macos project by Jorge Rangel:
+https://github.com/jorshhh/pakon-macos] The full OEM matrix path has not been
+reproduced outside the OEM software.
+
 ## Rendering profiles
 
 Beyond the faithful inversion, the OEM offers "vibrant" rendering through Kodak

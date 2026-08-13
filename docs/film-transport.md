@@ -27,9 +27,11 @@ register (the sub-register-0 `SetMotorSpeed` value), **not** by
 DisengageFilmDrive alone. Disengaging releases the drive clutch; if the speed
 register is left at a running value the motor keeps turning. A clean stop
 returns the speed register to its idle value first, then disengages.
-[CONFIRMED on hardware, August 2026] observed directly: a `0xA2` disengage
-without first restoring the idle speed left the motor running, and writing the
-idle speed stopped it.
+[CONFIRMED on hardware, August 2026, in the pakon-macos project by Jorge
+Rangel: https://github.com/jorshhh/pakon-macos] observed directly: a `0xA2`
+disengage without first restoring the idle speed left the motor running, and
+writing the idle speed stopped it. This causal fact was not visible in the
+transmit-only OEM captures; it was learned by driving the transport.
 
 ## Speed
 

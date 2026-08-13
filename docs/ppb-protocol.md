@@ -91,6 +91,28 @@ In each, `data[0]` echoes the address and the following byte carries a status:
 [DOCUMENTED] from the OEM driver's status enumeration. A reply too short to
 contain a status byte carries no status; it must not be read as success.
 
+### Reply structure, recovered by driving the scanner
+
+The reverse-engineering captures were **transmit-only** (the OEM driver logs
+recorded host→device frames but not the device's replies), so the exact bytes
+of the reply direction were unknown until open-source code drove a real scanner
+and read them back. [CONFIRMED on hardware, August 2026, in the pakon-macos
+project by Jorge Rangel: https://github.com/jorshhh/pakon-macos]
+
+- Reply types mirror the request: READ replies come back with type `0x01`
+  (`01 <count> <addr> <status/flags> <data…>`), status polls with `0x03`, and
+  CMD/WRITE acknowledgements with `0x07`.
+- The byte after the address in a READ reply is a **status/flags byte**, not a
+  constant: `0x08` was observed as the ordinary value and `0x88` when an event
+  was pending, consistent with `0x80` being an event flag OR-ed onto `0x08`.
+  Its complete bit semantics are not yet established.
+- A `03 01 <addr>` status poll returns `03 02 <addr> <status>`; the value
+  `0x80` was observed meaning "host event pending".
+- The bridge replies to the HostReset/HostSetMode frames of the open handshake
+  **only on the first open after power-on or firmware load**; on later opens
+  those replies time out while the bridge keeps working normally. A driver
+  should treat those two replies as best-effort, not as failures.
+
 ## The open handshake
 
 A session begins by resetting the bridge and probing which controllers are
@@ -115,11 +137,10 @@ absent. Because the F-135 and F-135+ place their controllers at different
 addresses, the two models answer these probes with opposite results. This is
 how the OEM tells them apart. [CONFIRMED on hardware, August 2026] a real
 F-135+ answers the Plus motor address (0x44) present and the F-135 address
-(0x24) absent, exactly inverted from an F-135, verified by open-source code
-driving the scanner. The bridge also only replies to HostReset/HostSetMode on
-the first open after power-on or firmware load; on later opens those replies
-time out while the bridge keeps working, so a driver should treat them as
-best-effort.
+(0x24) absent, exactly inverted from an F-135, verified by the pakon-macos
+project by Jorge Rangel: https://github.com/jorshhh/pakon-macos, driving the
+scanner. (The reply bytes and the open handshake's first-open-only reply timing
+are detailed under "Reply structure" above.)
 
 ## Command channel
 
