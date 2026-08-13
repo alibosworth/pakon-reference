@@ -113,8 +113,13 @@ detection**: it asks whether a controller answers at each candidate address.
 A reply status of `0x00` means that controller is present; `0x01` means
 absent. Because the F-135 and F-135+ place their controllers at different
 addresses, the two models answer these probes with opposite results. This is
-how the OEM tells them apart. [INFERRED] from the probe structure and the
-address split; the branch is present in the OEM driver.
+how the OEM tells them apart. [CONFIRMED on hardware, August 2026] a real
+F-135+ answers the Plus motor address (0x44) present and the F-135 address
+(0x24) absent, exactly inverted from an F-135, verified by open-source code
+driving the scanner. The bridge also only replies to HostReset/HostSetMode on
+the first open after power-on or firmware load; on later opens those replies
+time out while the bridge keeps working, so a driver should treat them as
+best-effort.
 
 ## Command channel
 

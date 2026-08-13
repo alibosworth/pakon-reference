@@ -60,6 +60,27 @@ The per-row sample count and pixel width depend on the scan resolution; higher
 resolutions produce wider rows. [DOCUMENTED] the exported raw is 3000×2000 at
 the highest resolution and narrower at lower ones.
 
+### Per-resolution strides (measured on hardware)
+
+[CONFIRMED on hardware, August 2026] measured directly on an F-135+ across its
+scan modes. The visible width is `stride / 3` when there is no IR lane and
+`stride / 4` when the IR lane is present:
+
+| Scan mode | Samples per row | Layout | Visible width |
+|---|---|---|---|
+| Highest, no IR | 6000 | RGB | 2000 px |
+| Medium, no IR | 4500 | RGB | 1500 px |
+| Lowest, no IR | 3000 | RGB | 1000 px |
+| Lowest, IR on | 4000 | RGB + IR block | 1000 px |
+
+An 8000-sample row (2000 px × 4, RGB + IR) is observed on the F-135 with IR
+on, and is the expected, but not yet measured, F-135+ highest-resolution
+IR-on layout. [INFERRED for the F-135+ case]
+
+So the IR lane is present only when Digital ICE is enabled, and the stride is
+not a fixed constant; it must be derived from the scan settings (or measured),
+not hardcoded.
+
 ## The exported raw file
 
 The OEM's "save raw with header" writes a 16-byte header
@@ -76,3 +97,17 @@ configuration] The IR channel is not included even when Digital ICE was on.
 With colour correction enabled, the OEM configuration files indicate the
 export instead contains 12-bit RPD-rendered data, so the unprocessed claim is
 scoped to the tested configuration, not to every planar export. [DOCUMENTED]
+
+## Marker bit for row origin
+
+The USB stream can begin mid-row (bulk chunking is not row-aligned), so the
+triplet phase floats and, uncorrected, the channel assignment rotates and the
+colour cast flips between scans. The scanner marks each scan line by setting the
+least-significant bit of one fixed word per line; finding that word recovers the
+true row origin and makes the channel assignment phase-independent. The
+`R, G, B` channel identity stated above is the **marker-aligned** order: before
+row-origin recovery, an arbitrarily chunked capture has a floating phase, and
+phase-zero readings historically produced a spurious `B, R, G` assignment.
+[CONFIRMED on hardware, August 2026] applied in an open-source decoder and
+verified phase-invariant across many simulated capture starts. (Independently
+documented by the libpakon project.)

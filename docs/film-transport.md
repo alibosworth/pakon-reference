@@ -27,8 +27,9 @@ register (the sub-register-0 `SetMotorSpeed` value), **not** by
 DisengageFilmDrive alone. Disengaging releases the drive clutch; if the speed
 register is left at a running value the motor keeps turning. A clean stop
 returns the speed register to its idle value first, then disengages.
-[INFERRED] from the OEM stop sequence, which always writes the idle speed
-before disengaging.
+[CONFIRMED on hardware, August 2026] observed directly: a `0xA2` disengage
+without first restoring the idle speed left the motor running, and writing the
+idle speed stopped it.
 
 ## Speed
 

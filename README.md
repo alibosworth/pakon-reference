@@ -46,8 +46,10 @@ history):
   are marked and dated accordingly.
 
 Cross-confirmation with independent projects (libpakon, pakon-macos, the
-FX35 Windows driver) is cited throughout where it exists. Every fact carries a
-confidence marker and a source; see [CONVENTIONS.md](CONVENTIONS.md).
+FX35 Windows driver) is cited throughout where it exists. Facts verified on
+real hardware in August 2026 are marked `[CONFIRMED on hardware, August 2026]`.
+Every fact carries a confidence marker and a source; see
+[CONVENTIONS.md](CONVENTIONS.md).
 
 ## Contents
 
