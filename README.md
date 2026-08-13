@@ -57,7 +57,7 @@ driver, and Stefan Dierauf's libpakon) is cited throughout where it exists.
 Facts verified on
 real hardware in August 2026 are marked `[CONFIRMED on hardware, August 2026]`.
 Every fact carries a confidence marker and a source; see
-[CONVENTIONS.md](CONVENTIONS.md).
+[CONVENTIONS.md](docs/CONVENTIONS.md).
 
 ## Contents
 

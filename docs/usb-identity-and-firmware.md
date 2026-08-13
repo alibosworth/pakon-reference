@@ -74,7 +74,7 @@ The load is the standard FX2 (EZ-USB) sequence, over USB control transfers:
 register is at `0x7F92` on the older EZ-USB and `0xE600` on the FX2. The
 bootstrap and main images are Intel HEX files in the OEM package; this
 reference documents the *sequence*, not the firmware bytes (see
-[CONVENTIONS.md](../CONVENTIONS.md)).
+[CONVENTIONS.md](CONVENTIONS.md)).
 
 ## Controller firmware
 

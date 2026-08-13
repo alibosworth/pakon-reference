@@ -7,14 +7,14 @@ traced.
 
 Every non-obvious fact carries one:
 
-- **[CONFIRMED]** — verified directly: observed on real hardware, read from a
+- **[CONFIRMED]**: verified directly: observed on real hardware, read from a
   capture, or proven by running code against a scanner. The strongest claim.
-- **[DOCUMENTED]** — stated in original Kodak/Pakon material (firmware
+- **[DOCUMENTED]**: stated in original Kodak/Pakon material (firmware
   readmes, INF files, service documentation) or read directly from driver
   source, but not independently verified here.
-- **[INFERRED]** — a reasoned conclusion from evidence, not a direct
+- **[INFERRED]**: a reasoned conclusion from evidence, not a direct
   observation. May be wrong; the reasoning is given so it can be checked.
-- **[SPECULATIVE]** — a hypothesis worth recording but not yet supported.
+- **[SPECULATIVE]**: a hypothesis worth recording but not yet supported.
   Used sparingly.
 
 When a fact is later upgraded (e.g. an inference confirmed on hardware), the
@@ -38,27 +38,27 @@ This repository documents facts about the hardware and protocol. It does
 - decompiler output or disassembly listings
 - scanned OEM documentation (service manuals, etc.)
 
-Stating a *derived fact* — "the ColNeg inversion LUT is exactly
-`out = 3500·log10(16383/in)`" — is the point of the repository. Shipping the
+Stating a *derived fact* ("the ColNeg inversion LUT is exactly
+`out = 3500·log10(16383/in)`") is the point of the repository. Shipping the
 file that fact was derived from is not. Numeric constants that constitute an
 interoperability fact (register addresses, a formula's coefficients, a
 protocol opcode) are facts, not artifacts, and belong here.
 
 ## Scope: what things do, not how the OEM coded it
 
-The dividing line for what belongs here is **WHAT vs HOW** — behaviour and
+The dividing line for what belongs here is **WHAT vs HOW**, behaviour and
 algorithm versus code structure:
 
-- **In scope — behaviour and algorithm** that a black-box reimplementation
+- **In scope, behaviour and algorithm:** that a black-box reimplementation
   would want to reproduce: how the scanner behaves and its protocol; the
   processing maths; and the OEM software's *processing choices that affect the
   output* (for example, whether the inversion is tuned by film type or speed,
   how per-film contrast classes are selected, how roll-adaptive scene balance
   works, the order of the processing stages).
-- **In scope — a parameter's exact value when it materially changes the
-  output**: a matrix coefficient, a per-film adjustment, a LUT shape. These are
+- **In scope, a parameter's exact value when it materially changes the
+  output:**: a matrix coefficient, a per-film adjustment, a LUT shape. These are
   the difference between matching the OEM result and not.
-- **Out of scope — code-structure artifacts with no external effect**: internal
+- **Out of scope, code-structure artifacts with no external effect:** internal
   function/class names, flag bitmasks, enum values, purely-internal buffer
   sizes. These describe how Kodak's *program* was written, not what the scanner
   or the processing does. Cite them as the *source* of a behavioural fact; do
@@ -72,8 +72,8 @@ a source, not a fact.
 ### The "A note about the Pakon implementation" callout
 
 Facts about what the OEM host software *does* (as opposed to what the scanner
-hardware does) are real and useful — a reimplementation that wants
-OEM-matching results needs them — but they must never be mistaken for hardware
+hardware does) are real and useful (a reimplementation that wants
+OEM-matching results needs them) but they must never be mistaken for hardware
 or protocol facts. Quarantine them in a clearly labelled callout:
 
 > **A note about the Pakon implementation.** The OEM software does X …
@@ -100,6 +100,6 @@ hex (`04 03 10 00 85`).
 ## Dates
 
 Each document's facts are dated to when the underlying research established
-them (see the timeline in the README). Commit dates track that research
+them (see the [project timeline](index.md#provenance-and-timeline)). Commit dates track that research
 history, not the transcription date; this is a redacted public view of a
 private repository whose real commit history cannot be published.

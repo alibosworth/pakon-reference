@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block analytics %}
+  <!-- Privacy-friendly analytics by Plausible (self-hosted), embedded
+       first-party via the alibosworth.com /p/* proxy per house convention.
+       Site: pakon-reference.alibosworth.com -->
+  <script async src="https://alibosworth.com/p/pa-DTdD4ieieV18xjvvRHyhh.js"></script>
+  <script>
+    window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+    plausible.init({ endpoint: "https://alibosworth.com/p/event" })
+  </script>
+{% endblock %}
