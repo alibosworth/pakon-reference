@@ -153,3 +153,11 @@ device's endpoint descriptor and scan captures.
 A structured parameter/calibration table is read separately over USB control
 transfers (vendor requests `0xA4`/`0xA9`) in fixed-size chunks. [DOCUMENTED]
 from captures; contents detailed in [calibration.md](calibration.md).
+
+## Open questions
+
+- Reply payloads for most commands are unobserved (the captures were
+  transmit-only; only the exchanges exercised live are confirmed).
+- The complete bit semantics of the READ reply status/flags byte.
+- The `0xA4`/`0xA9` parameter table's field layout.
+- Whether the F-235/F-335 use these bus addresses at all.

@@ -109,3 +109,9 @@ Beyond the faithful inversion, the OEM offers "vibrant" rendering through Kodak
 ICC profiles (e.g. an RPD rendering profile) plus scene-balance and highlight
 handling, at `F-X35 COM SERVER\anselinstalldir\icc\`. These are a look applied
 on top of the inversion, not part of it. [DOCUMENTED]
+
+## Open questions
+
+- The full OEM matrix path has not been reproduced outside the OEM software.
+- The OEM's film-specific layer (per-film LUTs and profiles, film-class
+  selection, scene balance) is not yet documented here.

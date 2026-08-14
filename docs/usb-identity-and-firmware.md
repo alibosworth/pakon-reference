@@ -95,3 +95,9 @@ firmware (`NL050A.HEX`) disassembles as PIC18 (4-byte absolute addressing,
 config registers at `0x300000`), confirming the architecture step up from the
 F-135's PIC16. [CONFIRMED] by disassembly, May 2026. See
 [scanner-family.md](scanner-family.md) for the full per-model breakdown.
+
+## Open questions
+
+- The personality structure's final byte and the extra trailing byte are not
+  understood.
+- The full EEPROM layout beyond the personality is undocumented.

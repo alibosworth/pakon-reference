@@ -71,6 +71,15 @@ software licenses do not extend to it.
 
 ## Conventions and license
 
+## Not comprehensive
+
+This reference documents what has been established, and no more. It is not a
+complete description of these scanners: reply semantics for most commands,
+several payload layouts, the parameter table's fields, the F-235/F-335
+protocol, and the OEM's film-specific processing are among the known gaps.
+Each page ends with its open questions, so absence of a fact here means it is
+not yet established, not that it does not matter.
+
 Claims carry confidence markers (`[CONFIRMED]` / `[DOCUMENTED]` /
 `[INFERRED]`) and sources; see [Conventions](CONVENTIONS.md) for how they are
 applied. Licensed [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/):

@@ -103,3 +103,10 @@ between engage and end). [DOCUMENTED]
 ### End / teardown
 CCD config to disable acquisition → EndAcquisition → DisengageFilmDrive → motor
 speed to an exit value → idle. [DOCUMENTED]
+
+## Open questions
+
+- Most command names are working labels, not OEM identifiers.
+- Payload field layouts are unknown for most write commands.
+- The 30-byte sensor response layout is unverified beyond a few fields.
+- Per-command reply payloads are largely unobserved.

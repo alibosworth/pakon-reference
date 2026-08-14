@@ -114,3 +114,9 @@ row-origin recovery was first shown to this author by Stefan Dierauf. It was
 applied in a decoder (the pakon-macos project by Jorge Rangel:
 https://github.com/jorshhh/pakon-macos) and [CONFIRMED on hardware,
 August 2026] phase-invariant across many simulated capture starts.
+
+## Open questions
+
+- The F-135+ highest-resolution IR-on stride (expected 8000) is unmeasured.
+- The calibration-phase (pre-film) stream structure is not documented here.
+- F-235/F-335 stream geometry is entirely unknown.

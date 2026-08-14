@@ -74,3 +74,9 @@ Because framing is a software determination from image content, it is
 independent of the transport: advance moves a fixed distance, and where the
 frames actually fall is worked out afterwards from what was scanned. See also
 [image-stream.md](image-stream.md).
+
+## Open questions
+
+- The film-present indication within the sensor state is not pinned down.
+- The advance duration/distance parameter encoding is not decoded.
+- The exact end-of-roll signalling is not documented.

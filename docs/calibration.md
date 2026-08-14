@@ -71,3 +71,9 @@ This CCD-level calibration (gain/offset/exposure/fixed-pattern) is distinct from
 the colour negative inversion. Calibration makes the raw linear CCD values
 correct and uniform; the C-41 inversion (LUT + matrix) is a separate, later
 stage documented in [color-pipeline.md](color-pipeline.md).
+
+## Open questions
+
+- The fixed-pattern-correction formula is partial (prefix terms and clamp).
+- The parameter table read at open is undecoded.
+- The register banks are only partially mapped.
