@@ -1,0 +1,108 @@
+# Changelog
+
+What changed in the reference, when, and whether each change added a fact,
+tightened one, or reversed one. Reversals are listed as such: a fact that
+carried a confidence marker and turned out wrong is a normal event here,
+and hiding it would defeat the markers. Dates are when the change was
+published; each entry links the page it touched. Newest first.
+
+## 2026-08-17
+
+- **Addition and correction, `calibration.md`:** the read the OEM does at
+  start-up over vendor requests `0xA4`/`0xA9`, previously an undecoded
+  "parameter table", is the scanner's per-unit EEPROM (serial, per-resolution
+  optical offset and motor speeds, motor-adjust words, the two 3x10 colour
+  matrices; not the light calibration). Documents the read, the two-copy
+  layout with CRC-32, the field map, and how the OEM falls back to the
+  backup copy on a bad primary (first good copy wins, no repair, warning
+  only if both fail), confirmed by the engine's own routine and by the
+  registry it populates. Closes the matching open questions on the PPB and
+  USB/firmware pages. Layout from pakon-mac; reads with pakon-tlx-macos's
+  `eedump.py`, extended to verify both copies.
+- **Correction, `scanner-family.md`:** the F-135 and F-135+ are lit by an
+  LED array with per-channel current and duty control (R, G, B, IR), not a
+  lamp. The at-a-glance table had taken the OEM's own word "lamp" literally.
+  The F-235 stays a lamp (as documented, not observed); the F-335 stays LED.
+- **Addition and correction, `scanner-family.md`:** a section on the OEM
+  host software stack. The shipped COM server is a `tlx.dll` facade over
+  three per-model engine builds, and two things about it are not what the
+  names suggest: the letters A/B/C do not follow the model numbers 135/235/
+  335 (`TLB.dll` serves the F-135 and F-135+, `TLA.dll` the F-235,
+  `TLC.dll` the F-335), and the F-135 and F-135+ share one engine despite
+  different controller boards. **Reverses** the earlier description of the
+  host software as a single shared "TLX/TLA" stack, and re-attributes facts
+  this reference had sourced to "TLA.dll": those were read from the F-235
+  engine, or from captures of 135-line hardware, and are labelled
+  accordingly. Established from the binaries' own string tables and
+  `tlx.dll`'s dispatch, and confirmed on both 135-line generations.
+- **Correction, `CONVENTIONS.md`:** cite OEM binaries by PE file version
+  (every engine, the facade and the demo client are 3.1.0.28), and hash the
+  copy actually analysed, since installed engine DLLs are sometimes patched
+  by tooling; name the engine DLL a fact came from, since they are
+  per-model builds.
+- **Scope note, `color-pipeline.md`:** the LUT+matrix path documented on
+  that page is the F-235 engine's; the 135-line engine resolves that kernel
+  but never calls it for colour negatives and applies a per-unit 3x10
+  transform instead. The 135-line colour path is now an explicit open
+  question rather than an implied match.
+- **Correction, `image-stream.md`:** the 20480-byte bulk transfer size is
+  the OEM host's ring-packet choice (the driver only enforces a 0x5000
+  ceiling on a host-supplied value), not a property of the endpoint, whose
+  own maximum packet size is 512 bytes.
+- **Addition, front page:** a directory of the third-party Pakon clients,
+  and a sources-and-credit list separated from it. Automatic site
+  deployment on every merge (the site had been a manual snapshot and had
+  gone stale).
+
+## 2026-08-14
+
+- **Addition, every page:** an "Open questions" section per page, and a
+  statement that the reference is not comprehensive.
+
+## 2026-08-13
+
+- **Additions from hardware, several pages:** the F-135+ driven end to end
+  by open-source code (the pakon-macos project). Added the reply direction
+  of the protocol (reply-frame structure, the `0x88` READ marker byte,
+  first-open-only handshake replies), per-resolution image strides, that
+  IR-off scans carry no IR lane, and the motor run/stop register behaviour,
+  all marked `[CONFIRMED on hardware, August 2026]`. **Under review** as of
+  17 August: independent implementations dispute the stride table and the
+  run/stop register (the value written may be the CCD acquire word rather
+  than a speed); those markers stand until the reference's own captures are
+  re-checked, and will be corrected here if they fall.
+- **Addition, `CONVENTIONS.md`:** the scope rule separating what the
+  hardware and OEM software do from how the OEM's code is structured.
+- **Addition:** credit for contributing projects (FX35, libpakon,
+  pakon-macos); the MkDocs site.
+
+## 2026-07-10
+
+- **Addition, `color-pipeline.md`:** the exact ColNeg inversion LUT,
+  `D(x) = 3500 * log10(16383 / x)`, and the LUT-then-matrix ordering, from
+  numeric analysis. (Now scoped to the F-235 engine; see 2026-08-17.)
+
+## 2026-06-03
+
+- **Addition, `calibration.md`:** the fixed-pattern-correction gain
+  formula, partial (prefix terms and clamp still open).
+
+## 2026-05-02
+
+- **Additions:** USB identity and firmware loading; the scanner-family
+  page; calibration register banks.
+
+## 2026-05-01
+
+- **Addition, `dx-barcode.md`:** the DX barcode subsystem: encoding, the
+  product-code table, hardware, per-model differences.
+
+## 2026-03-13
+
+- **Addition, `image-stream.md`:** the bulk image stream: chunking,
+  interleave, IR lane, the exported raw format.
+
+## 2026-03-08
+
+- **First publication:** scaffold, the PPB protocol, and the command
+  reference from the March findings.
