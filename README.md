@@ -116,6 +116,9 @@ each source contributed:
 - [pakon-tlx-macos](https://github.com/pablonavarrob/pakon-tlx-macos) by pablonavarrob: because it forwards every call the unmodified OEM stack
   makes, it is a ground-truth witness to the OEM's host-side behaviour on an
   original F-135.
+  Its `tools/eedump.py` is the read-only EEPROM reader, replaying the OEM
+  engine's own transfer sequence, used for the per-unit EEPROM facts in
+  [calibration.md](docs/calibration.md#the-per-unit-eeprom).
 - [PakonClient](https://github.com/eatfrog/PakonClient) by eatfrog: the source of the OEM F235 SDK manuals (June 2004) cited here.
 
 ## License
