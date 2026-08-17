@@ -100,4 +100,6 @@ F-135's PIC16. [CONFIRMED] by disassembly, May 2026. See
 
 - The personality structure's final byte and the extra trailing byte are not
   understood.
-- The full EEPROM layout beyond the personality is undocumented.
+- The boot EEPROM (I2C `0x51`) beyond the 9-byte personality; the separate
+  per-unit EEPROM at `0x52` is documented in
+  [calibration.md](calibration.md#the-per-unit-eeprom).

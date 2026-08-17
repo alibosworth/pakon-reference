@@ -153,14 +153,14 @@ atomic write-then-read. A separate bulk IN endpoint carries the image stream
 (see [image-stream.md](image-stream.md)). [DOCUMENTED] from the operational
 device's endpoint descriptor and scan captures.
 
-A structured parameter/calibration table is read separately over USB control
-transfers (vendor requests `0xA4`/`0xA9`) in fixed-size chunks. [DOCUMENTED]
-from captures; contents detailed in [calibration.md](calibration.md).
+The scanner's per-unit EEPROM (serial, motor speeds, colour matrices) is
+read separately over USB control transfers (vendor requests `0xA4`/`0xA9`)
+in 32-byte chunks. [CONFIRMED]; layout and contents in
+[calibration.md](calibration.md#the-per-unit-eeprom).
 
 ## Open questions
 
 - Reply payloads for most commands are unobserved (the captures were
   transmit-only; only the exchanges exercised live are confirmed).
 - The complete bit semantics of the READ reply status/flags byte.
-- The `0xA4`/`0xA9` parameter table's field layout.
 - Whether the F-235/F-335 use these bus addresses at all.
