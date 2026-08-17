@@ -9,10 +9,19 @@ March 2026._
 
 ## Transport
 
-The image endpoint delivers the stream in **20480-byte bulk chunks**.
-[DOCUMENTED] every image packet in the scan captures is this size. The host
-reads continuously into a ring buffer while a second thread writes to disk; the
-scan ends on a device-signalled end-of-roll, not a fixed byte count.
+The OEM host reads the image endpoint in **20480-byte bulk transfers**.
+[DOCUMENTED] every image packet in the scan captures is this size. That size
+is a choice of the OEM host, not a property of the endpoint: the OEM driver's
+scan ring takes its packet size from a host-supplied field and only enforces
+a ceiling of 0x5000 (20480) on it, the OEM application allocates a ring of
+409 such packets, and independent implementations read the same endpoint in
+other sizes without ill effect. The endpoint's own maximum packet size is 512
+bytes (high speed). [DOCUMENTED] from the FX35 driver source (`RING_TAIL`
+packet-size validation) and pakon-tlx-macos's transcription of the OEM's ring
+control block; the 512-byte endpoint size from the firmware's USB descriptors.
+The host reads continuously into a ring buffer while a second thread writes
+to disk; the scan ends on a device-signalled end-of-roll, not a fixed byte
+count.
 
 ## Sample format
 

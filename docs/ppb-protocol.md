@@ -6,8 +6,11 @@ scanner presents itself to the host and relays framed commands to the internal
 microcontrollers; despite the USB transport, the protocol is modelled as a
 host addressing devices on a bus.
 
-_Established from analysis of the OEM Windows driver (TLA.dll) and USB captures
-of real hardware, March 2026._
+_Established from analysis of the OEM Windows host software and USB captures
+of real F-135+ hardware, March 2026. The host-software analysis was
+originally attributed to `TLA.dll`; the 135-line engine is `TLB.dll` (see
+[scanner-family.md](scanner-family.md#the-oem-host-software-stack)), and the
+protocol facts here stand on the hardware captures regardless._
 
 ## Bus participants
 
