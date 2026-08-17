@@ -27,6 +27,23 @@ capture", "observed live on an F-135+", "from `ReadmeF135.txt`", "from TLA.dll
 decompilation for interoperability", "cross-confirmed by libpakon". The goal
 is that a reader can weigh and re-verify each claim.
 
+When the source is one of the OEM engine DLLs, name the file, because the
+engines are per-model builds: `TLB.dll` is the F-135/F-135+ engine,
+`TLA.dll` the F-235's, `TLC.dll` the F-335's (see
+[scanner-family.md](scanner-family.md#the-oem-host-software-stack)). A
+behaviour read from `TLA.dll` is an F-235 fact until it is checked in
+`TLB.dll`; "TLA" inside class or registry names is the SDK's name, not the
+build's.
+
+Cite OEM binaries with their PE file version so a claim can be re-checked
+against the same build, e.g. "TLB.dll 3.1.0.28". The final OEM release
+ships every engine, the `tlx.dll` façade and `TLXClientDemo.exe` at
+3.1.0.28, `PakonIMAu.dll` at 3.0.0.22, `DMLDICELib.dll` at 1.0.0.1. Where a
+byte-level claim depends on it (an address, an embedded constant), add the
+first characters of the file's SHA-256; note that installed copies of the
+engine DLLs are sometimes patched by tooling, so hash the file you actually
+analysed.
+
 ## Scope: facts, not artifacts
 
 This repository documents facts about the hardware and protocol. It does

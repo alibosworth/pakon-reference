@@ -11,6 +11,21 @@ pipeline ordering settled by numeric analysis, July 2026. OEM file paths are
 relative to a standard Windows install; this reference documents the derived
 facts, not the files._
 
+**Engine scope.** The OEM's host software has per-model engine builds
+(`TLB.dll` for the F-135/F-135+, `TLA.dll` for the F-235; see
+[scanner-family.md](scanner-family.md#the-oem-host-software-stack)), and the
+builds differ in the colour-processing stage. The data files described on
+this page ship with every build, but which stages a given build actually
+applies to colour-negative data, and in what order, is engine-specific.
+Analysis of the shipped binaries by the pakon-mac project (Guy Langford-Lee,
+https://github.com/gazzdingo/pakon-mac) reports that the LUT→matrix
+stage described below is the **F-235 engine's** (applied through the
+`PakonIMAu` MMX kernel), while the **135-line engine** applies a different,
+per-unit colour transform to colour-negative data and does not call the
+LUT+matrix kernel at all (see [Open questions](#open-questions)). Readers
+working on an F-135/F-135+ should treat this page as documenting the shared
+data files and the F-235 path until the 135-line path is documented here.
+
 ## The inversion LUT, exactly
 
 The OEM's negative→positive tone conversion is a single 14-bit (16,384-entry)
@@ -115,3 +130,19 @@ on top of the inversion, not part of it. [DOCUMENTED]
 - The full OEM matrix path has not been reproduced outside the OEM software.
 - The OEM's film-specific layer (per-film LUTs and profiles, film-class
   selection, scene balance) is not yet documented here.
+- **The 135-line colour path.** The pakon-mac project's analysis of the
+  shipped engines (https://github.com/gazzdingo/pakon-mac) reports that
+  `TLB.dll` (F-135/F-135+) applies a per-unit second-order
+  polynomial (3×10 coefficients, stored as `NegMatrix0-29` in the scanner's
+  calibration EEPROM and mirrored to the registry) to colour-negative data,
+  and that the density LUT + 3×4 matrix kernel documented on this page has
+  no call site in that build; the psix project (Oliver Roch,
+  https://github.com/veroc/psix) independently measured the OEM's F-135+
+  output transfer as per-channel with no post-process 3×3, and the
+  pakon-tlx-macos project (Pablo Navarro,
+  https://github.com/pablonavarrob/pakon-tlx-macos) records the same 3×10
+  matrix in the F-135's registry. That polynomial's exact form, where the
+  negative→positive inversion then happens on the 135 line, and how the
+  Ansel stages consume the result are not yet documented here. Until they
+  are, the pipeline on this page is the F-235's, and 135-line
+  reimplementations should not assume it.
