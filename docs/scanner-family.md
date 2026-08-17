@@ -139,7 +139,7 @@ ceiling tables it carries, one per controller address set; pakon-tlx-macos,
 | Personality | `F235_AA07` | `F235_AA07` | `F235_AA05` | `F235_AA08` |
 | Light/CCD PIC | PICL (`PL`, PIC16) | PICL+ (`NL`, PIC18) | separate CCD board | separate CCD board |
 | Motor PIC | PICM (`PM`, PIC16) | PICM+ (`NM`, PIC18) | separate motor board | separate motor board |
-| Illumination | lamp | lamp | lamp (`LP` board) | **LED** (`LQ` board) |
+| Illumination | **LED** (R, G, B, IR) | **LED** (R, G, B, IR) | lamp (`LP` board) [DOCUMENTED, not observed] | **LED** (`LQ` board) |
 | CCD cooling (TEC) | no | **yes** | — | — |
 | DX reading | in PICL | in PICL+ | dedicated `DX` board | dedicated `DY` board |
 | APS (IX240) film | no | no | yes (`AP` board) | yes (`AP` board) |
@@ -147,6 +147,21 @@ ceiling tables it carries, one per controller address set; pakon-tlx-macos,
 [DOCUMENTED] from the OEM firmware readmes (`ReadmeF135/235/335.txt`)
 and the driver INF unless noted. PIC firmware lives in
 `F-X35 COM SERVER\Config\Firmware\` under the prefixes shown.
+
+On illumination: the OEM's own vocabulary says "lamp" for the light source
+on every model (a "lamp board", `LampError`, `WaitForLamp_R/G/B/Ir`), which
+an earlier version of this table took literally. The F-135 and F-135+ are
+lit by an **LED array with per-channel current and duty control** (red,
+green, blue and infrared): the light controller's registers `0x81` and
+`0x82` set per-channel LED current and per-channel duty, the 135-line engine
+calibrates it with routines named `bCalibrateLEDs`/`bDrvSetLed`, and the
+LEDs are visible inside the unit. [CONFIRMED] by inspection of an F-135+ and
+by the engine's own routine names; independently by the pakon-mac,
+pakon-tlx-macos and psix projects, whose light calibration is entirely LED
+current and duty. The F-335 is documented as LED (`LQ` board,
+`AD_LED_LAMP` in its engine). The F-235 is the only model the readmes call
+a lamp (`LP` board, `AD_LAMP` in its engine, and it has a filter wheel);
+that is taken as documented, not observed.
 
 ## Shared vs. distinct
 
