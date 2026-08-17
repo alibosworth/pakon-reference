@@ -37,7 +37,11 @@ Two vendor requests, both with `wIndex = 0x1234`, repeated per chunk:
 reads 32 bytes at a time at increasing offsets (`0x008`, `0x028`, `0x048`,
 …), which is the "fixed number of pairs, resolution independent" pattern the
 captures showed. [CONFIRMED] on hardware; the same two requests, and no
-others, are all that is needed to read the chip. There is a matching write
+others, are all that is needed to read the chip. The reads here were made
+with the [pakon-tlx-macos](https://github.com/pablonavarrob/pakon-tlx-macos)
+project's `tools/eedump.py`, which issues exactly this sequence (decoded
+from a live capture of the OEM engine's own transfers), extended to read
+the backup copies and check the CRCs. There is a matching write
 request (`0xA2`) which the OEM's normal scanning path never issues; only its
 Calibration Wizard writes the EEPROM.
 
@@ -99,11 +103,20 @@ both copies of section B validate; the primary of section A fails its CRC
 because of a single byte, `0x0A5`, which reads `0x48` where the backup has
 `0x00` (the high byte of `PosMatrix1`, turning a 0.0 into 131072.0). Stable
 across four reads and two power cycles, so a stored-data fault, not a read
-artifact; it touches only the slide matrix. Kodak's two-copy-plus-CRC scheme
-exists for exactly this, and the OEM treats a bad checksum as a warning
-(`INITIALIZEW_EEPROM_CHECKSUM_BAD` in its SDK), not an error. Anyone
-archiving their own unit's EEPROM should read both copies; a dump of the
-primaries alone cannot show whether it is good.
+artifact; it touches only the slide matrix.
+
+How the OEM uses the two copies: at start-up it reads the primary of each
+section, checks the length and CRC, and if either is bad reads the backup
+and uses that instead. The first good copy wins; the primary is not
+repaired. Only if both copies of a section fail does it keep what it read
+and raise the SDK's `INITIALIZEW_EEPROM_BLANK` /
+`INITIALIZEW_EEPROM_CHECKSUM_BAD` warning (a warning, not an error).
+[CONFIRMED] two ways on the reference unit: the retry loop in the engine's
+EEPROM-to-registry routine, and the registry it populates, which holds the
+backup's `PosMatrix1 = 0.0`, not the primary's corrupted value, with no
+warning shown. So a unit can carry a bad primary copy for years without
+anyone noticing. Anyone archiving their own unit's EEPROM should read both
+copies; a dump of the primaries alone cannot show whether it is good.
 
 The [pakon-mac](https://github.com/gazzdingo/pakon-mac) project reports that on its unit these EEPROMs returned good
 data only on the first transaction after a power cycle and degraded on
