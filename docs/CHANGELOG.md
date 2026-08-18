@@ -6,6 +6,17 @@ carried a confidence marker and turned out wrong is a normal event here,
 and hiding it would defeat the markers. Dates are when the change was
 published; each entry links the page it touched. Newest first.
 
+## 2026-08-18
+
+- **Addition, `calibration.md`:** the EEPROM select request's `wValue` is
+  `((0x50 | n) << 1) | direction`: it reaches any I2C EEPROM at
+  `0x50`–`0x57`, and bit 0 is the direction, so a write is the even-valued
+  select followed by `0xA2` instead of `0xA9`. From the engine's own read
+  routine, read out by pakon-mac for its transport allow-list; the read
+  direction confirmed on hardware, the write direction from disassembly
+  only. Also `per-unit-data-and-safety.md`: a read tool "issues" the OEM's
+  sequence rather than "replays" it (nothing is played back).
+
 ## 2026-08-17
 
 - **Correction, `calibration.md`:** the first word of each per-resolution

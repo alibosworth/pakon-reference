@@ -92,7 +92,7 @@ the known controller addresses have no recorded incident.
 The safe way is to issue exactly the transfers the OEM engine itself
 issues when it reads this chip at every launch, and nothing else. Those
 transfers are known to be serviced by the vendor firmware, they are reads,
-and they put no code on the scanner. Any tool that does this is replaying
+and they put no code on the scanner. Any tool that does this is issuing
 the OEM's own sequence; the steps below spell it out so a tool can be
 checked against it:
 
