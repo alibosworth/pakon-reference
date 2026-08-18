@@ -41,9 +41,23 @@ others, are all that is needed to read the chip. The reads here were made
 with the [pakon-tlx-macos](https://github.com/pablonavarrob/pakon-tlx-macos)
 project's `tools/eedump.py`, which issues exactly this sequence (decoded
 from a live capture of the OEM engine's own transfers), extended to read
-the backup copies and check the CRCs. There is a matching write
-request (`0xA2`) which the OEM's normal scanning path never issues; only its
-Calibration Wizard writes the EEPROM.
+the backup copies and check the CRCs.
+
+The select's `wValue` is general: `((0x50 | n) << 1) | direction`, so the
+same pair reaches any I2C EEPROM at `0x50`–`0x57` (the boot-personality
+chip at `0x51` included), and bit 0 is the direction. A write is the same
+select with bit 0 clear (`0x00A4`) followed by `0xA2` in place of `0xA9`, with
+`wValue` again a byte offset. This is from the engine's own read routine
+(`FN_bEEPromRead`, `fcn.100160a0` in TLB.dll 3.1.0.28: `or eax, 0x50; shl
+eax, 1`, then `or [arg], 1` and `0xA9` for a read, `0xA2` otherwise), read
+out by the [pakon-mac](https://github.com/gazzdingo/pakon-mac) project while
+building its transport allow-list
+([`tools/pakon_usb_guard.py`](https://github.com/gazzdingo/pakon-mac/blob/95c205c9c7bbfd9757e58aefd5e389f11fe1cca7/tools/pakon_usb_guard.py)).
+[CONFIRMED] for the read direction on hardware; the write direction is from
+the disassembly only, and the OEM's normal scanning path never issues it
+(only its Calibration Wizard writes the EEPROM). The practical corollary for
+anyone writing a read tool: an allow-list that admits only the odd-`wValue`
+select and `0xA9` cannot be turned into a write by any caller.
 
 Note that `0xA9` with `wIndex = 0` is a different operation: the 8-byte
 personality read served by the stage-1 loader (see
