@@ -8,6 +8,21 @@ published; each entry links the page it touched. Newest first.
 
 ## 2026-08-17
 
+- **Correction, `calibration.md`:** the first word of each per-resolution
+  triple in the EEPROM had been called an "optical offset" as if that were
+  known. The OEM's name for it is `Offset` and it says nothing about its
+  meaning; the page now gives the name, the values seen, and the reason for
+  reading it as the per-base start of the imaged CCD region, marked
+  inferred. Also states pakon-mac's read-once EEPROM report as one
+  project's observation, linked, rather than as a property of the parts.
+- **Addition, `per-unit-data-and-safety.md`:** a new page for anyone running
+  unofficial code against these scanners: what data is per-unit and where
+  it lives (EEPROM vs registry), how to back it up with the OEM's own read
+  sequence and nothing else, and what host software can damage (the FX2
+  wedge, PIC bootloader row erase, blind writes to the I2C EEPROMs, LED
+  current ceilings), each pinned to the file and commit where it was
+  observed. Reads with pakon-tlx-macos's `eedump.py`; layout and the
+  incident reports from pakon-mac.
 - **Addition and correction, `calibration.md`:** the read the OEM does at
   start-up over vendor requests `0xA4`/`0xA9`, previously an undecoded
   "parameter table", is the scanner's per-unit EEPROM (serial, per-resolution
