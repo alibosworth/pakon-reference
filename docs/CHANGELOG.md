@@ -11,7 +11,7 @@ published; each entry links the page it touched. Newest first.
 - **Addition and correction, `calibration.md`:** the read the OEM does at
   start-up over vendor requests `0xA4`/`0xA9`, previously an undecoded
   "parameter table", is the scanner's per-unit EEPROM (serial, per-resolution
-  optical offset and motor speeds, motor-adjust words, the two 3x10 colour
+  `Offset` word and motor speeds, motor-adjust words, the two 3x10 colour
   matrices; not the light calibration). Documents the read, the two-copy
   layout with CRC-32, the field map, and how the OEM falls back to the
   backup copy on a bad primary (first good copy wins, no repair, warning

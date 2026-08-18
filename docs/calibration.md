@@ -14,7 +14,7 @@ What earlier drafts of this page called "the parameter table read" is the OEM
 software reading the scanner's per-unit EEPROM at start-up: a serial I2C
 EEPROM at 7-bit address `0x52` on the motherboard, read through the FX2
 bridge with two vendor control requests. It holds the data that makes one
-unit that unit: serial number, per-resolution optical offset and motor
+unit that unit: serial number, a per-resolution `Offset` word and motor
 speeds, motor-adjust words, and the two colour matrices. It does **not**
 hold the light calibration (LED currents and duty cycles); the OEM keeps
 those in the Windows registry, written when its light-correction routine
@@ -68,12 +68,22 @@ Section A payload, absolute byte offsets, little-endian:
 |---|---|---|
 | `0x008`, `0x00C` | u32, u32 | two unnamed words (400 and 1351 on the reference unit) |
 | `0x010` | u32 | **scanner serial number** |
-| `0x014` / `0x016` / `0x018` | u16 ×3 | resolution base 4: optical Offset, MotorSpeed, MotorSpeed (IR) |
+| `0x014` / `0x016` / `0x018` | u16 ×3 | resolution base 4: `Offset`, MotorSpeed, MotorSpeed (IR) |
 | `0x01A` / `0x01C` / `0x01E` | u16 ×3 | resolution base 8: same three |
 | `0x020` / `0x022` / `0x024` | u16 ×3 | resolution base 16: same three |
 | `0x026` – `0x09D` | f32 ×30 | **NegMatrix0–29**: the colour-negative correction, 3 rows × 10 |
 | `0x09E` – `0x115` | f32 ×30 | **PosMatrix0–29**: the positive (slide) correction, 3 rows × 10 |
 | `0x116` – `0x18D` | 120 bytes | unused (zero on every unit seen) |
+
+`Offset` is the OEM's own name for the first word of each per-base triple
+(30 / 58 / 60 on the reference unit; 27 / 54 / 55 on another). Its meaning is
+not stated by the OEM. It sits with the motor speeds, scales with the
+resolution base, and matches the CCD pixel-window start that
+implementations write to the FPGA geometry register before a scan (31 for
+base 4, 62 for bases 8 and 16 in one implementation; the OEM writes 62 for
+the non-IR case), so it is most likely the per-unit start of the imaged
+region along the CCD line for that base, i.e. this unit's optical alignment
+to the film gate. [INFERRED from the value correspondence; not confirmed.]
 
 Section B payload: twelve u16 motor-adjust words (`0x808`–`0x81E`, values
 near 1000 and clamped by the OEM to 900–1100), then one unnamed u32.
