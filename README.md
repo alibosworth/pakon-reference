@@ -75,6 +75,7 @@ Every fact carries a confidence marker and a source; see
 
 | Document | Covers |
 |---|---|
+| [docs/per-unit-data-and-safety.md](docs/per-unit-data-and-safety.md) | What data is unique to each unit and where it lives, how to back it up safely, what can be damaged and how, and what is recoverable. Read first. |
 | [docs/usb-identity-and-firmware.md](docs/usb-identity-and-firmware.md) | Cold/warm enumeration, the personality mechanism, FX2 firmware selection and loading |
 | [docs/ppb-protocol.md](docs/ppb-protocol.md) | The command frame format, packet types, status codes, bus addresses, bridge open |
 | [docs/command-reference.md](docs/command-reference.md) | Per-controller command sets (light/CCD, motor, host) with payloads and sequences |

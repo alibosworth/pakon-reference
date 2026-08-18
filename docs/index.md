@@ -50,6 +50,8 @@ to when the underlying research established it:
 
 ## Where to start
 
+- About to touch a scanner? Read [Per-unit data & safety](per-unit-data-and-safety.md)
+  first: what to back up, and what can be damaged.
 - New to the protocol? Read [USB identity & firmware](usb-identity-and-firmware.md)
   then the [PPB protocol](ppb-protocol.md).
 - Decoding a scan? See the [image stream](image-stream.md) and the

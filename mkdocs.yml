@@ -45,6 +45,7 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Conventions: CONVENTIONS.md
+  - Per-unit data & safety: per-unit-data-and-safety.md
   - USB identity & firmware: usb-identity-and-firmware.md
   - PPB protocol: ppb-protocol.md
   - Command reference: command-reference.md
