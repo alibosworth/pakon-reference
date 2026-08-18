@@ -128,12 +128,15 @@ warning shown. So a unit can carry a bad primary copy for years without
 anyone noticing. Anyone archiving their own unit's EEPROM should read both
 copies; a dump of the primaries alone cannot show whether it is good.
 
-The [pakon-mac](https://github.com/gazzdingo/pakon-mac) project reports that on its unit these EEPROMs returned good
-data only on the first transaction after a power cycle and degraded on
-later reads while still reporting success. The reference unit shows no such
-behaviour (four consistent reads), so treat that as unit-dependent: read
-once per power cycle, and confirm by comparing across power cycles rather
-than by re-reading within one.
+The [pakon-mac](https://github.com/gazzdingo/pakon-mac) project reports that on its
+unit these EEPROMs returned good data only on the first transaction after a
+power cycle and degraded on later reads while still reporting success
+([`backups/eeprom-i2c/README.md`](https://github.com/gazzdingo/pakon-mac/blob/c0be5853c292/backups/eeprom-i2c/README.md)).
+That is not how these parts normally behave and may be specific to that
+unit or its tooling; the reference unit shows no such behaviour (four
+consistent reads). Until it is understood: read once per power cycle, and
+confirm by comparing across power cycles rather than by re-reading within
+one.
 
 ## CCD register banks
 
