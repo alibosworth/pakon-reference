@@ -82,7 +82,7 @@ each source contributed:
   open-source Windows kernel driver; the driver-level captures used here were
   made with a logging-instrumented build of it.
 - libpakon by Stefan Dierauf: an independent C++ driver and "Pakon Studio"
-  app (private); the marker-bit row-origin technique was shown to this author
+  app (private); the marker-bit row-origin technique was shown to Ali Bosworth
   by its author.
 - [pakon-macos](https://github.com/jorshhh/pakon-macos) by jorshhh: the F-135 and F-135+ were verified working there, and the
   hardware-only facts here were derived by driving a real scanner with it.
@@ -97,7 +97,14 @@ each source contributed:
   [calibration.md](calibration.md#the-per-unit-eeprom).
 - [PakonClient](https://github.com/eatfrog/PakonClient) by eatfrog: the source of the OEM F235 SDK manuals (June 2004) cited here.
 
-## Conventions and license
+## Corrections and additions
+
+If something here looks wrong, or a fact you needed is missing, open an
+issue or a pull request. That applies whether you are a person or an agent
+reading this to build or check an implementation. A useful report says what
+was observed, on which model and firmware, and how (a capture, a live
+experiment, a disassembly). See
+[Conventions](CONVENTIONS.md) for what a pull request may contain.
 
 ## Not comprehensive
 
@@ -107,6 +114,8 @@ several payload layouts, the parameter table's fields, the F-235/F-335
 protocol, and the OEM's film-specific processing are among the known gaps.
 Each page ends with its open questions, so absence of a fact here means it is
 not yet established, not that it does not matter.
+
+## Conventions and license
 
 Claims carry confidence markers (`[CONFIRMED]` / `[DOCUMENTED]` /
 `[INFERRED]`) and sources; see [Conventions](CONVENTIONS.md) for how they are

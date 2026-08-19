@@ -6,6 +6,13 @@ carried a confidence marker and turned out wrong is a normal event here,
 and hiding it would defeat the markers. Dates are when the change was
 published; each entry links the page it touched. Newest first.
 
+## 2026-08-19
+
+- **Addition, `index.md`:** a standing request for corrections and
+  additions, with what a useful report contains; the same line in the site
+  footer. "This author" replaced with the name in the credits and in
+  `image-stream.md`, since the phrase assumes a single author.
+
 ## 2026-08-18
 
 - **Addition, `calibration.md`:** the EEPROM select request's `wValue` is
