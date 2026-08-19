@@ -4,7 +4,8 @@ site_description: >-
   scanners work — protocol, image stream, calibration, and colour.
 copyright: >-
   CC BY 4.0, <a href="https://alibosworth.com">Ali Bosworth</a> &middot;
-  <a href="https://github.com/alibosworth/pakon-reference">View project on GitHub</a>
+  <a href="https://github.com/alibosworth/pakon-reference">View project on GitHub</a> &middot;
+  Corrections welcome: <a href="https://github.com/alibosworth/pakon-reference/issues">open an issue</a>
 
 theme:
   name: material

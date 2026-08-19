@@ -119,7 +119,7 @@ true row origin and makes the channel assignment phase-independent. The
 row-origin recovery, an arbitrarily chunked capture has a floating phase, and
 phase-zero readings historically produced a spurious `B, R, G` assignment. This
 marker-bit behaviour is a property of the scanner firmware; using it for
-row-origin recovery was first shown to this author by Stefan Dierauf. It was
+row-origin recovery was first shown to Ali Bosworth by Stefan Dierauf. It was
 applied in a decoder (the pakon-macos project by Jorge Rangel:
 https://github.com/jorshhh/pakon-macos) and [CONFIRMED on hardware,
 August 2026] phase-invariant across many simulated capture starts.

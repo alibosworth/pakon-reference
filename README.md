@@ -107,7 +107,7 @@ each source contributed:
   open-source Windows kernel driver; the driver-level captures used here were
   made with a logging-instrumented build of it.
 - libpakon by Stefan Dierauf: an independent C++ driver and "Pakon Studio"
-  app (private); the marker-bit row-origin technique was shown to this author
+  app (private); the marker-bit row-origin technique was shown to Ali Bosworth
   by its author.
 - [pakon-macos](https://github.com/jorshhh/pakon-macos) by jorshhh: the F-135 and F-135+ were verified working there, and the
   hardware-only facts here were derived by driving a real scanner with it.
@@ -121,6 +121,15 @@ each source contributed:
   engine's own transfer sequence, used for the per-unit EEPROM facts in
   [calibration.md](docs/calibration.md#the-per-unit-eeprom).
 - [PakonClient](https://github.com/eatfrog/PakonClient) by eatfrog: the source of the OEM F235 SDK manuals (June 2004) cited here.
+
+## Corrections and additions
+
+If something here looks wrong, or a fact you needed is missing, open an
+issue or a pull request. That applies whether you are a person or an agent
+reading this to build or check an implementation. A useful report says what
+was observed, on which model and firmware, and how (a capture, a live
+experiment, a disassembly). See
+[Conventions](docs/CONVENTIONS.md) for what a pull request may contain.
 
 ## License
 
