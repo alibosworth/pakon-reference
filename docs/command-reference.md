@@ -32,9 +32,10 @@ See [ppb-protocol.md](ppb-protocol.md) for the frame format these ride in.
 | `0x8A` | CMD | 0 | AcquireLine | trigger one CCD line acquisition |
 | `0x8B`/`0x8C`/`0x8D` | WRITE | 4 | SetCcdExposure B/G/R | per-channel exposure timing |
 | `0x8F` | WRITE | 4 | SetLightConfig | light source configuration |
-| `0x90` | READ | 30 | ReadSensorData | full CCD/sensor state (film detect, DX, positions) |
-| `0x91` | WRITE | 3 | SetScanLineParams | scan-line/resolution parameters |
-| `0x92` | CMD | 0 | EndAcquisition | end CCD acquisition |
+| `0x90` | READ | 30 | ReadSensorData | DX/position entries; layout in [dx-barcode.md](dx-barcode.md#how-the-host-reads-it). Read only after the controller raises its service flag [CONFIRMED] |
+| `0x91` | WRITE | 3 | SetScanLineParams | scan-line/resolution parameters; also resets the position counter reported by `0x90` [CONFIRMED] |
+| `0x92` | CMD | 0 | EndAcquisition | end CCD acquisition; closes the DX decode window [CONFIRMED] |
+| `0x93` | READ | 4 | ReadDxSensors | one byte per DX photodetector; polled at ~3 ms by the Film Track Test [CONFIRMED live on an F-135+] |
 | `0xD0`/`0xD1` | WRITE | 1 | SetTEC 1/2 | thermoelectric cooler; F-135+ only |
 
 `0xD0`/`0xD1` (TEC control) appear only on the F-135+, whose CCD is cooled.
@@ -108,5 +109,6 @@ speed to an exit value → idle. [DOCUMENTED]
 
 - Most command names are working labels, not OEM identifiers.
 - Payload field layouts are unknown for most write commands.
-- The 30-byte sensor response layout is unverified beyond a few fields.
+- The 30-byte sensor response layout is known (position, count, 5-byte
+  entries; see the DX page); the meaning of entry types 1, 2, 4 and 6 is not.
 - Per-command reply payloads are largely unobserved.

@@ -8,6 +8,35 @@ published; each entry links the page it touched. Newest first.
 
 ## 2026-08-19
 
+- **Addition, `dx-barcode.md`:** frame numbering is now reproduced live with
+  synthetic replies, upgrading the numbering facts from decompilation-only
+  to confirmed. The key requirement, found by decompilation and confirmed
+  on hardware: a type-7 film-start event (byte 1 bit 1) must precede the
+  codes or the numbering pass declares DX unusable without looking at them.
+  The accepted geometry settles the pitch units (810 position counts per
+  code at Base 4, table lines = counts / 4). Also corrected: the engine's
+  DX debug table is `DxCode.txt`, switched on by `DxCreateDebugFiles`
+  (the page previously said that switch produced no file on a 135-line
+  unit; the earlier attempt had not restarted the engine), and
+  `PakonDxLog.txt` stays empty even on a successful pass.
+
+
+- **Addition, `dx-barcode.md`:** a "How the host reads it" section: the
+  sensor read is event-driven (service flag → acknowledge → `0x90`), the
+  34-byte reply layout, the position counter (resets at `0x91`, 2 counts per
+  scan line at Base 4), the type-3 byte layout and its 19-bit parity, the
+  type-5 position event a code depends on, the type 7/8 edge events, the
+  engine's frame-numbering acceptance rule, and what the DX registry
+  switches actually do. Two follow-up items closed by it. Sourced from live
+  observation on an F-135+ through a logging bridge (with synthetic replies
+  for the layout claims) and from `TLB.dll` 3.1.0.28. Frame numbering from
+  synthetic replies is explicitly not yet achieved.
+- **Tightening, `dx-barcode.md`:** the reference unit's DX fault narrowed:
+  all four photodetectors respond (register `0x93`), no barcode modulation,
+  no type-3 ever returned.
+- **Addition, `command-reference.md`:** `0x93` ReadDxSensors; notes on
+  `0x90`/`0x91`/`0x92`; the sensor-response open question rewritten.
+
 - **Addition, `index.md`:** a standing request for corrections and
   additions, with what a useful report contains; the same line in the site
   footer. "This author" replaced with the name in the credits and in
