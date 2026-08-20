@@ -6,6 +6,25 @@ carried a confidence marker and turned out wrong is a normal event here,
 and hiding it would defeat the markers. Dates are when the change was
 published; each entry links the page it touched. Newest first.
 
+## 2026-08-20
+
+- **Addition and one reversal, `dx-barcode.md`:** the host-side DX read is
+  rewritten with everything established through 2026-08-20 and reproduced from
+  synthetic replies across all six resolution and Digital ICE configurations.
+  New: the `0x91` (SetScanLineParams) value that names each configuration, with
+  a table matched to OEM Windows captures; the engine's expected frame pitch
+  `width x 38400 / 23700`; the per-configuration divisor (4/6/8, doubling to
+  8/12/16 with Digital ICE); the half-frame slot shift `width x 0x695F / 23700`
+  the engine adds to "A"-slot codes; the film-found offset clamping (the engine
+  records the film start but usually substitutes a nominal offset for it); and
+  the code-to-picture unit conversion. **Reversal:** the earlier draft's
+  reading that synthetic codes were "placed about twice as densely as real
+  film" is withdrawn. It rested on the unreconciled 2-counts-per-image-row
+  figure; the accepted pitch is close to a frame's length in image rows, so
+  the density is normal. The counter-to-film-travel relation stays marked
+  unresolved. Command/reply captures of all six configurations are published
+  at pakon-captures and linked.
+
 ## 2026-08-19
 
 - **Addition, `resources/dx-product-code-table.md`:** a new Resources section,

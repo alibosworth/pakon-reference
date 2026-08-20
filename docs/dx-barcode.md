@@ -65,10 +65,33 @@ inventory; see [scanner-family.md](scanner-family.md).
 ## How the host reads it
 
 _Observed live on an F-135+ through a user-space bridge that logs every
-command and reply between the OEM engine and libusb, 2026-08-18/19, and read
-from `TLB.dll` 3.1.0.28 (SHA-256 `5866ec56…`) decompilation for
-interoperability. The synthetic-reply experiments below rewrite the reply in
-that bridge; no scanner firmware or OEM binary is modified._
+command and reply between the OEM engine and libusb (2026-08-18 to 20), and
+read from `TLB.dll` 3.1.0.28 decompilation for interoperability. Full
+command/reply captures of all six resolution and Digital ICE configurations
+are published at
+[pakon-captures](https://github.com/alibosworth/pakon-captures). Some facts
+below were established by injecting synthetic replies in the bridge; that is
+noted where it applies, and no scanner firmware or OEM binary is modified._
+
+**What the scan is: the `0x91` trigger.** [CONFIRMED live, six configurations]
+The scan-line trigger `WRITE PICL 0x91` (SetScanLineParams) carries a 16-bit
+little-endian value that names the scan configuration, and it is issued twice
+per scan (once for the pre-scan calibration, once for transport). The values
+seen, each matched against an independent OEM Windows capture of the same
+unit:
+
+| resolution | Digital ICE | `0x91` value |
+|---|---|---|
+| Base 4 | off | `0x0107` |
+| Base 4 | on | `0x00c5` |
+| Base 8 | off | `0x0075` |
+| Base 8 | on | `0x004d` |
+| Base 16 | off | `0x003c` |
+| Base 16 | on | `0x0031` |
+
+The motor rate written just before transport (`WRITE PICM MOTOR RATE`) is a
+second, independent identifier of the configuration: it is distinct for each
+of the six, and decreases as the resolution and IR load rise.
 
 **The read is event-driven, not polled.** [CONFIRMED live, ~10 scans] The
 engine never issues ReadSensorData (PICL `0x90`) on a timer during a scan.
@@ -79,7 +102,8 @@ issues the 30-byte `0x90` read. On the reference unit, whose sensor decodes
 nothing, this happens about once per scan (and once during the pre-scan
 calibration), so a scan sees one or two sensor reads. Asserting the same two
 bits in the bridge makes the engine acknowledge and read on demand, at any
-cadence tried (0.3–3 s), which is how the experiments below were driven.
+cadence tried (0.3–3 s), which is how the synthetic-reply work below was
+driven.
 
 **Reply layout.** [CONFIRMED live; matches the engine's parser] The reply is
 34 bytes: the usual 4-byte PPB header (`01 20 <PICL address> 08`), then a
@@ -93,15 +117,8 @@ cadence tried (0.3–3 s), which is how the experiments below were driven.
 
 The engine sign-extends the 16-bit position with its own wrap counter. On
 the reference unit the idle reply is count 1, type 0 (a "no entry" entry);
-the position counter is live in every reply. It restarts at the scan-line
-trigger (`0x91`). At Base 4 it advances about 1105 counts/s against 553
-image rows/s on the image endpoint, a ratio of 2 counts per row. [CONFIRMED,
-one measured scan; the ratio at other resolutions is INFERRED] Its rate
-scales with the motor speed (about 506 counts/s at Base 16). What one count
-corresponds to in film travel is **not** established: 2 counts per row would
-put a 35 mm frame at roughly 3200 counts, while the spacing the engine
-accepts as a frame pitch is about half that (see Frame numbering), and the
-two have not been reconciled.
+the position counter is live in every reply, and restarts at the `0x91`
+trigger.
 
 **Type-3 entry: the decoded barcode.** [CONFIRMED by decompilation and by
 live acceptance of a synthetic entry] Bytes after the type byte, for the
@@ -131,68 +148,116 @@ without a matching type-5 is dropped before the frame table; the
 product/generation vote happens earlier, which is why product can be
 accepted while frame numbering is not.
 
-**A film start must be recorded, or numbering never runs.** [CONFIRMED by
-decompilation and live, 2026-08-19] The numbering pass declares DX unusable
-before looking at any code unless a film-start position was recorded during
-the scan. Only a type-7 entry with byte-1 bit 1 set records a usable one
-(its own position, bytes 2–3); a type-5 with bit 1 set also satisfies the
-existence test but stores a sentinel that ruins the per-picture placement.
-Once film start is set, further type-7 entries are treated as picture-edge
-events. This was the single condition separating rejected synthetic
-sequences from accepted ones: the same code stream failed without the
-type-7 and numbered every frame with it.
+**The engine moves the half-frame code.** [CONFIRMED by decompilation and
+live, 2026-08-20] The type-3 handler does not use an "A"-slot code's position
+as given: it adds a fixed shift `this+0x58 = width × 0x695F / 23700`, which is
+1138, 1707 and 2276 counts at Base 4, 8 and 16. A plain-slot code is not
+shifted. So a synthetic "A" code has to be placed that many counts early to
+land where intended; without the correction each "A" code drifts into the
+following picture, which reads as a half-frame labelling error. This was
+confirmed by pre-compensating: the shifted code then appeared in the engine's
+own table exactly where it was aimed.
 
-**Event entries.** [CONFIRMED live] After film passed the sensors during a
-Film Track Test, the reference unit's controller returned four 5-byte
-entries of types 7 and 8 alternating, each with a 16-bit position: the
-sensor's picture-edge events (an 8/7 pair brackets an edge; the engine keeps
-a list of the midpoints). Types 5–8 are the only entries this unit's
-controller has ever produced on its own; it has never produced a type 3.
+**A film start must be recorded, but the engine mostly ignores its value.**
+[CONFIRMED by decompilation and live] The numbering pass declares DX unusable
+before looking at any code unless a film-start position was recorded during
+the scan (a type-7 entry with byte-1 bit 1 set; a type-5 with bit 1 set
+satisfies the existence test but stores a sentinel that ruins placement). So
+the type-7 is required. Its *position*, however, is largely discarded:
+`sub_10015520` derives a film-found offset (`this+0x3c`) from it, then bounds
+that against a nominal offset computed from the scan geometry alone, and
+substitutes the nominal when the derived value falls outside a window of
+`width × 2000 / 23700` either side. On the reference unit the substitution
+fired on nearly every scan (`FilmFoundOffset` equalled `uiOffsetCcdTest` in
+the debug log), so the phase was set by the nominal, not by the injected film
+start. The nominal, per resolution, is `width / divisor × 16042 / 23700`,
+which is about 169 without IR at every resolution (`width / divisor` is 250)
+and about twice that with IR.
+
+**Event entries (types 7 and 8).** [CONFIRMED live] The controller emits
+type-7 and type-8 entries of its own, each with a 16-bit position: sensor
+edge events (an 8/7 pair brackets a film edge; the engine keeps a list of the
+midpoints). These carry flag byte `0x01`, not the `0x02` that marks a film
+start, so on this engine's two-slot path they establish neither the film
+start nor, once a film start exists, anything the numbering uses. Types 5–8
+are the only entries this unit's controller has ever produced on its own; it
+has never produced a type 3.
 
 **Frame numbering.** [CONFIRMED from decompilation and live with synthetic
-replies, 2026-08-19] After the scan the engine walks the table of positioned
-codes and accepts numbering only if it finds at least three consecutive
-codes it did not have to interpolate or correct: consecutive positions one
-half pitch apart within ±1/8 of the expected pitch, frame\_raw stepping by 1
-per code (35 mm), the half-frame parity matching, and the run starting on an
-odd frame\_raw (an "A" code). Missing codes are interpolated, surplus ones
-dropped, and the picture then takes the code whose position, converted to
-lines and shifted by the fixed distance between the DX sensor and the CCD
-line, falls inside the picture span the image framing found. If no such run
-exists the scan carries the "DX Read" warning and every frame is labelled
-`DX_Error`, and because the default filenames are then identical, saving the
-roll writes a single file.
+replies, 2026-08-19/20] After the scan the engine walks the table of
+positioned codes and accepts numbering only if it finds at least three
+consecutive codes it did not have to interpolate or correct: consecutive
+positions one half pitch apart within ±1/8 of the expected pitch, `frame_raw`
+stepping by 1 per code (35 mm), the half-frame parity matching, and the run
+starting on an odd `frame_raw` (an "A" code). A code closer to its neighbour
+than seven-eighths of the expected half pitch is dropped; a gap wider than
+the tolerance is filled by interpolation. If no accepted run exists the scan
+carries the "DX Read" warning and every frame is labelled `DX_Error`, and
+because the default filenames are then identical, saving the roll writes a
+single file.
 
-The accepted geometry, at Base 4 on the reference unit: one code per
-810 position counts, i.e. a frame pitch of 1620, with the film start at the
-first code. That is what the engine accepts, and it is consistent inside the
-engine's own arithmetic: its expected half pitch is about 801 counts, and its
-code table prints positions divided by 4, in the same units as its picture
-framing (pictures 375 wide at a pitch of ~405 = 1620/4). Whether 1620 counts
-is also the *physical* length of a frame is a separate question and the
-answer appears to be no: the OEM's resolution table gives 1603 lines per
-frame at Base 4, and at the measured 2 counts per image row a frame would
-span roughly 3200 counts. So these codes are placed about twice as densely as
-real film would carry them, and the engine accepts them because its own
-spacing test is satisfied. [CONFIRMED that it is accepted; the relationship
-between counts, lines and film travel is UNRESOLVED] A stream of type-7 film start + type-5/type-3
-pairs in that geometry was accepted end to end: no DX warning, the client
-showing product 79 / specifier 11 and frames 1–4 (the COM frame-number
-property is in half frames, so it displays 2/4/6/8), and one file per frame
-on save. [CONFIRMED live, 2026-08-19]
+**The expected pitch is a function of the scan width.** [CONFIRMED by
+decompilation and live, all six configurations] `sub_10015520` computes the
+expected half pitch as `width × 19200 / 23700`, so a frame pitch of
+`width × 38400 / 23700`: 1620, 2430 and 3240 counts at Base 4, 8 and 16.
+Digital ICE doubles it (the transport runs a second IR pass, so the position
+counter advances twice as far per frame): 3240, 4860 and 6480. Each value was
+confirmed by a synthetic scan that numbered correctly; the OEM resolution
+table's slightly different figures (1603 / 2405 / 3206) also pass, both being
+inside the ±1/8 window.
+
+**The divisor, and Digital ICE.** [CONFIRMED live, all six configurations]
+The engine reduces raw positions to normalised line units by dividing by
+`this+0x14`, its per-configuration divisor: 4, 6, 8 at Base 4, 8, 16 without
+IR, doubling to 8, 12, 16 with it. The divisor is legible in any scan with
+the debug log on: it is the film-start position divided by the `FilmFoundDx`
+line. Why IR doubles it is localised in the decompilation but not fully read
+out (the value is set in the scan-parameter marshalling, where the current
+decompiler output drops the argument); the OEM resolution table itself sets
+the divisor to 4/6/8 with no IR term, so the doubling is applied downstream.
+[the doubling is UNRESOLVED as to mechanism; the values are CONFIRMED]
+
+**Which picture a code labels.** [from decompilation; the unit conversion
+CONFIRMED, the exact comparison INFERRED] Placement is not done in raw
+counts. A code's position is converted to a line coordinate
+`(position − FilmFoundOffset) / divisor` and compared against the picture
+coordinates the image framing found, which are in the same units (pictures
+come out about 405 line-units apart and 375 wide, at every resolution, which
+is what makes the framing normalised). A code read at the sensor reaches it
+before the picture reaches the imaging line (the DX sensor sits ahead of the
+CCD), so the picture that claims a code is one whole frame ahead of it; a
+synthetic sequence has to start a frame early for the configured number to
+land on the first picture. Measured that lead was 1 half-frame at Base 4 and
+8 and 2 at Base 16.
+
+**What a synthetic scan needs, end to end.** [CONFIRMED live, all six
+configurations, 2026-08-20] Numbering was reproduced from injected replies by:
+recording a film start (type 7, bit 1); placing one type-5 position event and
+one type-3 code per half frame on a grid of `width × 19200 / 23700` counts
+(doubled for IR); sending "A"-slot codes early by `width × 0x695F / 23700` to
+survive the engine's shift; and starting the sequence a frame ahead so the
+first picture takes the configured number. The client then showed the product
+and specifier, numbered the frames, and saved one file each. The relationship
+between the position counter and physical film travel is the one piece still
+not reconciled: the counter was measured at about 2 counts per image row
+during streaming, yet a frame's accepted pitch (about 1620 counts at Base 4)
+is close to its length in image rows (1603), which implies about 1 count per
+row. The two measurements have not been squared. [UNRESOLVED]
 
 **Registry switches.** [CONFIRMED live] Under `…\Pakon\TLB\Scan\Test`,
 `DxCreateDebugFilesCommunication = 1` writes a PPB traffic log for the motor
 controller (`Logs\PakonPpbDebugDx<serial>.txt`), nothing DX-specific.
 `DxCreateDebugFiles = 1` (read at engine start; on a 64-bit host it must land
 in the 32-bit registry view) makes the engine write `Logs\DxCode.txt` after
-each scan: the decoded code table (ID, frame, line), `Good Dx Count`, the
-film-found position, and the picture-framing results — the engine's own
-ground truth for DX debugging. [CONFIRMED live, 2026-08-19; an earlier
-failed attempt had not restarted the engine] `Logs\PakonDxLog.txt` stayed
-empty even on a successful pass; what would ever fill it is unknown.
-`DxCalibrationFilmOffset` is consumed only by the sensor pot calibration,
-not by numbering. [CONFIRMED by decompilation]
+each scan: the decoded code table (ID, frame, PAR, Line), `Good Dx Count`,
+the film-found position and offsets, and the picture-framing results. Reading
+it: `Line = position / divisor − FilmFoundOffset`, and the divisor is the
+film-start position over `FilmFoundDx`. It is the engine's own ground truth
+for DX debugging. [CONFIRMED live, 2026-08-19; an earlier failed attempt had
+not restarted the engine] `Logs\PakonDxLog.txt` stayed empty even on a
+successful pass; what would ever fill it is unknown.
+`DxCalibrationFilmOffset` is consumed only by the sensor pot calibration, not
+by numbering. [CONFIRMED by decompilation]
 
 ## Note on the reference hardware
 
@@ -215,26 +280,29 @@ not a sensor that reads zero. [CONFIRMED readings; INFERRED conclusion]
 
 ## Follow-up work
 
-The open DX questions all trace to the reference unit's (serial 16402)
-non-functioning DX reads, so the unlock is another scanner with a working DX
-sensor:
+Product/generation, frame numbering, and the whole host-side read sequence are
+now established and reproduced from synthetic replies across all six
+resolution and Digital ICE configurations. What remains open:
 
-- capture the DX command exchange (start scan, pot adjustment, sensor reads)
-  on a unit that decodes film successfully: one scan of coded film through a
-  logging bridge would show the real reply stream — the accepted synthetic
-  geometry above says what the engine requires, not what a real controller
-  emits (event grouping, extra event types, how "no film" and "decode
-  failed" differ);
-- (answered above, 2026-08-18) which bytes of the sensor response carry the
-  decoded product/generation values;
-- (answered above, 2026-08-18) whether the DX result arrives in the polled
-  sensor state or as an event: as an event;
-- (answered above, 2026-08-19) the engine's DX debug output: it is
-  `DxCode.txt`, switched on by `DxCreateDebugFiles`.
+- a capture from a unit whose DX sensor **works**. Everything above says what
+  the engine requires; a real decoding controller would show what it actually
+  emits (how a genuine type-3 arrives, event grouping, how "no film" and
+  "decode failed" differ). The reference unit's sensor does not decode, so
+  this cannot be answered here.
+- **why Digital ICE doubles the divisor.** The values are confirmed (4/6/8 to
+  8/12/16); the mechanism is localised to the scan-parameter marshalling, but
+  the current decompiler output drops the argument at that call, so it needs a
+  cleaner disassembly of that one code path.
+- **the position counter's relation to film travel.** It measured about 2
+  counts per image row during streaming, yet a frame's accepted pitch is close
+  to its length in image rows, implying about 1. The two have not been
+  reconciled.
 
 The reference unit's fault is a fault of the individual scanner, not a
 protocol fact, but it shaped which DX facts could be verified against live
-hardware versus derived from the OEM software.
+hardware versus derived from the OEM software. Full command/reply captures of
+all six configurations are at
+[pakon-captures](https://github.com/alibosworth/pakon-captures).
 
 ## Further reading
 
