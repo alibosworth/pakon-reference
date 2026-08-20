@@ -15,9 +15,16 @@ published; each entry links the page it touched. Newest first.
   other, and the page now says so where the subsystem is introduced. The
   attribution was also weaker than the page's own evidence: the detectors read
   about 248 with no film and drop to 110-135 when film covers them, which they
-  could only do if the emitter were lit, so a dead emitter is excluded rather
-  than merely unlikely. The fault is narrowed to what sits between a working
-  emitter-detector pair and a decoded code.
+  could only do if the emitter were lit. **That inference was wrong and is
+  withdrawn**: the imaging illuminant's own IR channel shines across the film
+  path for Digital ICE, and a DX detector near it would see that as background
+  whether or not the DX emitter works, with film attenuating it the same way.
+  Nor is it established that those four detectors are the DX barcode readers.
+  A dead or weak emitter is in fact a leading candidate, since all four failing
+  identically points at the one element they share. The page now says the cause
+  is not narrowed, and names the two measurements that would separate the
+  cases: reading the detectors with the lamp off, and identifying which of the
+  four are the DX readers.
 
 - **Addition, `dx-barcode.md`:** the page now says at the top why a reader
   would care about supplying a DX code rather than reading one. The frame
