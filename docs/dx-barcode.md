@@ -152,11 +152,14 @@ accepted while frame numbering is not.
 live, 2026-08-20] The type-3 handler does not use an "A"-slot code's position
 as given: it adds a fixed shift `this+0x58 = width × 0x695F / 23700`, which is
 1138, 1707 and 2276 counts at Base 4, 8 and 16. A plain-slot code is not
-shifted. So a synthetic "A" code has to be placed that many counts early to
-land where intended; without the correction each "A" code drifts into the
-following picture, which reads as a half-frame labelling error. This was
-confirmed by pre-compensating: the shifted code then appeared in the engine's
-own table exactly where it was aimed.
+shifted. That is the same fraction of the frame pitch at every resolution,
+about 0.70 of a frame, so it represents a fixed distance along the film of
+roughly 27 mm rather than anything derived from the 19 mm code spacing; the
+gap between the DX sensor and the imaging line is the obvious candidate but is
+not established here. For an implementation what follows is that a synthesised
+"A" code must be placed that many counts early to be recorded where intended,
+which was confirmed by pre-compensating: the code then appeared in the
+engine's own table at the position aimed at.
 
 **A film start must be recorded, but the engine mostly ignores its value.**
 [CONFIRMED by decompilation and live] The numbering pass declares DX unusable
@@ -223,12 +226,19 @@ counts. A code's position is converted to a line coordinate
 `(position − FilmFoundOffset) / divisor` and compared against the picture
 coordinates the image framing found, which are in the same units (pictures
 come out about 405 line-units apart and 375 wide, at every resolution, which
-is what makes the framing normalised). A code read at the sensor reaches it
-before the picture reaches the imaging line (the DX sensor sits ahead of the
-CCD), so the picture that claims a code is one whole frame ahead of it; a
-synthetic sequence has to start a frame early for the configured number to
-land on the first picture. Measured that lead was 1 half-frame at Base 4 and
-8 and 2 at Base 16.
+is what makes the framing normalised). Which code a given picture ends up with
+therefore depends on where the pictures fall, and on real film that is not
+fixed: the edge code is imprinted at the factory at a constant pitch while the
+frames are exposed later by the camera at whatever phase the loading produced,
+so a picture may sit over a whole-frame label, over its "A" half-frame label,
+or across both. That is the reason both labels exist.
+
+For a synthetic sequence, where the code positions are chosen rather than
+found, the phase is a setting rather than a property of the film. Feeding the
+sequence so that the configured number lands on the first picture needed it
+started 1 half-frame early at Base 4 and Base 8 and 2 at Base 16. Those are
+measurements of this arrangement on this unit, not a general property of the
+scanner. [CONFIRMED live for the configurations tested]
 
 **What a synthetic scan needs, end to end.** [CONFIRMED live, all six
 configurations, 2026-08-20] Numbering was reproduced from injected replies by:

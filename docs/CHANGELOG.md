@@ -8,6 +8,20 @@ published; each entry links the page it touched. Newest first.
 
 ## 2026-08-20 (later)
 
+- **Correction, `dx-barcode.md`:** two claims about the "A" half-frame code
+  are withdrawn, both of which assumed a fixed relationship between the edge
+  code and the pictures. There is none: the code is imprinted at the factory
+  at a constant pitch and the frames are exposed later by the camera at
+  whatever phase the loading produced, so a picture may fall over a
+  whole-frame label, over its "A" label, or across both (see
+  [35mm-dx-edge-code](https://github.com/alibosworth/35mm-dx-edge-code)).
+  So an "A" code arriving where a plain one was expected is not in itself an
+  error, and the engine's fixed shift for "A"-slot codes is not a correction
+  for code spacing: it is about 0.70 of a frame at every resolution, roughly
+  27 mm of film, where the code pitch is 19 mm. The page now states the shift
+  and the measured synthetic-sequence phase as what they are, measurements of
+  one arrangement, without the causal reading.
+
 - **Removal, `dx-barcode.md`:** "Because it reads the film edge, DX is legible
   even on cut strips" is deleted. It did not say what it meant, and the
   comparison it implied does not hold: film reaches one of these scanners
