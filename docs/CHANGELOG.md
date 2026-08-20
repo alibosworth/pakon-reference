@@ -19,7 +19,10 @@ published; each entry links the page it touched. Newest first.
   "synthetic" appeared thirteen times without ever being introduced. The
   vocabulary is now consistent, and a section heading that read "What a
   synthetic scan needs" no longer uses "scan" to mean a run of replayed
-  replies.
+  replies. The registry-switch paragraph now carries the
+  conventions' "A note about the Pakon implementation" callout, so a reader is
+  not left to work out that those settings belong to the OEM software rather
+  than to the scanner.
 
 - **Correction, `dx-barcode.md`:** two claims about the "A" half-frame code
   are withdrawn, both of which assumed a fixed relationship between the edge
