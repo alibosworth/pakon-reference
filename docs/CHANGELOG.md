@@ -8,18 +8,17 @@ published; each entry links the page it touched. Newest first.
 
 ## 2026-08-20 (later)
 
-- **Correction, `dx-barcode.md`:** the four sensors read from PICL register
-  `0x93` sit as a pair at the film entrance and a pair at the exit, each pair
-  duplicated across the strip's width, which accounts for a pattern the page
-  had recorded without explaining: one pair darkens and then the other as a
-  strip advances. Whether those sensors are the DX readers doing double duty,
-  or film-presence sensors only, is left open rather than asserted either way.
-  The OEM's `FilmTrackTest` trims the DX pots, is documented for trouble
-  reading DX codes, and fails with `EC_DXBadSwing`, which favours double duty;
-  the code running along one film edge only argues against all four being
-  readers. Either way the test does not narrow the reference unit's fault, and
-  a dead or weak emitter remains among the candidates, so the page now says
-  what would settle it.
+- **Addition, `dx-barcode.md`:** the F-135 service manual settles the DX
+  sensor arrangement, which the page had been guessing at from observed
+  behaviour. There are two DX sensors, staggered along the film track, placed
+  so that between them they read the code on either side of the film, and the
+  exit-side sensor doubles as the scanner's film-presence sensor. That
+  accounts for the four levels in PICL register `0x93` and for their timing,
+  one stagger darkening about four seconds before the other as a strip
+  advances, which the page had recorded without explaining. The reference
+  unit's DX sensors are therefore alive and seeing both light and film while
+  never reporting a decoded code, so the remaining candidates are the DX
+  illuminator, the optics, the gain, and the controller's decoder.
 
 - **Addition, `dx-barcode.md`:** a follow-up item asking for the DX
   detector-to-CCD distance to be measured on the machine. Two of the engine's
