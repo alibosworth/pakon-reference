@@ -28,7 +28,8 @@ identity and ISO, at
 `F-X35 COM SERVER\anselinstalldir\dataPathItems\common\common-ProdCodeTable.dpi`.
 It was last revised 6 June 2006, so **any film launched after 2006 has no
 complete entry** and falls back to a default ISO. [DOCUMENTED] from the table
-file header.
+file header. Every assigned entry, and the original file, are in
+[Resources: the OEM's DX product-code table](resources/dx-product-code-table.md).
 
 A concrete consequence: modern Kodak Portra encodes as (product code 95,
 generation code 14). Product code 95 (Kodak's premium 35mm colour-negative

@@ -56,6 +56,8 @@ nav:
   - Film transport: film-transport.md
   - DX barcode: dx-barcode.md
   - Scanner family: scanner-family.md
+  - Resources:
+      - DX product-code table: resources/dx-product-code-table.md
   - Changelog: CHANGELOG.md
 
 plugins:

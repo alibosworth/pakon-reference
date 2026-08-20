@@ -8,6 +8,14 @@ published; each entry links the page it touched. Newest first.
 
 ## 2026-08-19
 
+- **Addition, `resources/dx-product-code-table.md`:** a new Resources section,
+  starting with the OEM's DX product-code table: all 361 assigned
+  (product, generation) pairs with their ISO speeds and the file's own
+  product-line labels, plus the original `common-ProdCodeTable.dpi` text.
+  Carrying that file is a stated exception to the "facts, not artifacts"
+  rule, argued in `CONVENTIONS.md`: the assignments are PIMA's rather than
+  the OEM's, and a lookup table summarised is a lookup table wasted.
+
 - **Addition, `dx-barcode.md`:** frame numbering is now reproduced live with
   synthetic replies, upgrading the numbering facts from decompilation-only
   to confirmed. The key requirement, found by decompilation and confirmed
