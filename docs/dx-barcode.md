@@ -361,6 +361,14 @@ resolution and Digital ICE configurations. What remains open:
   counts per image row during streaming, yet a frame's accepted pitch is close
   to its length in image rows, implying about 1. The two have not been
   reconciled.
+- **the distance along the film path from the DX detectors to the CCD line**,
+  measured on the machine. The engine carries two constants that are plainly
+  distances, and converting them at a 38 mm frame pitch gives the shift it
+  applies to a half-frame code as **26.7 mm** and the nominal film-found offset
+  as **15.9 mm**. Both are attributed above to the sensor-to-imaging-line gap,
+  on nothing better than plausibility. A tape measure inside the film path
+  would say which, if either, is that distance, and a value matching neither
+  would mean the constants are something else entirely.
 - **what a cut through a code does.** The barcode repeats along the film edge,
   so cutting a roll into strips leaves a partial code at each end of a strip.
   Whether the controller reports such a fragment, suppresses it, or returns it
