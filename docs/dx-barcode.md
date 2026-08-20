@@ -72,12 +72,13 @@ are published at
 below were established by injecting synthetic replies in the bridge; that is
 noted where it applies, and no scanner firmware or OEM binary is modified._
 
-**What the scan is: the `0x91` trigger.** [CONFIRMED live, six configurations]
-The scan-line trigger `WRITE PICL 0x91` (SetScanLineParams) carries a 16-bit
-little-endian value that names the scan configuration, and it is issued twice
-per scan (once for the pre-scan calibration, once for transport). The values
-seen, each matched against an independent OEM Windows capture of the same
-unit:
+**The trigger names the resolution and IR state.** [CONFIRMED live, six
+configurations] The scan-line trigger `WRITE PICL 0x91` (SetScanLineParams)
+carries a 16-bit little-endian value identifying which of the six
+combinations of scan resolution and Digital ICE the host is about to run. It
+is issued twice per scan, once for the pre-scan calibration and once for the
+transport pass, with the same value both times. The values seen, each
+matched against an independent OEM Windows capture of the same unit:
 
 | resolution | Digital ICE | `0x91` value |
 |---|---|---|
