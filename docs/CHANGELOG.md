@@ -20,7 +20,10 @@ published; each entry links the page it touched. Newest first.
   for code spacing: it is about 0.70 of a frame at every resolution, roughly
   27 mm of film, where the code pitch is 19 mm. The page now states the shift
   and the measured synthetic-sequence phase as what they are, measurements of
-  one arrangement, without the causal reading.
+  one arrangement, without the causal reading. It also now says plainly that a
+  strip labelled `1A, 2A, 3A, 4A` is a correct reading rather than a fault:
+  any phase is legitimate, and a synthetic sequence aims at the whole-frame
+  series only because it is tidier.
 
 - **Removal, `dx-barcode.md`:** "Because it reads the film edge, DX is legible
   even on cut strips" is deleted. It did not say what it meant, and the

@@ -233,12 +233,17 @@ frames are exposed later by the camera at whatever phase the loading produced,
 so a picture may sit over a whole-frame label, over its "A" half-frame label,
 or across both. That is the reason both labels exist.
 
-For a synthetic sequence, where the code positions are chosen rather than
-found, the phase is a setting rather than a property of the film. Feeding the
-sequence so that the configured number lands on the first picture needed it
-started 1 half-frame early at Base 4 and Base 8 and 2 at Base 16. Those are
-measurements of this arrangement on this unit, not a general property of the
-scanner. [CONFIRMED live for the configurations tested]
+So a strip whose pictures come out labelled `1A, 2A, 3A, 4A` is a correct
+reading, not a fault: it says the frames were exposed nearer the half-frame
+labels than the whole-frame ones. Any phase is legitimate.
+
+For a synthetic sequence the phase is a setting rather than something the film
+imposes, so a whole-frame series can simply be chosen as the tidier result.
+Landing the configured number on the first picture that way needed the
+sequence started 1 half-frame early at Base 4 and Base 8 and 2 at Base 16.
+Those are measurements of one arrangement on one unit, not a property of the
+scanner.
+[CONFIRMED live for the configurations tested]
 
 **What a synthetic scan needs, end to end.** [CONFIRMED live, all six
 configurations, 2026-08-20] Numbering was reproduced from injected replies by:
