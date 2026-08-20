@@ -59,9 +59,12 @@ their existing product-code ranges, which is exactly what (95, 14) shows.
 
 ## Hardware and firmware
 
-DX reading uses a **separate IR sensor**: IR is transmitted through the film
-and read on the other side, with analog gain set by adjustable pots ("DxPots").
-[DOCUMENTED] from the service description.
+DX reading uses a **separate IR path**, distinct from the imaging optics: an
+emitter on one side of the film and photodetectors on the other, with analog
+gain on the detector side set by adjustable pots ("DxPots"). There are four
+detectors, read as four bytes from PICL register `0x93`. "DX sensor" below
+means that assembly as a whole; where a fault is attributed to one half or the
+other, it says which. [DOCUMENTED] from the service description.
 
 The barcode is decoded **inside the light-controller firmware** (PICL), not on
 the host: the firmware interprets the analog signal and returns a pre-decoded
@@ -304,18 +307,20 @@ On the specific F-135+ used for much of this research (serial 16402), DX
 reading fails. In the captured sensor responses examined (three reads,
 including one during an active DX scan), the DX-related fields were exactly
 zero while other leading bytes were nonzero. [CONFIRMED] for those captured
-responses. A failed DX IR sensor on that unit is the suspected explanation,
-not a proven failure mode. [INFERRED]
+responses. A fault somewhere in the DX path on that unit is the suspected
+explanation, not a proven failure mode. [INFERRED]
 
 Narrowed 2026-08-18: during the client's Film Track Test the engine polls
-PICL register `0x93` (4 bytes, one per DX sensor) every ~3 ms while running
+PICL register `0x93` (4 bytes, one per detector) every ~3 ms while running
 the transport. On this unit all four values sit near 248 with no film and
 each drops to roughly 110–135 while film covers it, in two pairs a few
-seconds apart, so none of the four photodetectors is electrically dead.
-None shows the fast clear/dark alternation a barcode would produce, and the
-controller has never returned a type-3 entry. The fault is between the
-detectors and the decoded code (optics, gain, or the controller's decoder),
-not a sensor that reads zero. [CONFIRMED readings; INFERRED conclusion]
+seconds apart. That rules out both halves of the path being dead: the
+detectors respond, and they can only respond to light the emitter is
+producing. None of the four shows the fast clear/dark alternation a barcode
+would produce, though, and the controller has never returned a type-3 entry.
+So the fault lies between a working emitter-detector pair and a decoded code:
+optics (alignment or dirt), gain, or the controller's decoder.
+[CONFIRMED readings; INFERRED conclusion]
 
 ## Follow-up work
 

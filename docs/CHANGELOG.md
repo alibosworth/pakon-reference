@@ -8,6 +8,17 @@ published; each entry links the page it touched. Newest first.
 
 ## 2026-08-20 (later)
 
+- **Correction, `dx-barcode.md`:** "DX sensor" was used throughout as though
+  the subsystem were one component, and the reference unit's fault was
+  attributed to "a failed DX IR sensor", which reads as the detector. The path
+  has two halves, an emitter one side of the film and four photodetectors the
+  other, and the page now says so where the subsystem is introduced. The
+  attribution was also weaker than the page's own evidence: the detectors read
+  about 248 with no film and drop to 110-135 when film covers them, which they
+  could only do if the emitter were lit, so a dead emitter is excluded rather
+  than merely unlikely. The fault is narrowed to what sits between a working
+  emitter-detector pair and a decoded code.
+
 - **Addition, `dx-barcode.md`:** the page now says at the top why a reader
   would care about supplying a DX code rather than reading one. The frame
   numbers become the frame labels and the default filenames, so a roll with no
