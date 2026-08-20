@@ -5,6 +5,22 @@ and speed. The scanners read it with a dedicated infrared sensor and use it to
 pick film-specific processing. This subsystem is independent of the visible
 image path.
 
+The scanners also take the **frame numbers** from that barcode, and those
+numbers become the frame labels and the default filenames when a roll is
+saved. So when no code is read, every frame is labelled `DX_Error` and the
+default filenames are all identical, which collapses a saved roll into one
+file. Two ordinary situations produce that: **the DX sensor fails**, which is
+common on these long out of support machines, and **the film carries no edge
+code**, which is true of respooled motion-picture stock and much else.
+
+That is why this page documents not only how the host reads the code but what
+the engine requires to accept one. Those requirements were established by
+**replaying the sensor replies**: a bridge between the OEM software and the
+scanner substitutes a decoded code for what the faulty sensor returned, and
+the engine's response says which conditions it is testing. Facts established
+that way are marked as such below. The same technique is what lets an
+implementation supply a film code and frame numbers by hand.
+
 _From reverse engineering of the OEM DX handling and the product-code table,
 March 2026; product-code decoding cross-checked May 2026; host-read protocol
 and frame numbering established live August 2026._
@@ -69,8 +85,9 @@ read from `TLB.dll` 3.1.0.28 decompilation for interoperability. Full
 command/reply captures of all six resolution and Digital ICE configurations
 are published at
 [pakon-captures](https://github.com/alibosworth/pakon-captures). Some facts
-below were established by injecting synthetic replies in the bridge; that is
-noted where it applies, and no scanner firmware or OEM binary is modified._
+below were established by replaying substituted replies through that bridge,
+as described above; that is noted where it applies, and no scanner firmware or
+OEM binary is modified._
 
 **The trigger names the resolution and IR state.** [CONFIRMED live, six
 configurations] The scan-line trigger `WRITE PICL 0x91` (SetScanLineParams)
@@ -102,8 +119,8 @@ issues the 30-byte `0x90` read. On the reference unit, whose sensor decodes
 nothing, this happens about once per scan (and once during the pre-scan
 calibration), so a scan sees one or two sensor reads. Asserting the same two
 bits in the bridge makes the engine acknowledge and read on demand, at any
-cadence tried (0.3–3 s), which is how the synthetic-reply work below was
-driven.
+cadence tried (0.3–3 s), which is how the replayed replies below were
+delivered.
 
 **Reply layout.** [CONFIRMED live; matches the engine's parser] The reply is
 34 bytes: the usual 4-byte PPB header (`01 20 <PICL address> 08`), then a
@@ -121,7 +138,7 @@ the position counter is live in every reply, and restarts at the `0x91`
 trigger.
 
 **Type-3 entry: the decoded barcode.** [CONFIRMED by decompilation and by
-live acceptance of a synthetic entry] Bytes after the type byte, for the
+live acceptance of a substituted entry] Bytes after the type byte, for the
 two-slot mode the 135-line engine runs:
 
 | byte | bits |
@@ -135,8 +152,8 @@ two-slot mode the 135-line engine runs:
 exposure roll runs 2..49, exactly the range the F235 COM reference gives),
 7-bit two's complement for the leader labels (−2 prints "00", −4 "X"). Parity
 is even over the 19 bits of bytes 2, 3 and 4[4:0], the same rule as the
-on-film code (18 data bits + parity). A synthetic entry with product 79 /
-generation 11 injected this way makes the engine report exactly that in the
+on-film code (18 data bits + parity). An entry carrying product 79 /
+generation 11, substituted this way, makes the engine report exactly that in the
 client and clear its "Product And Specifier" warning. [CONFIRMED live,
 2026-08-18]
 
@@ -156,7 +173,7 @@ shifted. That is the same fraction of the frame pitch at every resolution,
 about 0.70 of a frame, so it represents a fixed distance along the film of
 roughly 27 mm rather than anything derived from the 19 mm code spacing; the
 gap between the DX sensor and the imaging line is the obvious candidate but is
-not established here. For an implementation what follows is that a synthesised
+not established here. For an implementation what follows is that a substituted
 "A" code must be placed that many counts early to be recorded where intended,
 which was confirmed by pre-compensating: the code then appeared in the
 engine's own table at the position aimed at.
@@ -186,7 +203,7 @@ start nor, once a film start exists, anything the numbering uses. Types 5–8
 are the only entries this unit's controller has ever produced on its own; it
 has never produced a type 3.
 
-**Frame numbering.** [CONFIRMED from decompilation and live with synthetic
+**Frame numbering.** [CONFIRMED from decompilation and live with replayed
 replies, 2026-08-19/20] After the scan the engine walks the table of
 positioned codes and accepts numbering only if it finds at least three
 consecutive codes it did not have to interpolate or correct: consecutive
@@ -205,7 +222,7 @@ expected half pitch as `width × 19200 / 23700`, so a frame pitch of
 `width × 38400 / 23700`: 1620, 2430 and 3240 counts at Base 4, 8 and 16.
 Digital ICE doubles it (the transport runs a second IR pass, so the position
 counter advances twice as far per frame): 3240, 4860 and 6480. Each value was
-confirmed by a synthetic scan that numbered correctly; the OEM resolution
+confirmed by a run of replayed replies that numbered correctly; the OEM resolution
 table's slightly different figures (1603 / 2405 / 3206) also pass, both being
 inside the ±1/8 window.
 
@@ -237,16 +254,16 @@ So a strip whose pictures come out labelled `1A, 2A, 3A, 4A` is a correct
 reading, not a fault: it says the frames were exposed nearer the half-frame
 labels than the whole-frame ones. Any phase is legitimate.
 
-For a synthetic sequence the phase is a setting rather than something the film
-imposes, so a whole-frame series can simply be chosen as the tidier result.
+When the code positions are supplied rather than read from film, the phase is
+a setting rather than something the film imposes, so a whole-frame series can simply be chosen as the tidier result.
 Landing the configured number on the first picture that way needed the
 sequence started 1 half-frame early at Base 4 and Base 8 and 2 at Base 16.
 Those are measurements of one arrangement on one unit, not a property of the
 scanner.
 [CONFIRMED live for the configurations tested]
 
-**What a synthetic scan needs, end to end.** [CONFIRMED live, all six
-configurations, 2026-08-20] Numbering was reproduced from injected replies by:
+**Everything the engine requires, in one place.** [CONFIRMED live, all six
+configurations, 2026-08-20] Numbering was reproduced from replayed replies by:
 recording a film start (type 7, bit 1); placing one type-5 position event and
 one type-3 code per half frame on a grid of `width × 19200 / 23700` counts
 (doubled for IR); sending "A"-slot codes early by `width × 0x695F / 23700` to
@@ -296,7 +313,7 @@ not a sensor that reads zero. [CONFIRMED readings; INFERRED conclusion]
 ## Follow-up work
 
 Product/generation, frame numbering, and the whole host-side read sequence are
-now established and reproduced from synthetic replies across all six
+now established and reproduced from replayed replies across all six
 resolution and Digital ICE configurations. What remains open:
 
 - a capture from a unit whose DX sensor **works**. Everything above says what

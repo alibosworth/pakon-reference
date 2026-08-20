@@ -8,6 +8,19 @@ published; each entry links the page it touched. Newest first.
 
 ## 2026-08-20 (later)
 
+- **Addition, `dx-barcode.md`:** the page now says at the top why a reader
+  would care about supplying a DX code rather than reading one. The frame
+  numbers become the frame labels and the default filenames, so a roll with no
+  readable code saves as a single file, and two ordinary situations cause
+  that: a failed DX sensor, common on machines this old, and film that carries
+  no edge code at all. The page's method is introduced there too: the
+  engine's requirements were established by replaying substituted sensor
+  replies and watching which conditions it tested. Previously the word
+  "synthetic" appeared thirteen times without ever being introduced. The
+  vocabulary is now consistent, and a section heading that read "What a
+  synthetic scan needs" no longer uses "scan" to mean a run of replayed
+  replies.
+
 - **Correction, `dx-barcode.md`:** two claims about the "A" half-frame code
   are withdrawn, both of which assumed a fixed relationship between the edge
   code and the pictures. There is none: the code is imprinted at the factory
