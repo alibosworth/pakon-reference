@@ -314,13 +314,33 @@ Narrowed 2026-08-18: during the client's Film Track Test the engine polls
 PICL register `0x93` (4 bytes, one per detector) every ~3 ms while running
 the transport. On this unit all four values sit near 248 with no film and
 each drops to roughly 110–135 while film covers it, in two pairs a few
-seconds apart. That rules out both halves of the path being dead: the
-detectors respond, and they can only respond to light the emitter is
-producing. None of the four shows the fast clear/dark alternation a barcode
-would produce, though, and the controller has never returned a type-3 entry.
-So the fault lies between a working emitter-detector pair and a decoded code:
-optics (alignment or dirt), gain, or the controller's decoder.
-[CONFIRMED readings; INFERRED conclusion]
+seconds apart. So none of the four is electrically dead, and light of some
+kind is reaching all of them. None shows the fast clear/dark alternation a
+barcode would produce, and the controller has never returned a type-3 entry.
+
+Two things that reading does **not** establish. Which light those four
+detectors are responding to is unknown. The imaging illuminant has its own IR
+channel, used for Digital ICE, shining across the film path towards the CCD;
+a DX detector near that path would see it as background whether or not the DX
+emitter is lit. Film passing between them attenuates that background exactly
+as it would the DX emitter's own light, so the swing does not by itself show
+that the DX emitter works. And whether these four are the DX barcode readers
+at all is unconfirmed; they drop in two pairs seconds apart, which suggests
+sensors spread along the film path rather than four readers at one point.
+
+So the fault may lie anywhere in the path, and **a dead or weak emitter is a
+leading candidate**: it would produce exactly this picture, with the
+detectors still reporting film presence from ambient light while no barcode
+modulation ever reaches them. All four failing the same way points to a shared
+element rather than four independent faults, and the emitter is the shared
+element. Optics, gain and the controller's decoder remain open too.
+[CONFIRMED readings; the cause INFERRED and not narrowed]
+
+Two measurements would separate these: reading register `0x93` with the lamp
+off (light still present means a working DX emitter; darkness means the swing
+above came from the lamp), and identifying which of the four are the DX
+readers, by blocking them one at a time or running a very high contrast edge
+code past them.
 
 ## Follow-up work
 
