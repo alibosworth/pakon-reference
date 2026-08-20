@@ -9,14 +9,17 @@ published; each entry links the page it touched. Newest first.
 ## 2026-08-20 (later)
 
 - **Correction, `dx-barcode.md`:** the four sensors read from PICL register
-  `0x93` during the Film Track Test are film-presence sensors, a pair at the
-  entrance and a pair at the exit, not the DX barcode reader. That explains
-  the pattern the page had recorded but not accounted for, one pair darkening
-  and then the other as a strip advances. So that test says only that the
-  transport can tell whether film is present: it exercises neither the DX
-  detector, whose register has still not been found, nor the DX emitter. The
-  reference unit's fault is correspondingly not narrowed, and a dead or weak
-  emitter remains among the candidates.
+  `0x93` sit as a pair at the film entrance and a pair at the exit, each pair
+  duplicated across the strip's width, which accounts for a pattern the page
+  had recorded without explaining: one pair darkens and then the other as a
+  strip advances. Whether those sensors are the DX readers doing double duty,
+  or film-presence sensors only, is left open rather than asserted either way.
+  The OEM's `FilmTrackTest` trims the DX pots, is documented for trouble
+  reading DX codes, and fails with `EC_DXBadSwing`, which favours double duty;
+  the code running along one film edge only argues against all four being
+  readers. Either way the test does not narrow the reference unit's fault, and
+  a dead or weak emitter remains among the candidates, so the page now says
+  what would settle it.
 
 - **Addition, `dx-barcode.md`:** a follow-up item asking for the DX
   detector-to-CCD distance to be measured on the machine. Two of the engine's
