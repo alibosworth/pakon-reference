@@ -276,7 +276,14 @@ during streaming, yet a frame's accepted pitch (about 1620 counts at Base 4)
 is close to its length in image rows (1603), which implies about 1 count per
 row. The two measurements have not been squared. [UNRESOLVED]
 
-**Registry switches.** [CONFIRMED live] Under `…\Pakon\TLB\Scan\Test`,
+**Registry switches: the engine's own DX log.**
+
+> **A note about the Pakon implementation.** The settings below belong to the
+> OEM Windows software, not to the scanner. They are recorded because the file
+> one of them produces is the engine's own account of how it read a scan, which
+> is how most of the behaviour above was checked.
+
+[CONFIRMED live] Under `…\Pakon\TLB\Scan\Test`,
 `DxCreateDebugFilesCommunication = 1` writes a PPB traffic log for the motor
 controller (`Logs\PakonPpbDebugDx<serial>.txt`), nothing DX-specific.
 `DxCreateDebugFiles = 1` (read at engine start; on a 64-bit host it must land
