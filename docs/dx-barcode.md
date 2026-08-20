@@ -316,29 +316,42 @@ the transport. On this unit all four values sit near 248 with no film and
 each drops to roughly 110–135 while film covers it, in two pairs about four
 seconds apart.
 
-**Those four are film-presence sensors, not the barcode reader.** The unit
-carries a pair at the film entrance and a pair at the exit, and each pair is
-duplicated across the width of the strip, which is why a strip passing through
-darkens one pair and then the other as it advances. [the two positions
-CONFIRMED by inspection of the unit; the duplication across the width
-INFERRED] The DX code runs along one film edge only, so at most one sensor of
-each pair could ever sit over it.
+The physical arrangement accounts for that pattern: the unit carries a sensor
+pair at the film entrance and another at the exit, each pair duplicated across
+the width of the strip, so a strip advancing darkens one pair and then the
+other. [the two positions CONFIRMED by inspection of the unit; the duplication
+across the width INFERRED]
 
-That reading therefore says only that the transport can tell whether film is
-present. It says nothing about the DX detector, which has never been observed
-responding to anything, and nothing about the DX emitter: the imaging
-illuminant has its own IR channel for Digital ICE shining across the film path
-towards the CCD, so a nearby detector sees that as background whether or not
-the DX emitter is lit, and film attenuates the background exactly as it would
-the emitter's own light.
+**What those four sensors are is unsettled, and it matters.** They may be film
+presence sensors only, in which case the test above says nothing about the DX
+reader at all. Or the DX detectors may do double duty, the same photodetector
+reporting a slow level for film presence and a fast modulation for the
+barcode, with the decoding done in the controller. The second reading has the
+better support: the OEM's own `FilmTrackTest` takes a "DX pots adjust" flag,
+is documented for use "if the scanner is having trouble reading DX codes", and
+fails with `EC_DXBadSwing`, so a test that measures swing and trims the DX
+gain is measuring the DX detectors, and register `0x93` is what it polls.
+Against it, the DX code runs along one film edge only, so at most one sensor
+of each pair could ever sit over the code. [DOCUMENTED for the test's purpose;
+the sensors' identity INFERRED and disputed]
 
-So the fault is not narrowed by that test. **A dead or weak emitter remains a
-leading candidate**, along with the detector itself, the optics, the gain, and
-the controller's decoder. [CONFIRMED readings; the cause INFERRED and open]
+Either way the readings do not narrow the fault. If those are the DX
+detectors, they respond to light and are not dead, but nothing has shown them
+seeing barcode modulation. If they are not, the DX detector has never been
+observed at all. And in neither case do they show the DX emitter working: the
+imaging illuminant has its own IR channel for Digital ICE shining across the
+film path towards the CCD, so a nearby detector sees that as background
+whether or not the DX emitter is lit, and film attenuates the background
+exactly as it would the emitter's own light. **A dead or weak emitter remains
+a leading candidate**, along with the detector, the optics, the gain, and the
+controller's decoder. [CONFIRMED readings; the cause INFERRED and open]
 
-What would separate them: reading the sensor registers with the lamp off, so
-that any remaining signal is the DX emitter's own light; and finding the
-register the DX detector reports on, which is not `0x93`.
+What would separate them: reading register `0x93` with the lamp off, so that
+any remaining signal is the DX emitter's own light; running a high contrast
+edge code past the sensors and watching for fast modulation on any of the four
+bytes, which would settle the double-duty question outright; and letting a
+Film Track Test run to completion, since its own results report per-sensor
+swing.
 
 ## Follow-up work
 
@@ -359,9 +372,10 @@ resolution and Digital ICE configurations. What remains open:
   counts per image row during streaming, yet a frame's accepted pitch is close
   to its length in image rows, implying about 1. The two have not been
   reconciled.
-- **which register the DX detector reports on.** Register `0x93` carries the
-  film-presence sensors, so the barcode detector's own reading has not been
-  found yet, and nothing observed so far shows it responding at all.
+- **whether the DX detectors and the film-presence sensors are the same
+  parts.** Register `0x93` carries four sensor levels, and it is not settled
+  whether the DX readers are among them (doing double duty) or report
+  somewhere else entirely.
 - **the distance along the film path from the DX detectors to the CCD line**,
   measured on the machine. The engine carries two constants that are plainly
   distances, and converting them at a 38 mm frame pitch gives the shift it
