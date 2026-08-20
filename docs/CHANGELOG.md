@@ -6,6 +6,17 @@ carried a confidence marker and turned out wrong is a normal event here,
 and hiding it would defeat the markers. Dates are when the change was
 published; each entry links the page it touched. Newest first.
 
+## 2026-08-20 (later)
+
+- **Removal, `dx-barcode.md`:** "Because it reads the film edge, DX is legible
+  even on cut strips" is deleted. The sentence did not say what it meant: the
+  contrast it depended on, the cassette's DX contacts being lost when film is
+  cut while the edge barcode is not, was never on the page, and the same point
+  is now made properly in the host-read section. Added in its place, under
+  Follow-up work, the question the cut-strip case actually raises: a cut
+  through a code leaves a partial one at each end of a strip, and what the
+  controller and the numbering pass do with that is not known.
+
 ## 2026-08-20
 
 - **Addition and one reversal, `dx-barcode.md`:** the host-side DX read is
