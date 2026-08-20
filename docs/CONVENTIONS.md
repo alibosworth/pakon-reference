@@ -61,6 +61,18 @@ file that fact was derived from is not. Numeric constants that constitute an
 interoperability fact (register addresses, a formula's coefficients, a
 protocol opcode) are facts, not artifacts, and belong here.
 
+One narrow exception, under [Resources](resources/dx-product-code-table.md):
+the OEM's DX product-code table is carried in full, both reformatted and as
+the original text file. The rule above exists to keep Kodak's own work out of
+this repository, and this table is not that: its own header says the speeds
+are those "publish[ed] by PIMA", the industry body that assigns DX codes, so
+the content is a transcription of a public standard's assignments rather than
+anything the OEM devised. It is plain text, it contains no code, no
+calibration data particular to a scanner, and nothing that could damage a
+unit. A reference that told you a DX code resolves to an ISO speed but not
+which speed would be failing at the one job this page has. Anything else in
+the artifact list stays out.
+
 ## Scope: what things do, not how the OEM coded it
 
 The dividing line for what belongs here is **WHAT vs HOW**, behaviour and
