@@ -45,8 +45,7 @@ their existing product-code ranges, which is exactly what (95, 14) shows.
 
 DX reading uses a **separate IR sensor**: IR is transmitted through the film
 and read on the other side, with analog gain set by adjustable pots ("DxPots").
-Because it reads the film edge, DX is legible even on cut strips. [DOCUMENTED]
-from the service description.
+[DOCUMENTED] from the service description.
 
 The barcode is decoded **inside the light-controller firmware** (PICL), not on
 the host: the firmware interprets the analog signal and returns a pre-decoded
@@ -297,6 +296,11 @@ resolution and Digital ICE configurations. What remains open:
   counts per image row during streaming, yet a frame's accepted pitch is close
   to its length in image rows, implying about 1. The two have not been
   reconciled.
+- **what a cut through a code does.** The barcode repeats along the film edge,
+  so cutting a roll into strips leaves a partial code at each end of a strip.
+  Whether the controller reports such a fragment, suppresses it, or returns it
+  as a code that fails parity is not known, nor what the numbering pass then
+  does with a strip's first and last pictures.
 
 The reference unit's fault is a fault of the individual scanner, not a
 protocol fact, but it shaped which DX facts could be verified against live
