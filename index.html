@@ -1,0 +1,1140 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="An implementation-agnostic reference for how the Kodak/Pakon F-X35 film scanners work — protocol, image stream, calibration, and colour.">
+      
+      
+      
+      
+      
+        <link rel="next" href="CONVENTIONS/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Pakon F-X35 Reference</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+  <!-- Privacy-friendly analytics by Plausible (self-hosted), embedded
+       first-party via the alibosworth.com /p/* proxy per house convention.
+       Site: pakon-reference.alibosworth.com -->
+  <script async src="https://alibosworth.com/p/pa-DTdD4ieieV18xjvvRHyhh.js"></script>
+  <script>
+    window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+    plausible.init({ endpoint: "https://alibosworth.com/p/event" })
+  </script>
+
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#pakon-f-x35-reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="Pakon F-X35 Reference" class="md-header__button md-logo" aria-label="Pakon F-X35 Reference" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pakon F-X35 Reference
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Home
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="Pakon F-X35 Reference" class="md-nav__button md-logo" aria-label="Pakon F-X35 Reference" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Pakon F-X35 Reference
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-this-exists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why this exists
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#provenance-and-timeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Provenance and timeline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-to-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where to start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-source-pakon-clients" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open-source Pakon clients
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources-and-credit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources and credit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#corrections-and-additions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Corrections and additions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#not-comprehensive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Not comprehensive
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conventions-and-license" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conventions and license
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="CONVENTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="per-unit-data-and-safety/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Per-unit data & safety
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="usb-identity-and-firmware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    USB identity & firmware
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ppb-protocol/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PPB protocol
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="command-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Command reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="image-stream/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Image stream
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="calibration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Calibration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="color-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Colour pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="film-transport/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Film transport
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="dx-barcode/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DX barcode
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="scanner-family/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scanner family
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" >
+        
+          
+          <label class="md-nav__link" for="__nav_13" id="__nav_13_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resources
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_13">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Resources
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="resources/dx-product-code-table/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DX product-code table
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="CHANGELOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-this-exists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why this exists
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#provenance-and-timeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Provenance and timeline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-to-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where to start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-source-pakon-clients" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open-source Pakon clients
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources-and-credit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources and credit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#corrections-and-additions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Corrections and additions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#not-comprehensive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Not comprehensive
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conventions-and-license" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conventions and license
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="pakon-f-x35-reference">Pakon F-X35 Reference<a class="headerlink" href="#pakon-f-x35-reference" title="Permanent link">&para;</a></h1>
+<p>An implementation-agnostic reference for how the Kodak/Pakon <strong>F-X35</strong> film
+scanners (F-135, F-135+, F-235, F-335) actually work: USB identity and firmware
+loading, the PPB command protocol, image stream formats, calibration, the
+colour pipeline, film transport, and the differences between the models.</p>
+<p>This documents <strong>facts about the hardware and its protocol</strong>, so that any
+implementation (driver, scanning tool, decoder) can be built or checked
+against it. It is not a driver, not a scanning application, and it contains no
+Kodak software, firmware, or data files.</p>
+<h2 id="why-this-exists">Why this exists<a class="headerlink" href="#why-this-exists" title="Permanent link">&para;</a></h2>
+<p>The knowledge needed to drive these scanners has been re-derived from scratch
+by every project that attempted it, because no neutral reference existed. The
+scanners are long out of support, the film community depends on them, and the
+facts about how they work should be public and free.</p>
+<h2 id="provenance-and-timeline">Provenance and timeline<a class="headerlink" href="#provenance-and-timeline" title="Permanent link">&para;</a></h2>
+<p>This is a distilled, redacted public view of a private reverse-engineering
+corpus built since March 2026: analysis of the original Windows software for
+interoperability, USB and driver-level captures of real hardware, firmware
+disassembly, and live experiments on physical scanners. The corpus itself
+cannot be published because it contains Kodak software artifacts, firmware,
+and decompilation output; this reference carries only the derived facts. Each document is dated
+to when the underlying research established it:</p>
+<ul>
+<li><strong>March 8, 2026</strong>: first findings (USB/PPB protocol, driver architecture,
+  the colour pipeline, Digital ICE)</li>
+<li><strong>March 13-19, 2026</strong>: image stream and planar format, DX barcode tables,
+  ICC profiles</li>
+<li><strong>April 26-27, 2026</strong>: driver-level captures of a real F-135+ across four
+  resolution/IR configurations</li>
+<li><strong>May 2, 2026</strong>: firmware inventory, F-135+ PICL Plus disassembly, IOCTL
+  capture decode; first live driving of the F-135+ (via Stefan Dierauf's
+  libpakon)</li>
+<li><strong>June-July 2026</strong>: the fixed-pattern-correction constant; the exact ColNeg
+  inversion formula</li>
+<li><strong>August 12-13, 2026</strong>: the F-135+ driven end to end in the
+  <a href="https://github.com/jorshhh/pakon-macos">pakon-macos</a> project, verifying
+  much of the corpus on hardware and adding the reply direction,
+  per-resolution strides, and motor behaviour</li>
+<li><strong>August 14-17, 2026</strong>: compared against the other open Pakon clients
+  and the shipped OEM binaries; settled which engine DLL serves which model
+  (TLB = 135 line, TLA = F-235, TLC = F-335), confirmed by decompiling
+  TLB.dll that the 135-line engine never calls the LUT+matrix colour kernel,
+  and added the OEM F235 SDK manuals to the sources</li>
+</ul>
+<h2 id="where-to-start">Where to start<a class="headerlink" href="#where-to-start" title="Permanent link">&para;</a></h2>
+<ul>
+<li>About to touch a scanner? Read <a href="per-unit-data-and-safety/">Per-unit data &amp; safety</a>
+  first: what to back up, and what can be damaged.</li>
+<li>New to the protocol? Read <a href="usb-identity-and-firmware/">USB identity &amp; firmware</a>
+  then the <a href="ppb-protocol/">PPB protocol</a>.</li>
+<li>Decoding a scan? See the <a href="image-stream/">image stream</a> and the
+  <a href="color-pipeline/">colour pipeline</a>.</li>
+<li>Working out model differences? The
+  <a href="scanner-family/">scanner family</a> page is the map, including which OEM
+  engine DLL serves which model (TLB = 135 line, TLA = F-235, TLC = F-335;
+  the letters do not follow the model numbers).</li>
+</ul>
+<h2 id="open-source-pakon-clients">Open-source Pakon clients<a class="headerlink" href="#open-source-pakon-clients" title="Permanent link">&para;</a></h2>
+<p>A list of emerging third-party Pakon clients:</p>
+<table>
+<thead>
+<tr>
+<th>Project</th>
+<th>Approach</th>
+<th>Models driven</th>
+<th>License</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/eatfrog/PakonClient">PakonClient</a> by Henri Toivonen</td>
+<td>C# client that drives the OEM COM server (<code>tlx.dll</code>) on Windows, plus research notes.</td>
+<td>F-135+ (via the OEM stack)</td>
+<td>not stated at time of writing</td>
+</tr>
+<tr>
+<td><a href="https://github.com/jorshhh/pakon-macos">pakon-macos</a> by Jorge Rangel</td>
+<td>Userspace driver plus web app; capture replay of the OEM sequences with its own decoder and C-41 inversion. Linux and macOS. Protocol and imaging notes.</td>
+<td>F-135; F-135+ via a pending contribution</td>
+<td>AGPL-3.0</td>
+</tr>
+<tr>
+<td><a href="https://github.com/gazzdingo/pakon-mac">pakon-mac</a> by Guy Langford-Lee</td>
+<td>Userspace driver, Electron app, and a reimplementation of the OEM colour engine checked against the vendor DLLs under emulation; regenerable per-unit calibration. macOS, Windows, Linux. Extensive research notes.</td>
+<td>F-135+</td>
+<td>MIT with a non-commercial restriction</td>
+</tr>
+<tr>
+<td><a href="https://github.com/pablonavarrob/pakon-tlx-macos">pakon-tlx-macos</a> by Pablo Navarro</td>
+<td>Runs the unmodified OEM Windows software under Wine on macOS, replacing only the kernel driver with a shim to libusb. Kodak's own colour science and Digital ICE, no reimplementation. Notes on the OEM's driver contract and behaviour.</td>
+<td>F-135</td>
+<td>MIT</td>
+</tr>
+<tr>
+<td><a href="https://github.com/veroc/psix">psix</a> by Oliver Roch</td>
+<td>Userspace driver and local web app on Linux: firmware load, transport, C-41 inversion, IR dust removal.</td>
+<td>F-135+</td>
+<td>not stated at time of writing</td>
+</tr>
+</tbody>
+</table>
+<h2 id="sources-and-credit">Sources and credit<a class="headerlink" href="#sources-and-credit" title="Permanent link">&para;</a></h2>
+<p>Facts verified in or contributed by other projects are credited inline. What
+each source contributed:</p>
+<ul>
+<li><a href="https://github.com/ktkaufman03/FX35">FX35</a> by ktkaufman03: modernised
+  open-source Windows kernel driver; the driver-level captures used here were
+  made with a logging-instrumented build of it.</li>
+<li>libpakon by Stefan Dierauf: an independent C++ driver and "Pakon Studio"
+  app (private); the marker-bit row-origin technique was shown to Ali Bosworth
+  by its author.</li>
+<li><a href="https://github.com/jorshhh/pakon-macos">pakon-macos</a> by jorshhh: the F-135 and F-135+ were verified working there, and the
+  hardware-only facts here were derived by driving a real scanner with it.</li>
+<li><a href="https://github.com/gazzdingo/pakon-mac">pakon-mac</a> by gazzdingo: stated the TLA/TLB/TLC = F-235/F-135/F-335 file mapping before it was
+  established here; that the one 135-line build also serves the F-135+ is
+  this reference's addition.</li>
+<li><a href="https://github.com/pablonavarrob/pakon-tlx-macos">pakon-tlx-macos</a> by pablonavarrob: because it forwards every call the unmodified OEM stack
+  makes, it is a ground-truth witness to the OEM's host-side behaviour on an
+  original F-135.
+  Its <code>tools/eedump.py</code> is the read-only EEPROM reader, replaying the OEM
+  engine's own transfer sequence, used for the per-unit EEPROM facts in
+  <a href="calibration/#the-per-unit-eeprom">calibration.md</a>.</li>
+<li><a href="https://github.com/eatfrog/PakonClient">PakonClient</a> by eatfrog: the source of the OEM F235 SDK manuals (June 2004) cited here.</li>
+</ul>
+<h2 id="corrections-and-additions">Corrections and additions<a class="headerlink" href="#corrections-and-additions" title="Permanent link">&para;</a></h2>
+<p>If something here looks wrong, or a fact you needed is missing, open an
+issue or a pull request. That applies whether you are a person or an agent
+reading this to build or check an implementation. A useful report says what
+was observed, on which model and firmware, and how (a capture, a live
+experiment, a disassembly). See
+<a href="CONVENTIONS/">Conventions</a> for what a pull request may contain.</p>
+<h2 id="not-comprehensive">Not comprehensive<a class="headerlink" href="#not-comprehensive" title="Permanent link">&para;</a></h2>
+<p>This reference documents what has been established, and no more. It is not a
+complete description of these scanners: reply semantics for most commands,
+several payload layouts, the parameter table's fields, the F-235/F-335
+protocol, and the OEM's film-specific processing are among the known gaps.
+Each page ends with its open questions, so absence of a fact here means it is
+not yet established, not that it does not matter.</p>
+<h2 id="conventions-and-license">Conventions and license<a class="headerlink" href="#conventions-and-license" title="Permanent link">&para;</a></h2>
+<p>Claims carry confidence markers (<code>[CONFIRMED]</code> / <code>[DOCUMENTED]</code> /
+<code>[INFERRED]</code>) and sources; see <a href="CONVENTIONS/">Conventions</a> for how they are
+applied. Licensed <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>:
+the point of this reference is that nobody should have to pay for, or
+re-derive, these facts.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      CC BY 4.0, <a href="https://alibosworth.com">Ali Bosworth</a> &middot; <a href="https://github.com/alibosworth/pakon-reference">View project on GitHub</a> &middot; Corrections welcome: <a href="https://github.com/alibosworth/pakon-reference/issues">open an issue</a>
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "toc.follow", "content.code.copy", "search.suggest", "search.highlight"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

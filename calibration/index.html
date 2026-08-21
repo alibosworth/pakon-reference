@@ -1,0 +1,1332 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="An implementation-agnostic reference for how the Kodak/Pakon F-X35 film scanners work — protocol, image stream, calibration, and colour.">
+      
+      
+      
+      
+        <link rel="prev" href="../image-stream/">
+      
+      
+        <link rel="next" href="../color-pipeline/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Calibration - Pakon F-X35 Reference</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+  <!-- Privacy-friendly analytics by Plausible (self-hosted), embedded
+       first-party via the alibosworth.com /p/* proxy per house convention.
+       Site: pakon-reference.alibosworth.com -->
+  <script async src="https://alibosworth.com/p/pa-DTdD4ieieV18xjvvRHyhh.js"></script>
+  <script>
+    window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+    plausible.init({ endpoint: "https://alibosworth.com/p/event" })
+  </script>
+
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#calibration" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Pakon F-X35 Reference" class="md-header__button md-logo" aria-label="Pakon F-X35 Reference" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pakon F-X35 Reference
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Calibration
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Pakon F-X35 Reference" class="md-nav__button md-logo" aria-label="Pakon F-X35 Reference" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Pakon F-X35 Reference
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONVENTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../per-unit-data-and-safety/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Per-unit data & safety
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usb-identity-and-firmware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    USB identity & firmware
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ppb-protocol/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PPB protocol
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../command-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Command reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../image-stream/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Image stream
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Calibration
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Calibration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-per-unit-eeprom" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The per-unit EEPROM
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The per-unit EEPROM">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-read" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The read
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verifying-a-read" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying a read
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ccd-register-banks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CCD register banks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dark-bright-calibration-and-fixed-pattern-correction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dark / bright calibration and fixed-pattern correction
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dark / bright calibration and fixed-pattern correction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-per-column-gain-formula-partial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The per-column gain formula (partial)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#colour-vs-calibration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Colour vs. calibration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../color-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Colour pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../film-transport/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Film transport
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dx-barcode/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DX barcode
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../scanner-family/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scanner family
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" >
+        
+          
+          <label class="md-nav__link" for="__nav_13" id="__nav_13_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resources
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_13">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Resources
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../resources/dx-product-code-table/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DX product-code table
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CHANGELOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-per-unit-eeprom" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The per-unit EEPROM
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The per-unit EEPROM">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-read" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The read
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verifying-a-read" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying a read
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ccd-register-banks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CCD register banks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dark-bright-calibration-and-fixed-pattern-correction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dark / bright calibration and fixed-pattern correction
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dark / bright calibration and fixed-pattern correction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-per-column-gain-formula-partial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The per-column gain formula (partial)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#colour-vs-calibration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Colour vs. calibration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="calibration">Calibration<a class="headerlink" href="#calibration" title="Permanent link">&para;</a></h1>
+<p>Before scanning, the OEM programs the CCD (gain, offset, per-channel exposure)
+and computes a per-column correction from calibration passes. This is what
+makes the raw stream usable: it normalises the lamp profile and each sensor
+element's response.</p>
+<p><em>From the OEM driver and Ansel pipeline reverse engineering, and the parameter
+table read seen in captures, March–May 2026.</em></p>
+<h2 id="the-per-unit-eeprom">The per-unit EEPROM<a class="headerlink" href="#the-per-unit-eeprom" title="Permanent link">&para;</a></h2>
+<p>What earlier drafts of this page called "the parameter table read" is the OEM
+software reading the scanner's per-unit EEPROM at start-up: a serial I2C
+EEPROM at 7-bit address <code>0x52</code> on the motherboard, read through the FX2
+bridge with two vendor control requests. It holds the data that makes one
+unit that unit: serial number, a per-resolution <code>Offset</code> word and motor
+speeds, motor-adjust words, and the two colour matrices. It does <strong>not</strong>
+hold the light calibration (LED currents and duty cycles); the OEM keeps
+those in the Windows registry, written when its light-correction routine
+runs. [CONFIRMED] contents by live read on an F-135+ (serial 16402), August
+2026, matching the layout decoded from the OEM engine by the
+<a href="https://github.com/gazzdingo/pakon-mac">pakon-mac</a> project
+(<code>docs/69-calibration-auto-load.md</code>).</p>
+<h3 id="the-read">The read<a class="headerlink" href="#the-read" title="Permanent link">&para;</a></h3>
+<p>Two vendor requests, both with <code>wIndex = 0x1234</code>, repeated per chunk:</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>bmRequestType</th>
+<th>bRequest</th>
+<th>wValue</th>
+<th>wLength</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>select</td>
+<td><code>0x40</code> (vendor OUT, no data)</td>
+<td><code>0xA4</code></td>
+<td><code>0x00A5</code></td>
+<td>0</td>
+</tr>
+<tr>
+<td>read</td>
+<td><code>0xC0</code> (vendor IN)</td>
+<td><code>0xA9</code></td>
+<td>byte offset into the EEPROM</td>
+<td>≤ 32</td>
+</tr>
+</tbody>
+</table>
+<p><code>0x00A5</code> is the EEPROM's 8-bit I2C address with the read bit set
+(<code>(0x52 &lt;&lt; 1) | 1</code>); the select is re-issued before every read. The OEM
+reads 32 bytes at a time at increasing offsets (<code>0x008</code>, <code>0x028</code>, <code>0x048</code>,
+…), which is the "fixed number of pairs, resolution independent" pattern the
+captures showed. [CONFIRMED] on hardware; the same two requests, and no
+others, are all that is needed to read the chip. The reads here were made
+with the <a href="https://github.com/pablonavarrob/pakon-tlx-macos">pakon-tlx-macos</a>
+project's <code>tools/eedump.py</code>, which issues exactly this sequence (decoded
+from a live capture of the OEM engine's own transfers), extended to read
+the backup copies and check the CRCs.</p>
+<p>The select's <code>wValue</code> is general: <code>((0x50 | n) &lt;&lt; 1) | direction</code>, so the
+same pair reaches any I2C EEPROM at <code>0x50</code>–<code>0x57</code> (the boot-personality
+chip at <code>0x51</code> included), and bit 0 is the direction. A write is the same
+select with bit 0 clear (<code>0x00A4</code>) followed by <code>0xA2</code> in place of <code>0xA9</code>, with
+<code>wValue</code> again a byte offset. This is from the engine's own read routine
+(<code>FN_bEEPromRead</code>, <code>fcn.100160a0</code> in TLB.dll 3.1.0.28: <code>or eax, 0x50; shl
+eax, 1</code>, then <code>or [arg], 1</code> and <code>0xA9</code> for a read, <code>0xA2</code> otherwise), read
+out by the <a href="https://github.com/gazzdingo/pakon-mac">pakon-mac</a> project while
+building its transport allow-list
+(<a href="https://github.com/gazzdingo/pakon-mac/blob/95c205c9c7bbfd9757e58aefd5e389f11fe1cca7/tools/pakon_usb_guard.py"><code>tools/pakon_usb_guard.py</code></a>).
+[CONFIRMED] for the read direction on hardware; the write direction is from
+the disassembly only, and the OEM's normal scanning path never issues it
+(only its Calibration Wizard writes the EEPROM). The practical corollary for
+anyone writing a read tool: an allow-list that admits only the odd-<code>wValue</code>
+select and <code>0xA9</code> cannot be turned into a write by any caller.</p>
+<p>Note that <code>0xA9</code> with <code>wIndex = 0</code> is a different operation: the 8-byte
+personality read served by the stage-1 loader (see
+<a href="../usb-identity-and-firmware/">usb-identity-and-firmware.md</a>). The
+<code>wIndex</code> value selects which.</p>
+<h3 id="layout">Layout<a class="headerlink" href="#layout" title="Permanent link">&para;</a></h3>
+<p>The data is stored <strong>twice</strong>. Two sections, each a header
+<code>{u32 length; u32 crc32}</code> followed by the payload, with the CRC-32 (the
+standard reflected zlib/PKZIP polynomial) taken over the payload only.
+Each section has a backup copy:</p>
+<table>
+<thead>
+<tr>
+<th>Section</th>
+<th>Primary</th>
+<th>Backup</th>
+<th>Length</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td><code>0x000</code></td>
+<td><code>0x400</code></td>
+<td>398 bytes (8 header + 390)</td>
+</tr>
+<tr>
+<td>B</td>
+<td><code>0x800</code></td>
+<td><code>0xA00</code></td>
+<td>36 bytes (8 header + 28)</td>
+</tr>
+</tbody>
+</table>
+<p>Section A payload, absolute byte offsets, little-endian:</p>
+<table>
+<thead>
+<tr>
+<th>Offset</th>
+<th>Type</th>
+<th>Field</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0x008</code>, <code>0x00C</code></td>
+<td>u32, u32</td>
+<td>two unnamed words (400 and 1351 on the reference unit)</td>
+</tr>
+<tr>
+<td><code>0x010</code></td>
+<td>u32</td>
+<td><strong>scanner serial number</strong></td>
+</tr>
+<tr>
+<td><code>0x014</code> / <code>0x016</code> / <code>0x018</code></td>
+<td>u16 ×3</td>
+<td>resolution base 4: <code>Offset</code>, MotorSpeed, MotorSpeed (IR)</td>
+</tr>
+<tr>
+<td><code>0x01A</code> / <code>0x01C</code> / <code>0x01E</code></td>
+<td>u16 ×3</td>
+<td>resolution base 8: same three</td>
+</tr>
+<tr>
+<td><code>0x020</code> / <code>0x022</code> / <code>0x024</code></td>
+<td>u16 ×3</td>
+<td>resolution base 16: same three</td>
+</tr>
+<tr>
+<td><code>0x026</code> – <code>0x09D</code></td>
+<td>f32 ×30</td>
+<td><strong>NegMatrix0–29</strong>: the colour-negative correction, 3 rows × 10</td>
+</tr>
+<tr>
+<td><code>0x09E</code> – <code>0x115</code></td>
+<td>f32 ×30</td>
+<td><strong>PosMatrix0–29</strong>: the positive (slide) correction, 3 rows × 10</td>
+</tr>
+<tr>
+<td><code>0x116</code> – <code>0x18D</code></td>
+<td>120 bytes</td>
+<td>unused (zero on every unit seen)</td>
+</tr>
+</tbody>
+</table>
+<p><code>Offset</code> is the OEM's own name for the first word of each per-base triple
+(30 / 58 / 60 on the reference unit; 27 / 54 / 55 on another). Its meaning is
+not stated by the OEM. It sits with the motor speeds, scales with the
+resolution base, and matches the CCD pixel-window start that
+implementations write to the FPGA geometry register before a scan (31 for
+base 4, 62 for bases 8 and 16 in one implementation; the OEM writes 62 for
+the non-IR case), so it is most likely the per-unit start of the imaged
+region along the CCD line for that base, i.e. this unit's optical alignment
+to the film gate. [INFERRED from the value correspondence; not confirmed.]</p>
+<p>Section B payload: twelve u16 motor-adjust words (<code>0x808</code>–<code>0x81E</code>, values
+near 1000 and clamped by the OEM to 900–1100), then one unnamed u32.</p>
+<p>Each 3×10 matrix row is <code>R, G, B, R², G², B², RG, GB, BR, constant</code>, i.e. a
+second-order colour matrix; on the reference unit the quadratic columns are
+all ≈ 0 and NegMatrix is in effect a 3×4 affine (diagonal ≈ 0.29 / 0.29 /
+0.32, constants ≈ +166 / +430 / +638), and PosMatrix is the plain 0.25
+diagonal with no cross terms or offsets. These are per-unit factory
+values, not shared constants; the OEM also mirrors them into the registry.
+[CONFIRMED] layout and values on serial 16402; layout first established
+by <a href="https://github.com/gazzdingo/pakon-mac">pakon-mac</a> from the OEM engine.</p>
+<p>Reference-unit motor constants, for scale (per-unit; do not copy):</p>
+<table>
+<thead>
+<tr>
+<th>Base</th>
+<th>Offset</th>
+<th>MotorSpeed</th>
+<th>MotorSpeed (IR)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4</td>
+<td>30</td>
+<td>25726</td>
+<td>19278</td>
+</tr>
+<tr>
+<td>8</td>
+<td>58</td>
+<td>11434</td>
+<td>7557</td>
+</tr>
+<tr>
+<td>16</td>
+<td>60</td>
+<td>5900</td>
+<td>4836</td>
+</tr>
+</tbody>
+</table>
+<h3 id="verifying-a-read">Verifying a read<a class="headerlink" href="#verifying-a-read" title="Permanent link">&para;</a></h3>
+<p>Read both copies of both sections, check all four CRCs, and compare
+primary with backup. On the reference unit the backup of section A and
+both copies of section B validate; the primary of section A fails its CRC
+because of a single byte, <code>0x0A5</code>, which reads <code>0x48</code> where the backup has
+<code>0x00</code> (the high byte of <code>PosMatrix1</code>, turning a 0.0 into 131072.0). Stable
+across four reads and two power cycles, so a stored-data fault, not a read
+artifact; it touches only the slide matrix.</p>
+<p>How the OEM uses the two copies: at start-up it reads the primary of each
+section, checks the length and CRC, and if either is bad reads the backup
+and uses that instead. The first good copy wins; the primary is not
+repaired. Only if both copies of a section fail does it keep what it read
+and raise the SDK's <code>INITIALIZEW_EEPROM_BLANK</code> /
+<code>INITIALIZEW_EEPROM_CHECKSUM_BAD</code> warning (a warning, not an error).
+[CONFIRMED] two ways on the reference unit: the retry loop in the engine's
+EEPROM-to-registry routine, and the registry it populates, which holds the
+backup's <code>PosMatrix1 = 0.0</code>, not the primary's corrupted value, with no
+warning shown. So a unit can carry a bad primary copy for years without
+anyone noticing. Anyone archiving their own unit's EEPROM should read both
+copies; a dump of the primaries alone cannot show whether it is good.</p>
+<p>The <a href="https://github.com/gazzdingo/pakon-mac">pakon-mac</a> project reports that on its
+unit these EEPROMs returned good data only on the first transaction after a
+power cycle and degraded on later reads while still reporting success
+(<a href="https://github.com/gazzdingo/pakon-mac/blob/c0be5853c292/backups/eeprom-i2c/README.md"><code>backups/eeprom-i2c/README.md</code></a>).
+That is not how these parts normally behave and may be specific to that
+unit or its tooling; the reference unit shows no such behaviour (four
+consistent reads). Until it is understood: read once per power cycle, and
+confirm by comparing across power cycles rather than by re-reading within
+one.</p>
+<h2 id="ccd-register-banks">CCD register banks<a class="headerlink" href="#ccd-register-banks" title="Permanent link">&para;</a></h2>
+<p>The CCD is configured through register writes on the command channel (light
+controller). The reverse engineering identified banked registers for scan
+geometry and exposure/gain:</p>
+<ul>
+<li>a scan-window/geometry bank (start, end, and timing/span of the active CCD
+  window)</li>
+<li>an exposure/gain bank (per-channel R/G/B exposure, and per-channel dark trim
+  with a sign bit)</li>
+<li>a profile-mode selector (visible / IR / complete) that gates whether the IR
+  channel is acquired</li>
+</ul>
+<p>[DOCUMENTED]/[INFERRED] from the register-write sequences; the profile-mode
+selector corresponds to the IR/Digital-ICE fourth channel appearing in the
+image stream (see <a href="../image-stream/">image-stream.md</a>).</p>
+<h2 id="dark-bright-calibration-and-fixed-pattern-correction">Dark / bright calibration and fixed-pattern correction<a class="headerlink" href="#dark-bright-calibration-and-fixed-pattern-correction" title="Permanent link">&para;</a></h2>
+<p>The OEM computes a <strong>per-column fixed-pattern correction</strong> from calibration
+lines (a set of dark reference lines and a set of bright, open-gate lines) so
+that each CCD column's gain and offset are individually normalised.
+[DOCUMENTED] the per-column dark-offset subtraction and per-column gain
+multiplication are visible in the OEM line processor; the exact
+gain-computation formula was reverse-engineered later (documented below).</p>
+<p>A practical constraint worth recording: on this hardware the lamp only
+illuminates while the film transport is running, so the bright calibration pass
+must be taken with the motor moving: the calibration is driven, not a
+motor-off measurement. [INFERRED] from the lamp/transport behaviour.</p>
+<h3 id="the-per-column-gain-formula-partial">The per-column gain formula (partial)<a class="headerlink" href="#the-per-column-gain-formula-partial" title="Permanent link">&para;</a></h3>
+<p>The per-column gain computation was reverse-engineered from the OEM
+<code>CiConfigFixedPatternCorrection</code> routine. The known form is:</p>
+<div class="highlight"><pre><span></span><code>gain[column] = (125 · 2^32) / (bright[column] − dark[column] − &lt;prefix terms&gt;)
+</code></pre></div>
+<p>with a dark target near 300 and a bright target near 64000, and the result
+clamped to a maximum. <strong>This is a partial formula</strong>: the <code>&lt;prefix terms&gt;</code> in
+the denominator and the exact clamp value are not independently established
+here, so it is not yet implementable as written. What is solid is the constant
+<code>125 · 2^32</code> (= <code>0x7d00000000</code>), which was independently cross-confirmed
+against the same constant in Stefan Dierauf's libpakon, and the dark/bright
+targets. [DOCUMENTED, partial; June 2026]</p>
+<h2 id="colour-vs-calibration">Colour vs. calibration<a class="headerlink" href="#colour-vs-calibration" title="Permanent link">&para;</a></h2>
+<p>This CCD-level calibration (gain/offset/exposure/fixed-pattern) is distinct from
+the colour negative inversion. Calibration makes the raw linear CCD values
+correct and uniform; the C-41 inversion (LUT + matrix) is a separate, later
+stage documented in <a href="../color-pipeline/">color-pipeline.md</a>.</p>
+<h2 id="open-questions">Open questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
+<ul>
+<li>The fixed-pattern-correction formula is partial (prefix terms and clamp).</li>
+<li>The two unnamed u32 words at the top of section A and the one at the end
+  of section B, and the 120 unused bytes.</li>
+<li>The register banks are only partially mapped.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      CC BY 4.0, <a href="https://alibosworth.com">Ali Bosworth</a> &middot; <a href="https://github.com/alibosworth/pakon-reference">View project on GitHub</a> &middot; Corrections welcome: <a href="https://github.com/alibosworth/pakon-reference/issues">open an issue</a>
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "toc.follow", "content.code.copy", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
