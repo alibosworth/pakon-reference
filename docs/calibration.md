@@ -53,7 +53,14 @@ eax, 1`, then `or [arg], 1` and `0xA9` for a read, `0xA2` otherwise), read
 out by the [pakon-mac](https://github.com/gazzdingo/pakon-mac) project while
 building its transport allow-list
 ([`tools/pakon_usb_guard.py`](https://github.com/gazzdingo/pakon-mac/blob/95c205c9c7bbfd9757e58aefd5e389f11fe1cca7/tools/pakon_usb_guard.py)).
-[CONFIRMED] for the read direction on hardware; the write direction is from
+[CONFIRMED] for the read direction on hardware, and on both chips: `0x00A5`
+reaches `0x52`, and `0x00A3` reaches the boot EEPROM at `0x51`, the latter
+tested in August 2026 on serial 16402 against the application firmware. The
+generality is therefore a demonstrated property of the firmware rather than
+an inference from the disassembly, and it is what makes the boot chip
+archivable at all (see
+[per-unit-data-and-safety.md](per-unit-data-and-safety.md#backing-up-the-boot-personality-and-the-light-calibration)).
+The write direction is from
 the disassembly only, and the OEM's normal scanning path never issues it
 (only its Calibration Wizard writes the EEPROM). The practical corollary for
 anyone writing a read tool: an allow-list that admits only the odd-`wValue`

@@ -99,7 +99,15 @@ F-135's PIC16. [CONFIRMED] by disassembly, May 2026. See
 ## Open questions
 
 - The personality structure's final byte and the extra trailing byte are not
-  understood.
-- The boot EEPROM (I2C `0x51`) beyond the 9-byte personality; the separate
-  per-unit EEPROM at `0x52` is documented in
+  understood. Where the boundary between them falls is now known: the stage-1
+  loader's `0xA9` read returns 8 bytes, and those are the chip's first 8, so
+  the ninth byte (`0x02`) is stored on the chip but is not part of what the
+  loader reports.
+- The boot EEPROM (I2C `0x51`) holds nothing else. Past the 9-byte personality
+  it reads `0xFF` to the end of its 256 bytes. [CONFIRMED on hardware, August
+  2026] by reading the chip itself on serial 16402, with the `wValue 0x00A3`
+  select described in
+  [per-unit-data-and-safety.md](per-unit-data-and-safety.md#backing-up-the-boot-personality-and-the-light-calibration).
+  One unit only, so whether another stores anything there is untested. The
+  separate per-unit EEPROM at `0x52` is documented in
   [calibration.md](calibration.md#the-per-unit-eeprom).

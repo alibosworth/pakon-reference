@@ -6,6 +6,28 @@ carried a confidence marker and turned out wrong is a normal event here,
 and hiding it would defeat the markers. Dates are when the change was
 published; each entry links the page it touched. Newest first.
 
+## 2026-08-24 (later)
+
+- **Addition, `per-unit-data-and-safety.md` and
+  `usb-identity-and-firmware.md`:** the boot EEPROM at I2C `0x51` has now been
+  read directly, on serial 16402, with the `wValue 0x00A3` select against the
+  application firmware. It holds the 9-byte personality and then `0xFF` to the
+  end of its 256 bytes, which closes the open question about what else is on
+  that chip. One unit only, so it is marked as such.
+
+- **Clarification, `per-unit-data-and-safety.md`:** the personality read the
+  stage-1 loader serves (`0xA9` with `wIndex 0`) is not a way to dump that
+  chip, and the page now says so. It returns 8 bytes, which are the chip's
+  first 8, so the ninth byte is missing from it, and the loader is gone once
+  the application firmware is running. Archiving the chip needs the `0x00A3`
+  select instead. The distinction matters because the two are easy to conflate
+  and only one of them produces a file that could restore anything.
+
+- **Tightening, `calibration.md`:** the select's generality was marked
+  confirmed on hardware for the read direction, which in practice meant chip
+  `0x52` alone. It now holds for `0x51` as well, so the claim rests on a
+  demonstration rather than on the disassembly it was read from.
+
 ## 2026-08-24
 
 - **Addition, `resources/eeprom/`:** a new page collecting the
