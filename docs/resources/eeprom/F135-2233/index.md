@@ -40,7 +40,7 @@ are byte-identical.
 ## What this unit established
 
 Section B is **not** the same on every scanner in the family. This unit's
-section B differs from all three F-135 Plus units in exactly one payload
+section B differs from all four F-135 Plus units in exactly one payload
 byte: the third motor-adjust word is `0x03F0` where the Plus has `0x03E8`,
 so section B looks like a factory default scoped per model rather than a
 family-wide constant. That reading currently rests on this single

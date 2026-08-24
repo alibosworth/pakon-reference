@@ -130,11 +130,11 @@ Section B payload: twelve u16 motor-adjust words (`0x808`–`0x81E`, values
 near 1000 and clamped by the OEM to 900–1100), then one unnamed u32.
 Section B appears to be a **factory default scoped per model**, not
 per-unit and not universal: it is byte-identical (CRC `0x873e6ed3`) on all
-three F-135 Plus units read, while the one base F-135 read differs in
+four F-135 Plus units read, while the one base F-135 read differs in
 exactly one payload byte: the third motor-adjust word is `0x03F0` where
 the Plus has `0x03E8`, giving CRC `0x2a582d50`. Either the OEM's
 motor-speed calibration has never been run on any unit read so far, or it
-does not write here. [CONFIRMED] on four units; the base-model reading
+does not write here. [CONFIRMED] on five units; the base-model reading
 rests on a single unit.
 
 Each 3×10 matrix row is `R, G, B, R², G², B², RG, GB, BR, constant`, i.e. a
@@ -148,7 +148,7 @@ The two matrices behave differently across units: **NegMatrix is per-unit**
 (diagonals range 0.26–0.34 and constants 145–166 / 386–445 / 602–651 over
 the units read), while **PosMatrix is bit-identical on every unit read,
 across both models**: the plain 0.25 diagonal, so a shared constant
-rather than a factory measurement. [CONFIRMED] on four complete dumps; see
+rather than a factory measurement. [CONFIRMED] on five units; see
 [the dump comparison](resources/eeprom/index.md). Layout first established
 by [pakon-mac](https://github.com/gazzdingo/pakon-mac) from the OEM engine.
 

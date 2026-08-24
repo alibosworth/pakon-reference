@@ -12,7 +12,10 @@ published; each entry links the page it touched. Newest first.
   decoded per-unit EEPROM contents of every unit read so far, five at time
   of writing, with the raw dumps alongside. One unit cannot show which
   fields a factory calibration actually measured and which are defaults;
-  the spread can. Contributed by Mats Fagerberg ([thetalkingdrum](https://github.com/thetalkingdrum)), who read
+  the spread can. It also records that **two of the five carry a damaged
+  primary copy of section A with a good backup**, with different damage in
+  each case, which is the strongest argument yet for the page's insistence
+  on reading both copies. Contributed by Mats Fagerberg ([thetalkingdrum](https://github.com/thetalkingdrum)), who read
   three of the five, with the partial dump from
   [pakon-mac](https://github.com/gazzdingo/pakon-mac)'s unit as the fifth.
 
@@ -32,7 +35,7 @@ published; each entry links the page it touched. Newest first.
   matrices were indistinguishable in kind.
 
 - **Tightening, `calibration.md`:** section B is a factory default scoped
-  **per model**, not universal. It is byte-identical on all three F-135 Plus
+  **per model**, not universal. It is byte-identical on all four F-135 Plus
   units read, and the one base F-135 differs in exactly one payload byte
   (third motor-adjust word `0x03F0` against the Plus's `0x03E8`). The
   base-model side rests on a single unit and is marked as such.

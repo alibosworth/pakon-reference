@@ -40,7 +40,7 @@ saved reads of section A's primary are byte-identical), so it is a
 stored-data fault, not a read artifact. It touches only the slide
 (positive film) matrix.
 
-**This unit is the reason the reference insists on reading both copies.**
+**This unit is part of why the reference insists on reading both copies.**
 The OEM software handles the fault silently: it reads the primary, finds
 the CRC bad, reads the backup, uses that, and shows no warning. The
 registry export from this unit holds `PosMatrix1 = 0.000000`, which is the
@@ -49,6 +49,12 @@ normally for years with a corrupted copy on the chip, and nothing in the
 software would ever have said so. A dump of the primaries alone could not
 have revealed it either. Only reading both copies and checking the CRCs
 did.
+
+It is not the only one. Unit 16275 also has a damaged section A primary and
+a good backup, with different damage: a corrupted length byte plus a
+17-byte block at a page boundary. Two of the five units read are in this
+state, so it is worth treating as a normal thing to find rather than bad
+luck. See [the comparison](../index.md#the-units).
 
 If restoring this chip, write the **backup** copy of section A, not the
 primary. Section B is identical in both copies.

@@ -18,19 +18,26 @@ on the [per-unit data and safety](../../per-unit-data-and-safety.md) page.
 |---|---|---|---|---|
 | [2233](F135-2233/index.md) | 1350 | F-135 | all four copies valid | Mats Fagerberg ([thetalkingdrum](https://github.com/thetalkingdrum)) |
 | [5963](F135plus-5963/index.md) | 1351 | F-135 Plus | all four copies valid | Mats Fagerberg ([thetalkingdrum](https://github.com/thetalkingdrum)) |
-| 16275 | 1351 | F-135 Plus | partial dump, CRC unverifiable | [pakon-mac](https://github.com/gazzdingo/pakon-mac) |
+| 16275 | 1351 | F-135 Plus | section A primary fails CRC | [pakon-mac](https://github.com/gazzdingo/pakon-mac) |
 | [16402](F135plus-16402/index.md) | 1351 | F-135 Plus | section A primary fails CRC | Ali Bosworth ([alibosworth](https://github.com/alibosworth)) |
 | [17157](F135plus-17157/index.md) | 1351 | F-135 Plus | all four copies valid | Mats Fagerberg ([thetalkingdrum](https://github.com/thetalkingdrum)) |
 
-Unit 16275 is not reproduced here. It is a 256-byte raw I2C read covering
-chip bytes `0x001`–`0x0FF` only, offset by one byte (its first byte, the low
-byte of the section length, is missing), and it carries no CRC, no section A
-tail and no section B. It decodes cleanly once realigned, so its values are
-included in the tables below, but the file itself lives in
-[that project's repository](https://github.com/gazzdingo/pakon-mac). Its
-final byte differs from every other unit, which is consistent with the
-read-degradation behaviour that project documents rather than a real
-difference.
+Unit 16275's values are decoded from
+[`eeprom_52_VERIFIED-20260818.bin`](https://github.com/gazzdingo/pakon-mac/blob/cd23ee5/backups/eeprom-i2c/eeprom_52_VERIFIED-20260818.bin),
+a full 3072-byte read of that chip covering all four copies. The file is not
+reproduced here; it lives in that project's repository. An earlier file in
+the same directory, `eeprom_52.bin`, is a 256-byte partial read shifted by
+one byte and should not be used.
+
+**Two of these five units carry a damaged primary copy of section A with a
+good backup**, and on both the OEM software had been reading the backup for
+years without saying so. The damage is different in each case: 16402 has a
+single corrupted byte at `0x0A5`, while 16275 has its length byte corrupted
+(`0x5A` where it should read `0x8E`) plus a 17-byte block at
+`0x100`–`0x110`, which is a 256-byte page boundary. No explanation for
+either. The three units read since are clean, so this is not universal, but
+two in five is frequent enough that reading only the primary copy would have
+missed it both times.
 
 ## Section A, field by field
 
@@ -51,7 +58,7 @@ columns are ≈ 0 on every unit, so each is in effect a 3×4 affine):
 |---|---|---|
 | 2233 (F-135) | 0.27680 / 0.27967 / 0.26158 | 163.4 / 441.4 / 651.0 |
 | 5963 (F-135+) | 0.28383 / 0.32009 / 0.33758 | 145.6 / 386.7 / 602.9 |
-| 16275 (F-135+) | 0.28920 / 0.27580 / 0.27820 | 159.6 / 444.8 / 635.5 |
+| 16275 (F-135+) | 0.28920 / 0.27583 / 0.27824 | 159.6 / 444.8 / 635.5 |
 | 16402 (F-135+) | 0.29299 / 0.28521 / 0.32000 | 165.8 / 429.8 / 638.2 |
 | 17157 (F-135+) | 0.28860 / 0.31628 / 0.32606 | 162.1 / 401.3 / 607.7 |
 
@@ -73,7 +80,7 @@ another: identical on all three Plus units (0.749 / 0.661 / 0.820 at bases
 suggests these ratios are design constants rather than measurements.
 
 **Constant across everything read.** PosMatrix, the plain 0.25 diagonal,
-bit-identical on all four complete dumps and across both models, so a
+bit-identical on all five units and across both models, so a
 shared constant and not a factory measurement. The revision word at `0x008`,
 400 everywhere.
 The 120-byte tail at `0x116`–`0x18D`, zero on every complete dump.
@@ -81,7 +88,7 @@ The 120-byte tail at `0x116`–`0x18D`, zero on every complete dump.
 ## Section B
 
 Twelve motor-adjust words and a trailing `u32`. It is **identical on all
-three F-135 Plus units** (CRC `0x873e6ed3`, words alternating 1000 / 1008)
+four F-135 Plus units** (CRC `0x873e6ed3`, words alternating 1000 / 1008)
 and differs on the one base F-135 read in exactly one payload byte: the
 third word is `0x03F0` where the Plus has `0x03E8`, giving CRC
 `0x2a582d50`.
@@ -102,11 +109,11 @@ procedure it follows, the two vendor requests involved, the command-line
 alternatives, and the reasons to read both copies are on the
 [per-unit data and safety](../../per-unit-data-and-safety.md) page.
 
-Do it while your scanner works. A chip fault is silent: unit
-[16402](F135plus-16402/index.md) has a corrupted primary copy of section A
-that the OEM engine has been quietly routing around for years, and nothing
-in the software ever said so. The only way to know is to read both copies
-and check the CRCs yourself.
+Do it while your scanner works. A chip fault is silent, and two of the five
+units here are carrying one: the OEM engine has been quietly routing around
+a bad primary copy for years on both, and nothing in the software ever said
+so. The only way to know is to read both copies and check the CRCs
+yourself.
 
 ## Using someone else's dump
 
