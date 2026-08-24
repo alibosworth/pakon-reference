@@ -6,6 +6,52 @@ carried a confidence marker and turned out wrong is a normal event here,
 and hiding it would defeat the markers. Dates are when the change was
 published; each entry links the page it touched. Newest first.
 
+## 2026-08-24
+
+- **Addition, `resources/eeprom/`:** a new page collecting the
+  decoded per-unit EEPROM contents of every unit read so far, five at time
+  of writing, with the raw dumps alongside. One unit cannot show which
+  fields a factory calibration actually measured and which are defaults;
+  the spread can. Contributed by Mats Fagerberg ([thetalkingdrum](https://github.com/thetalkingdrum)), who read
+  three of the five, with the partial dump from
+  [pakon-mac](https://github.com/gazzdingo/pakon-mac)'s unit as the fifth.
+
+- **Addition, `calibration.md`:** the word at `0x00C` is the **scanner
+  type**: 1350 on a base F-135, 1351 on an F-135 Plus. It matches the OEM
+  client's own error-log text ("Scanner Type 1351") on a unit whose EEPROM
+  decodes to 1351, and holds across five units. The field had been decoded
+  but left unnamed by pakon-mac. So model and serial are both readable from
+  a raw dump without running the OEM software. `0x008` (400 everywhere)
+  remains the one unexplained scalar in section A.
+
+- **Reversal, `calibration.md`:** the page said the colour matrices "are
+  per-unit factory values, not shared constants". That is true of NegMatrix
+  but **wrong for PosMatrix**, which is bit-identical on every complete dump
+  read, across both models: the plain 0.25 diagonal. It is a shared
+  constant. The original claim was made from a single unit, where the two
+  matrices were indistinguishable in kind.
+
+- **Tightening, `calibration.md`:** section B is a factory default scoped
+  **per model**, not universal. It is byte-identical on all three F-135 Plus
+  units read, and the one base F-135 differs in exactly one payload byte
+  (third motor-adjust word `0x03F0` against the Plus's `0x03E8`). The
+  base-model side rests on a single unit and is marked as such.
+
+- **Tightening, `calibration.md`:** the observed `Offset` spread widens to
+  27–34 at base 4 and 54–68 at base 16, which is 14 px on a 2000 px line, more
+  variation than the two previously known units suggested. Consistent with
+  the reading that `Offset` records per-unit optical alignment.
+
+- **Addition, `per-unit-data-and-safety.md`:** the recovery table said a
+  lost EEPROM could be restored "only from a backup you made. There is no
+  other source." A same-model donor dump is now acknowledged as a lossy last
+  resort, because when both copies of a section fail the OEM engine warns
+  and runs on whatever it read, so a blank chip is worse than a slightly
+  wrong one. The new page indicates the likely scale of the error from the
+  differences seen between the few units read, explicitly not as bounds and
+  untested on hardware. Making your own backup remains the only way to
+  recover *your* unit's values.
+
 ## 2026-08-20 (later)
 
 - **Addition, `dx-barcode.md`:** the F-135 service manual settles the DX
