@@ -14,8 +14,8 @@ client projects, August 2026. Sources are cited per item._
 
 | Store | Where | What | Replaceable? |
 |---|---|---|---|
-| **Boot personality** | the first 8 bytes of the I2C EEPROM at 7-bit `0x51` on the motherboard, read by the FX2 bridge silicon at power-up | an 8-byte C0 boot record, `c0 05 0f 35 f2 07 aa 04` on an F-135/F-135+ (signature, VID `0f05`, PID `f235`, revision `aa07`, config byte), followed on the chip by one further byte `02` that is outside the record. Selects the cold USB identity and so which firmware image the host loads. Defined in [usb-identity-and-firmware.md](usb-identity-and-firmware.md#the-personality-mechanism). | **Yes.** The bytes are known per model and Kodak shipped them as files (`FirmwareLoader/Personalities/USB F135.bin`). |
-| **Per-unit EEPROM** | I2C EEPROM at 7-bit `0x52` on the motherboard, read by the host through the bridge | Serial number; per-resolution `Offset` (the OEM's name; most likely the CCD pixel-window start for that base, see [calibration.md](calibration.md#the-per-unit-eeprom)) and motor speeds (normal and IR); motor-adjust words; the two 3x10 colour matrices. Stored twice with CRC-32. See [calibration.md](calibration.md#the-per-unit-eeprom). | **No.** Measured at the factory for this unit's optics and transport. |
+| **Boot personality** | the first 8 bytes of the I2C EEPROM at 7-bit `0x51` on the motherboard (also a 24LC64), read by the FX2 bridge silicon at power-up | an 8-byte C0 boot record, `c0 05 0f 35 f2 07 aa 04` on an F-135/F-135+ (signature, VID `0f05`, PID `f235`, revision `aa07`, config byte), followed on the chip by one further byte `02` that is outside the record. Selects the cold USB identity and so which firmware image the host loads. Defined in [usb-identity-and-firmware.md](usb-identity-and-firmware.md#the-personality-mechanism). | **Yes.** The bytes are known per model and Kodak shipped them as files (`FirmwareLoader/Personalities/USB F135.bin`). |
+| **Per-unit EEPROM** | I2C EEPROM at 7-bit `0x52` on the motherboard (a Microchip 24LC64, 8192 bytes, of which the sections use the first `0xA24`), read by the host through the bridge | Serial number; per-resolution `Offset` (the OEM's name; most likely the CCD pixel-window start for that base, see [calibration.md](calibration.md#the-per-unit-eeprom)) and motor speeds (normal and IR); motor-adjust words; the two 3x10 colour matrices. Stored twice with CRC-32. See [calibration.md](calibration.md#the-per-unit-eeprom). | **No.** Measured at the factory for this unit's optics and transport. |
 | **Light calibration** | The host's registry (`HKLM\Software\Pakon\TLB\Scan\DpiBase<N>_35\<mode>`), written by the OEM engine | LED currents, duty cycles (open-gate and with-film), A/D gains and offsets, per resolution base and film mode. | **Yes.** Derived by running the OEM's Light Correction (or an equivalent measurement); LEDs age, so it is meant to be re-derived. |
 | **PIC firmware** | Flash in the light and motor controllers (PICL/PICM, PICL+/PICM+) | Kodak's controller firmware, per hardware revision. | **Yes, with care.** Reflashable from the OEM images, but only the image matching the board's hardware revision (the OEM readme warns in capitals not to use `03`/`04`/`05` images on PCB 125039A). |
 | FX2 firmware | RAM in the USB bridge, uploaded by the host at every power-up | `Pakon7.hex` and siblings | Not per-unit and not persistent; a power cycle discards it. |
@@ -168,8 +168,10 @@ like data.
   `aa07` and the bytes are the known F-135 personality. If it is ever
   erased, those 9 bytes are what to write back. [CONFIRMED on hardware,
   August 2026] on serial 16402, against the application firmware: the chip
-  returns its 9 bytes and then `0xFF` to the end of its 256, and the dump
-  is byte-identical to one taken separately through the OEM stack. Note
+  returns its 9 bytes and then `0xFF` for the rest of the 256 bytes read,
+  and that dump is byte-identical to one taken separately through the OEM
+  stack. Note the chip itself is a 24LC64, 8192 bytes, so a 256-byte read
+  leaves almost all of it unseen. Note
   that the personality read the stage-1 loader serves (`0xA9` with
   `wIndex 0`) is **not** a way to dump this chip: it returns 8 bytes,
   which are the chip's first 8, so the ninth byte is missing and the

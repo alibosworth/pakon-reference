@@ -48,8 +48,9 @@ the scanner cold-enumerate as `0f05:f235` revision `aa07`.
 
 The **boot EEPROM** is the chip that record sits on. It is not a synonym for
 the personality: past the record it holds a ninth byte, `0x02`, which is
-outside the C0 format and is not understood, and then `0xFF` to the end of its
-256 bytes.
+outside the C0 format and is not understood, and then `0xFF` for as far as
+anyone has read. The chip is a Microchip 24LC64, so 8192 bytes, of which only
+the first 256 have been read.
 
 The **personality key** is `<productId>_<revision>`, so `F235_AA07`. It is a
 label the host forms from two fields of the record in order to choose a
@@ -125,9 +126,11 @@ F-135's PIC16. [CONFIRMED] by disassembly, May 2026. See
   and the byte after the record (`0x02`) is not understood at all. Only the
   second of those is outside the C0 format; the first has a defined position
   in it, whatever its value means on this hardware.
-- The boot EEPROM (I2C `0x51`) holds nothing else. Past the record and that
-  one byte it reads `0xFF` to the end of its 256 bytes. [CONFIRMED on hardware, August
-  2026] by reading the chip itself on serial 16402, with the `wValue 0x00A3`
+- What the boot EEPROM holds past its first 256 bytes. Those 256 have been
+  read: after the record and the byte following it, they are `0xFF`. But the
+  chip is a Microchip 24LC64, 8192 bytes, identified from a board photograph,
+  so **97% of it has never been read**. [CONFIRMED on hardware, August
+  2026] for the first 256 bytes on serial 16402, with the `wValue 0x00A3`
   select described in
   [per-unit-data-and-safety.md](per-unit-data-and-safety.md#backing-up-the-boot-personality-and-the-light-calibration).
   One unit only, so whether another stores anything there is untested. The
