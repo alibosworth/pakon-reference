@@ -58,6 +58,12 @@ nav:
   - Scanner family: scanner-family.md
   - Resources:
       - DX product-code table: resources/dx-product-code-table.md
+      - EEPROM dumps:
+          - Comparison: resources/eeprom/index.md
+          - F-135, serial 2233: resources/eeprom/F135-2233/index.md
+          - F-135+, serial 5963: resources/eeprom/F135plus-5963/index.md
+          - F-135+, serial 16402: resources/eeprom/F135plus-16402/index.md
+          - F-135+, serial 17157: resources/eeprom/F135plus-17157/index.md
   - Changelog: CHANGELOG.md
 
 plugins:
