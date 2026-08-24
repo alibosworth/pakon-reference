@@ -1,0 +1,2 @@
+# EEPROM dumps are byte-exact records; never let git normalise them.
+*.bin binary
