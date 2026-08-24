@@ -87,7 +87,9 @@ connector, rather than by the light board's own controller.
 [![Allegro A6277 LED drivers at U8 and U25](hardware-images/f135plus-led-drivers-u8-u25.jpg)](hardware-images/f135plus-led-drivers-u8-u25.jpg){ target=_blank rel=noopener }
 
 Below them are **four `X9015U` digitally controlled potentiometers** at `U20`,
-`U21`, `U22` and one more, each with a `1001` resistor alongside. Four of them,
+`U21`, `U22` and `U23`, each with a `1001` resistor alongside. `U23` is the
+leftmost and sits rotated a quarter turn from the other three, so its marking
+reads horizontally where theirs read vertically. Four of them,
 on a scanner with four light channels, is a coincidence worth writing down: the
 OEM keeps `Current_R`, `Current_G`, `Current_B` and `Current_Ir` per resolution
 base and film mode, and a constant-current driver of this family sets its
