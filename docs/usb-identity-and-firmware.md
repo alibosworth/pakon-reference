@@ -31,15 +31,38 @@ the personality mechanism below.
 
 ## The personality mechanism
 
-Every family member cold-enumerates the same way. The driver reads an 8-byte
-**personality** structure from the device with vendor request `0xA9`:
+The word **personality** gets used for three related things, so this page
+fixes what each one means and the rest of the reference follows it.
+
+The **personality** is an 8-byte Cypress C0 boot record, stored at the very
+start of the boot EEPROM (I2C `0x51`):
 
 ```
-[id] [vendorId:2] [productId:2] [revision:2] [extra]
+[0xC0] [vendorId:2] [productId:2] [revision:2] [config]
 ```
 
-and selects the firmware image by the key `<productId>_<revision>`. The
-revision distinguishes the model families:
+On an F-135 or F-135+ it reads `c0 05 0f 35 f2 07 aa 04`, little-endian
+throughout, so vendor `0f05`, product `f235`, revision `aa07`. The FX2 bridge
+silicon reads it at power-up with no host involvement, and it is what makes
+the scanner cold-enumerate as `0f05:f235` revision `aa07`.
+
+The **boot EEPROM** is the chip that record sits on. It is not a synonym for
+the personality: past the record it holds a ninth byte, `0x02`, which is
+outside the C0 format and is not understood, and then `0xFF` to the end of its
+256 bytes.
+
+The **personality key** is `<productId>_<revision>`, so `F235_AA07`. It is a
+label the host forms from two fields of the record in order to choose a
+firmware image. It is not stored anywhere on the scanner.
+
+Every family member cold-enumerates the same way. Once the stage-1 loader is
+running, the host can ask it for the record with vendor request `0xA9` and
+`wIndex 0`, which returns those same 8 bytes and not the ninth
+([CONFIRMED on hardware, August 2026] on serial 16402, where the loader's 8
+bytes matched the chip's first 8 exactly). That read is how the driver gets
+the key, and it is not a way to dump the chip; for that see
+[per-unit-data-and-safety.md](per-unit-data-and-safety.md#backing-up-the-boot-personality-and-the-light-calibration).
+The revision distinguishes the model families:
 
 | Personality key | Firmware image | Family |
 |---|---|---|
@@ -98,13 +121,12 @@ F-135's PIC16. [CONFIRMED] by disassembly, May 2026. See
 
 ## Open questions
 
-- The personality structure's final byte and the extra trailing byte are not
-  understood. Where the boundary between them falls is now known: the stage-1
-  loader's `0xA9` read returns 8 bytes, and those are the chip's first 8, so
-  the ninth byte (`0x02`) is stored on the chip but is not part of what the
-  loader reports.
-- The boot EEPROM (I2C `0x51`) holds nothing else. Past the 9-byte personality
-  it reads `0xFF` to the end of its 256 bytes. [CONFIRMED on hardware, August
+- What the record's configuration byte (`0x04`) selects is not decoded here,
+  and the byte after the record (`0x02`) is not understood at all. Only the
+  second of those is outside the C0 format; the first has a defined position
+  in it, whatever its value means on this hardware.
+- The boot EEPROM (I2C `0x51`) holds nothing else. Past the record and that
+  one byte it reads `0xFF` to the end of its 256 bytes. [CONFIRMED on hardware, August
   2026] by reading the chip itself on serial 16402, with the `wValue 0x00A3`
   select described in
   [per-unit-data-and-safety.md](per-unit-data-and-safety.md#backing-up-the-boot-personality-and-the-light-calibration).

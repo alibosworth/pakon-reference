@@ -11,9 +11,10 @@ published; each entry links the page it touched. Newest first.
 - **Addition, `per-unit-data-and-safety.md` and
   `usb-identity-and-firmware.md`:** the boot EEPROM at I2C `0x51` has now been
   read directly, on serial 16402, with the `wValue 0x00A3` select against the
-  application firmware. It holds the 9-byte personality and then `0xFF` to the
-  end of its 256 bytes, which closes the open question about what else is on
-  that chip. One unit only, so it is marked as such.
+  application firmware. It holds the 8-byte personality record, then one byte
+  outside that record, then `0xFF` to the end of its 256 bytes, which closes
+  the open question about what else is on that chip. One unit only, so it is
+  marked as such.
 
 - **Clarification, `per-unit-data-and-safety.md`:** the personality read the
   stage-1 loader serves (`0xA9` with `wIndex 0`) is not a way to dump that
@@ -22,6 +23,18 @@ published; each entry links the page it touched. Newest first.
   the application firmware is running. Archiving the chip needs the `0x00A3`
   select instead. The distinction matters because the two are easy to conflate
   and only one of them produces a file that could restore anything.
+
+- **Clarification, `usb-identity-and-firmware.md`:** "personality" was being
+  used for three different things across the reference, which made the pages
+  hard to reconcile: an 8-byte structure read over USB, the 9 bytes on the boot
+  chip, and the key `F235_AA07` that picks a firmware image. The personality
+  mechanism section now defines each. The **personality** is the 8-byte Cypress
+  C0 boot record at the start of chip `0x51`; the **boot EEPROM** is the chip it
+  sits on, which also holds one byte outside the record and then `0xFF`; the
+  **personality key** is a label the host forms from two of the record's fields
+  and is stored nowhere. The other pages now follow that, and the boot-personality
+  row in `per-unit-data-and-safety.md`, which had described a 9-byte personality,
+  is corrected.
 
 - **Tightening, `calibration.md`:** the select's generality was marked
   confirmed on hardware for the read direction, which in practice meant chip
