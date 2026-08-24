@@ -42,6 +42,9 @@ one board has been photographed. The reverse of the main board and the CCD,
 light and motor sub-boards have not been examined, and any of them could carry
 storage of their own.
 
+The two parts are pictured on the
+[hardware photographs](resources/hardware-images.md#the-two-i2c-eeproms) page.
+
 None of this describes a base F-135. The board photographed is an F-135+ main
 board, and the base model uses a different one, PCB #125039A, which is a
 separate design rather than a revision of the same thing. Its parts, its
@@ -220,6 +223,15 @@ like data.
 | Light calibration | Run Light Correction (or an equivalent measurement) again. |
 | PIC firmware row | Reflash the controller from the OEM image for that board's hardware revision, over the bootloader protocol. This has been done once on a real unit, by pakon-mac, whose [`tools/flash_picm.py`](https://github.com/gazzdingo/pakon-mac/blob/c0be5853c292/tools/flash_picm.py) is the implementation (its detailed recovery notes are on that project's private remote, per its [`docs/68-handover.md`](https://github.com/gazzdingo/pakon-mac/blob/c0be5853c292/docs/68-handover.md#L36-L44)). The bootloader protocol is not documented in this reference yet; it is delicate, and the wrong revision damages the board. |
 | Wedged FX2 | Power cycle. |
+
+Before reflashing a controller, check which board you have: the number is
+silkscreened along the bottom edge of the main board, reachable by removing
+the bottom plate with the scanner unplugged. `125430A`/`B`/`C` take hardware
+versions `03`/`04`/`05` and `125039A` takes `02`; that pairing is what the OEM
+readme warns about in capitals. More photographs are on the
+[hardware photographs](resources/hardware-images.md) page.
+
+![PCB #125430 REV C on an F-135+ main board](resources/hardware-images/f135plus-board-number.jpg)
 
 ## Open questions
 

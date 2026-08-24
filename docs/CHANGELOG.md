@@ -8,6 +8,17 @@ published; each entry links the page it touched. Newest first.
 
 ## 2026-08-24 (later)
 
+- **Addition, `resources/hardware-images.md`:** a new page with photographs of
+  the inside of a real scanner, the first the reference has carried. The point
+  is checkability rather than illustration: where the board number is printed,
+  which parts are fitted, and what an owner will actually see. The board-number
+  shot also appears beside the reflashing warning in
+  `per-unit-data-and-safety.md`, which until now told people the wrong image
+  could damage a board without showing them how to tell which board they have.
+  Everything on the page is one F-135+, and the page says so, along with what
+  has not been photographed: the board's reverse, the three sub-boards, and the
+  base F-135, whose main board is a separate design.
+
 - **Addition, `per-unit-data-and-safety.md` and
   `usb-identity-and-firmware.md`:** the boot EEPROM at I2C `0x51` has now been
   read directly, on serial 16402, with the `wValue 0x00A3` select against the

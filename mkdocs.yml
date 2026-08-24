@@ -58,6 +58,7 @@ nav:
   - Scanner family: scanner-family.md
   - Resources:
       - DX product-code table: resources/dx-product-code-table.md
+      - Hardware photographs: resources/hardware-images.md
       - EEPROM dumps:
           - Comparison: resources/eeprom/index.md
           - F-135, serial 2233: resources/eeprom/F135-2233/index.md
