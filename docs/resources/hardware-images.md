@@ -1,9 +1,8 @@
 # Hardware photographs
 
-Photographs of the inside of a real scanner, taken for this reference. They
-are here to make claims about the hardware checkable: where a board number is
-printed, which parts are fitted, and what a reader will actually see when they
-open their own machine.
+Photographs of the inside of a scanner, taken for this reference, so that
+claims about the hardware can be checked rather than taken on trust. They also
+give an owner something to compare against when they open their own machine.
 
 Everything on this page is **one F-135+**, serial 16402, photographed from the
 component side of its main board on 24 August 2026. Getting to that view needs
@@ -131,10 +130,10 @@ Read off the same board, without a photograph good enough to reproduce here:
 | Designator | Part | What it is |
 |---|---|---|
 | `U39` | LMD18200T | National 3A/55V H-bridge, the transport motor driver |
-| `U9` | Micron `46V16M16` | DDR SDRAM |
-| `U5` | IDT `71V124` | SRAM |
+| `U9` | Micron `MT46V16M16P-75 F` | 256 Mbit DDR SDRAM, date code `0708` |
+| `U5` | IDT `71V124 SA12YG` | 1 Mbit SRAM, date code `H0805P` |
 | `U18` | Xilinx `XC2S150E`, `FTG256`, speed `7C/6I` | Spartan-IIE FPGA, 150K system gates, 256-ball BGA. The scan-window and gain register banks live behind it |
-| `U34`, `U11` | `125506A`, `125507A` | Pakon-marked customs, function unknown. `U11` carries a second line that is not legible, so there may be a real part number to recover |
+| `U34`, `U11` | `125506A`, `125507A`, both dated `2208` | 44-pin QFPs whose Pakon number is printed on a **white label stuck to the package**, not moulded or laser-marked into it, which is why neither carries a manufacturer logo. The original marking is probably underneath. `U11` has a second line whose lower edge is just visible and could not be read |
 | `D13` | `B340LA` | Schottky rectifier |
 
 Marks that have been read but not identified, in case someone recognises one:
