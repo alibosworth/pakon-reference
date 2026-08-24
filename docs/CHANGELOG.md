@@ -32,8 +32,10 @@ published; each entry links the page it touched. Newest first.
   ever been read: the calibration sections end at `0xA24`, and just the first
   256 bytes of the boot chip have been requested. What is in the rest is now
   an open question rather than an assumption that there is nothing there. The
-  page also records what has *not* been looked at: the reverse of that board
-  and the CCD, light and motor sub-boards, any of which could carry storage.
+  page also records what has *not* been looked at: the reverse of that board,
+  the CCD, light and motor sub-boards, any of which could carry storage, and
+  the base F-135, which uses a different main board (PCB #125039A) that nobody
+  has examined. Everything here describes one F-135+.
 
 - **Clarification, `usb-identity-and-firmware.md`:** "personality" was being
   used for three different things across the reference, which made the pages
