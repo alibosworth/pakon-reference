@@ -42,6 +42,11 @@ one board has been photographed. The reverse of the main board and the CCD,
 light and motor sub-boards have not been examined, and any of them could carry
 storage of their own.
 
+None of this describes a base F-135. The board photographed is an F-135+ main
+board, and the base model uses a different one, PCB #125039A, which is a
+separate design rather than a revision of the same thing. Its parts, its
+capacities and how many EEPROMs it carries are all unexamined.
+
 ## What can be damaged, and how
 
 Everything below has happened to a real scanner or has been demonstrated
