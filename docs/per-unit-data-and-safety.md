@@ -163,10 +163,17 @@ like data.
 ## Backing up the boot personality and the light calibration
 
 - **Boot personality (`0x51`):** the same two requests read it (select
-  `wValue 0x00A3` = `(0x51 << 1) | 1`, then `0xA9` at offsets 0–8), or
+  `wValue 0x00A3` = `(0x51 << 1) | 1`, then `0xA9` at byte offsets), or
   simply record that your unit's cold identity is `0f05:f235` revision
   `aa07` and the bytes are the known F-135 personality. If it is ever
-  erased, those 9 bytes are what to write back.
+  erased, those 9 bytes are what to write back. [CONFIRMED on hardware,
+  August 2026] on serial 16402, against the application firmware: the chip
+  returns its 9 bytes and then `0xFF` to the end of its 256, and the dump
+  is byte-identical to one taken separately through the OEM stack. Note
+  that the personality read the stage-1 loader serves (`0xA9` with
+  `wIndex 0`) is **not** a way to dump this chip: it returns 8 bytes,
+  which are the chip's first 8, so the ninth byte is missing and the
+  loader is gone once the application firmware is running.
 - **Light calibration:** export the registry tree `HKLM\Software\Pakon\TLB`
   (or the `Wow6432Node` twin) after the OEM has run Light Correction. It is
   re-derivable, but keeping it saves a calibration run and records the
