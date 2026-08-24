@@ -18,8 +18,10 @@ for how it sits against the others.
 | PosMatrix | 0.25 diagonal, no cross terms or offsets |
 | MotorAdjust ×12 | 1000, 1008 alternating |
 
-Boot personality (`0x51`): `c0 05 0f 35 f2 07 aa 04 02`, the standard
+Boot chip (`0x51`): `c0 05 0f 35 f2 07 aa 04` then `02`, the standard
 F-135 / F-135+ bytes, which are the same on every unit and are replaceable.
+The first 8 are the personality record itself; see
+[usb-identity-and-firmware.md](../../../usb-identity-and-firmware.md#the-personality-mechanism).
 
 ## The fault in this chip
 
@@ -69,7 +71,7 @@ primary. Section B is identical in both copies.
 | [`eeprom_0x52_sectionB_backup.bin`](eeprom/eeprom_0x52_sectionB_backup.bin) | 36 B | CRC valid, identical to primary |
 | [`eeprom_0x52_sectionA_primary_read1_cycle1.bin`](eeprom/eeprom_0x52_sectionA_primary_read1_cycle1.bin) | 398 B | earlier read, power cycle 1, identical |
 | [`eeprom_0x52_sectionA_primary_read2_cycle2.bin`](eeprom/eeprom_0x52_sectionA_primary_read2_cycle2.bin) | 398 B | earlier read, power cycle 2, identical |
-| [`eeprom_0x51_boot_personality.bin`](eeprom/eeprom_0x51_boot_personality.bin) | 256 B | boot EEPROM; first 9 bytes are the personality |
+| [`eeprom_0x51_boot_personality.bin`](eeprom/eeprom_0x51_boot_personality.bin) | 256 B | the boot chip; the personality record is its first 8 bytes |
 | [`SHA256SUMS`](eeprom/SHA256SUMS) | | hashes for the above |
 
 A registry export from this unit (the OEM's own decode of the EEPROM plus

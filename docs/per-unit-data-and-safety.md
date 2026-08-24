@@ -14,7 +14,7 @@ client projects, August 2026. Sources are cited per item._
 
 | Store | Where | What | Replaceable? |
 |---|---|---|---|
-| **Boot personality** | I2C EEPROM at 7-bit `0x51` on the motherboard, read by the FX2 bridge silicon at power-up | 9 bytes: `c0 05 0f 35 f2 07 aa 04 02` on an F-135/F-135+ (C0-format load: VID `0f05`, PID `f235`, revision `aa07`, config byte, one trailing byte). Selects the cold USB identity and so which firmware image the host loads. | **Yes.** The bytes are known per model and Kodak shipped them as files (`FirmwareLoader/Personalities/USB F135.bin`). |
+| **Boot personality** | the first 8 bytes of the I2C EEPROM at 7-bit `0x51` on the motherboard, read by the FX2 bridge silicon at power-up | an 8-byte C0 boot record, `c0 05 0f 35 f2 07 aa 04` on an F-135/F-135+ (signature, VID `0f05`, PID `f235`, revision `aa07`, config byte), followed on the chip by one further byte `02` that is outside the record. Selects the cold USB identity and so which firmware image the host loads. Defined in [usb-identity-and-firmware.md](usb-identity-and-firmware.md#the-personality-mechanism). | **Yes.** The bytes are known per model and Kodak shipped them as files (`FirmwareLoader/Personalities/USB F135.bin`). |
 | **Per-unit EEPROM** | I2C EEPROM at 7-bit `0x52` on the motherboard, read by the host through the bridge | Serial number; per-resolution `Offset` (the OEM's name; most likely the CCD pixel-window start for that base, see [calibration.md](calibration.md#the-per-unit-eeprom)) and motor speeds (normal and IR); motor-adjust words; the two 3x10 colour matrices. Stored twice with CRC-32. See [calibration.md](calibration.md#the-per-unit-eeprom). | **No.** Measured at the factory for this unit's optics and transport. |
 | **Light calibration** | The host's registry (`HKLM\Software\Pakon\TLB\Scan\DpiBase<N>_35\<mode>`), written by the OEM engine | LED currents, duty cycles (open-gate and with-film), A/D gains and offsets, per resolution base and film mode. | **Yes.** Derived by running the OEM's Light Correction (or an equivalent measurement); LEDs age, so it is meant to be re-derived. |
 | **PIC firmware** | Flash in the light and motor controllers (PICL/PICM, PICL+/PICM+) | Kodak's controller firmware, per hardware revision. | **Yes, with care.** Reflashable from the OEM images, but only the image matching the board's hardware revision (the OEM readme warns in capitals not to use `03`/`04`/`05` images on PCB 125039A). |
@@ -52,7 +52,7 @@ malformed packet.
   sweep of writes across assumed board addresses erased a real unit's boot
   personality; it then enumerated as a bare FX2 (`04b4:8613`) with a red
   status LED and needed an explicit firmware image at every power-up until
-  the 9 bytes were rewritten. [CONFIRMED] by that incident (pakon-mac,
+  those bytes were rewritten. [CONFIRMED] by that incident (pakon-mac,
   [`tools/eeprom_dump.py`](https://github.com/gazzdingo/pakon-mac/blob/c0be5853c292/tools/eeprom_dump.py#L4-L6) and
   [`backups/eeprom-i2c/README.md`](https://github.com/gazzdingo/pakon-mac/blob/c0be5853c292/backups/eeprom-i2c/README.md)).
 - **Writing the per-unit EEPROM.** Vendor control request `0xA2` (the write
@@ -191,7 +191,7 @@ like data.
 
 | Lost | Recover by |
 |---|---|
-| Boot personality | Write the 9 known bytes back to the `0x51` EEPROM (an FX2 write, not the `0x52` chip). Until then the unit enumerates as `04b4:8613` and needs an explicit image; the scanner otherwise works (pakon-mac's unit runs this way: [`tools/eeprom_repair.py`](https://github.com/gazzdingo/pakon-mac/blob/c0be5853c292/tools/eeprom_repair.py#L11-L23), [`docs/01-usb-layer.md`](https://github.com/gazzdingo/pakon-mac/blob/c0be5853c292/docs/01-usb-layer.md#L33-L48)). |
+| Boot personality | Write the 9 known bytes back to the `0x51` EEPROM (the 8-byte record plus the byte that follows it, reproducing what was there) (an FX2 write, not the `0x52` chip). Until then the unit enumerates as `04b4:8613` and needs an explicit image; the scanner otherwise works (pakon-mac's unit runs this way: [`tools/eeprom_repair.py`](https://github.com/gazzdingo/pakon-mac/blob/c0be5853c292/tools/eeprom_repair.py#L11-L23), [`docs/01-usb-layer.md`](https://github.com/gazzdingo/pakon-mac/blob/c0be5853c292/docs/01-usb-layer.md#L33-L48)). |
 | Per-unit EEPROM, one copy | Nothing to do: the OEM reads the backup when the primary's length or CRC is bad, first good copy wins. Repairing the primary needs an `0xA2` write; weigh it against the risk. |
 | Per-unit EEPROM, both copies | From a backup you made; there is no source for *your* unit's values. Failing that, a dump from another unit of the same model is a lossy last resort. See [using someone else's dump](resources/eeprom/index.md#using-someone-elses-dump) for what it costs and why it still beats a blank chip. |
 | Light calibration | Run Light Correction (or an equivalent measurement) again. |
@@ -211,4 +211,6 @@ like data.
   (later reads differing from the first while still reporting success), and
   if so why; the reference unit reads consistently. Until it is understood,
   reading once per power cycle sidesteps it.
-- The boot EEPROM's contents beyond the 9-byte personality.
+- What the boot record's configuration byte selects, and what the byte after
+  the record is for. The rest of that chip is now known to be `0xFF` (see
+  [usb-identity-and-firmware.md](usb-identity-and-firmware.md#open-questions)).
