@@ -125,8 +125,25 @@ checked against it:
    should be a plain 0.25 diagonal.
 
 Keep the raw bytes and their hashes somewhere that will outlive the
-machine you read them on. An existing implementation of exactly this
-sequence, read-only, is [pakon-tlx-macos](https://github.com/pablonavarrob/pakon-tlx-macos)'s
+machine you read them on.
+
+If you would rather not set up a terminal, Python and a venv to do this,
+**[pakon-eeprom-backup-web](https://alibosworth.github.io/pakon-eeprom-backup-web/)**
+performs the whole procedure above from a Chrome or Edge tab with nothing
+to install ([source](https://github.com/alibosworth/pakon-eeprom-backup-web)).
+It issues the same two read requests, reads both copies of both sections,
+checks all four CRCs, compares primary with backup, decodes the serial and
+scanner type so you can confirm it is your unit, enforces one read per
+power cycle, and hands back a zip with the section files, a `SHA256SUMS`
+and a record of the CRC results. It reads only; it has no code path that
+can write the chip. It does load the standard Kodak FX2 firmware into the
+bridge's RAM first, as every client and the OEM do at every power-on, after
+checking the image's SHA-256 and that the revision the loader reports
+matches what the scanner announced on USB. RAM only, cleared by a power
+cycle, and not an EEPROM write.
+
+Two command-line implementations of the same
+sequence, read-only, are [pakon-tlx-macos](https://github.com/pablonavarrob/pakon-tlx-macos)'s
 `tools/eedump.py` (with the backup and CRC checks proposed in its
 [PR 4](https://github.com/pablonavarrob/pakon-tlx-macos/pull/4));
 [pakon-mac](https://github.com/gazzdingo/pakon-mac)'s `eeprom_oneshot.py`
@@ -169,7 +186,7 @@ like data.
 |---|---|
 | Boot personality | Write the 9 known bytes back to the `0x51` EEPROM (an FX2 write, not the `0x52` chip). Until then the unit enumerates as `04b4:8613` and needs an explicit image; the scanner otherwise works (pakon-mac's unit runs this way: [`tools/eeprom_repair.py`](https://github.com/gazzdingo/pakon-mac/blob/c0be5853c292/tools/eeprom_repair.py#L11-L23), [`docs/01-usb-layer.md`](https://github.com/gazzdingo/pakon-mac/blob/c0be5853c292/docs/01-usb-layer.md#L33-L48)). |
 | Per-unit EEPROM, one copy | Nothing to do: the OEM reads the backup when the primary's length or CRC is bad, first good copy wins. Repairing the primary needs an `0xA2` write; weigh it against the risk. |
-| Per-unit EEPROM, both copies | Only from a backup you made. There is no other source. |
+| Per-unit EEPROM, both copies | From a backup you made; there is no source for *your* unit's values. Failing that, a dump from another unit of the same model is a lossy last resort. See [using someone else's dump](resources/eeprom/index.md#using-someone-elses-dump) for what it costs and why it still beats a blank chip. |
 | Light calibration | Run Light Correction (or an equivalent measurement) again. |
 | PIC firmware row | Reflash the controller from the OEM image for that board's hardware revision, over the bootloader protocol. This has been done once on a real unit, by pakon-mac, whose [`tools/flash_picm.py`](https://github.com/gazzdingo/pakon-mac/blob/c0be5853c292/tools/flash_picm.py) is the implementation (its detailed recovery notes are on that project's private remote, per its [`docs/68-handover.md`](https://github.com/gazzdingo/pakon-mac/blob/c0be5853c292/docs/68-handover.md#L36-L44)). The bootloader protocol is not documented in this reference yet; it is delicate, and the wrong revision damages the board. |
 | Wedged FX2 | Power cycle. |
