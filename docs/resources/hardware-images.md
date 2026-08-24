@@ -142,7 +142,7 @@ Marks that have been read but not identified, in case someone recognises one:
 | Designator | Mark | Note |
 |---|---|---|
 | `U14` | `LTBBW e3` | Linear Tech logo. A top-mark code rather than a part number, so decodable from LTC's marking list by anyone who has it. Nothing else is printed on the package |
-| `U33` | `JM83AB` over `S0002VB` | National logo, 16-pin |
+| `U33` | `JM83AB` over `SOOO2VB` | National logo, 16-pin. The second line is where a part number belongs but does not resemble one, so this may be house-marked like `U34` and `U11`. Read as letter `O` rather than zero, though the two are hard to tell apart on a chip mark |
 | `U16` | `CJAB 2995M` | National logo, 8-pin, beside the DDR |
 | (bottom right) | `X30` over `UF400` | a vertical part, logo like two overlapping Vs |
 
