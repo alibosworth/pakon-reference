@@ -80,8 +80,9 @@ Section A payload, absolute byte offsets, little-endian:
 
 | Offset | Type | Field |
 |---|---|---|
-| `0x008`, `0x00C` | u32, u32 | two unnamed words (400 and 1351 on the reference unit) |
-| `0x010` | u32 | **scanner serial number** |
+| `0x008` | u32 | **hardware version** (`ScannerVersionHw`; 400 on every unit read) |
+| `0x00C` | u32 | **scanner type** (`ScannerType`): 1350 = F-135, 1351 = F-135 Plus |
+| `0x010` | u32 | **scanner serial number** (`ScannerSerialNumber`) |
 | `0x014` / `0x016` / `0x018` | u16 ×3 | resolution base 4: `Offset`, MotorSpeed, MotorSpeed (IR) |
 | `0x01A` / `0x01C` / `0x01E` | u16 ×3 | resolution base 8: same three |
 | `0x020` / `0x022` / `0x024` | u16 ×3 | resolution base 16: same three |
@@ -89,8 +90,34 @@ Section A payload, absolute byte offsets, little-endian:
 | `0x09E` – `0x115` | f32 ×30 | **PosMatrix0–29**: the positive (slide) correction, 3 rows × 10 |
 | `0x116` – `0x18D` | 120 bytes | unused (zero on every unit seen) |
 
+The word at `0x00C` is the **scanner type**, and it is a reliable model
+discriminator: 1350 on a base F-135, 1351 on an F-135 Plus. [CONFIRMED]
+across five units (see
+[the EEPROM dump comparison](resources/eeprom/index.md)) and two ways on
+the OEM software: its error log prints "Scanner Type 1351" for a unit whose
+EEPROM decodes to 1351, and the engine mirrors the word into the registry
+as `ScannerType` (see below). Identified by Mats Fagerberg
+([thetalkingdrum](https://github.com/thetalkingdrum)); the field was
+decoded but left unnamed by
+[pakon-mac](https://github.com/gazzdingo/pakon-mac). So model and serial
+can both be read straight off a raw dump without running the OEM
+software.
+
+The three consecutive words at `0x008`, `0x00C` and `0x010` are named by
+the OEM engine itself, which mirrors them into the registry in that order
+as `ScannerVersionHw`, `ScannerType` and `ScannerSerialNumber` under
+`HKLM\Software\Pakon\TLB\Scan`. On serial 16402 those keys read
+`dword:00000190`, `dword:00000547` and `dword:00004012` (400, 1351 and
+16402), matching the EEPROM words exactly. [CONFIRMED] against that unit's
+registry export.
+
+So `0x008` is the **hardware version**, and it reads 400 on every unit read
+so far. Because no unit has yet shown a different value, what a change in it
+would signify is untested.
+
 `Offset` is the OEM's own name for the first word of each per-base triple
-(30 / 58 / 60 on the reference unit; 27 / 54 / 55 on another). Its meaning is
+(27 to 34 at base 4 across the units read; see the
+[dump comparison](resources/eeprom/index.md)). Its meaning is
 not stated by the OEM. It sits with the motor speeds, scales with the
 resolution base, and matches the CCD pixel-window start that
 implementations write to the FPGA geometry register before a scan (31 for
@@ -101,14 +128,28 @@ to the film gate. [INFERRED from the value correspondence; not confirmed.]
 
 Section B payload: twelve u16 motor-adjust words (`0x808`–`0x81E`, values
 near 1000 and clamped by the OEM to 900–1100), then one unnamed u32.
+Section B appears to be a **factory default scoped per model**, not
+per-unit and not universal: it is byte-identical (CRC `0x873e6ed3`) on all
+three F-135 Plus units read, while the one base F-135 read differs in
+exactly one payload byte: the third motor-adjust word is `0x03F0` where
+the Plus has `0x03E8`, giving CRC `0x2a582d50`. Either the OEM's
+motor-speed calibration has never been run on any unit read so far, or it
+does not write here. [CONFIRMED] on four units; the base-model reading
+rests on a single unit.
 
 Each 3×10 matrix row is `R, G, B, R², G², B², RG, GB, BR, constant`, i.e. a
 second-order colour matrix; on the reference unit the quadratic columns are
 all ≈ 0 and NegMatrix is in effect a 3×4 affine (diagonal ≈ 0.29 / 0.29 /
-0.32, constants ≈ +166 / +430 / +638), and PosMatrix is the plain 0.25
-diagonal with no cross terms or offsets. These are per-unit factory
-values, not shared constants; the OEM also mirrors them into the registry.
-[CONFIRMED] layout and values on serial 16402; layout first established
+0.32, constants ≈ 166 / 430 / 638), and PosMatrix is the plain 0.25
+diagonal with no cross terms or offsets. The OEM also mirrors both into
+the registry.
+
+The two matrices behave differently across units: **NegMatrix is per-unit**
+(diagonals range 0.26–0.34 and constants 145–166 / 386–445 / 602–651 over
+the units read), while **PosMatrix is bit-identical on every unit read,
+across both models**: the plain 0.25 diagonal, so a shared constant
+rather than a factory measurement. [CONFIRMED] on four complete dumps; see
+[the dump comparison](resources/eeprom/index.md). Layout first established
 by [pakon-mac](https://github.com/gazzdingo/pakon-mac) from the OEM engine.
 
 Reference-unit motor constants, for scale (per-unit; do not copy):
@@ -118,6 +159,11 @@ Reference-unit motor constants, for scale (per-unit; do not copy):
 | 4 | 30 | 25726 | 19278 |
 | 8 | 58 | 11434 | 7557 |
 | 16 | 60 | 5900 | 4836 |
+
+Values from every unit read are collected in
+[the EEPROM dump comparison](resources/eeprom/index.md), which is the
+practical way to see which fields are per-unit, which are per-model, and
+which are constant.
 
 ### Verifying a read
 
