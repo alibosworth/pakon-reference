@@ -103,6 +103,20 @@ functions and the channel count only.]
 
 [![Allegro drivers and four X9015U digital potentiometers](hardware-images/f135plus-led-drivers-digipots.jpg)](hardware-images/f135plus-led-drivers-digipots.jpg){ target=_blank rel=noopener }
 
+### The FPGA holds nothing when it is off
+
+Spartan-IIE is SRAM-based, so `U18` has to be given its bitstream every time
+the scanner powers up, exactly as the FX2 is given `Pakon7.hex`. There is no
+configuration PROM beside it, and the FX2 image is far too small to contain a
+150K-gate bitstream, so the configuration arrives from somewhere else. The OEM
+package carries a "CCD FPGA file" alongside its controller images, which is the
+obvious candidate but is not documented here yet.
+
+The consequence for the rest of the reference: the scan-window and gain
+registers described in [calibration](../calibration.md) are registers in logic
+the **host itself loads**, not fixed silicon. Whatever those banks mean is a
+property of the bitstream in use.
+
 ## Power
 
 `U15` is an `LP3965ES-2.5` and `U17` an `LP3964ES-1.8`, National low-dropout
@@ -119,14 +133,21 @@ Read off the same board, without a photograph good enough to reproduce here:
 | `U39` | LMD18200T | National 3A/55V H-bridge, the transport motor driver |
 | `U9` | Micron `46V16M16` | DDR SDRAM |
 | `U5` | IDT `71V124` | SRAM |
-| `U18` | Xilinx Spartan | the FPGA the scan-window and gain registers live behind |
-| `U34`, `U11` | `125506A`, `125507A` | Pakon-marked customs, function unknown |
+| `U18` | Xilinx `XC2S150E`, `FTG256`, speed `7C/6I` | Spartan-IIE FPGA, 150K system gates, 256-ball BGA. The scan-window and gain register banks live behind it |
+| `U34`, `U11` | `125506A`, `125507A` | Pakon-marked customs, function unknown. `U11` carries a second line that is not legible, so there may be a real part number to recover |
 | `D13` | `B340LA` | Schottky rectifier |
 
-A vertical part at the bottom right reads `UF400` beneath a doubled-V logo and
-is not identified. Note that `JM83AF` on the `U39` motor driver is a National
-lot code rather than part of the part number: `U33` carries `JM83AB` in the
-same position.
+Marks that have been read but not identified, in case someone recognises one:
+
+| Designator | Mark | Note |
+|---|---|---|
+| `U14` | `LTBBW e3` | Linear Tech logo. A top-mark code rather than a part number, so decodable from LTC's marking list by anyone who has it. Nothing else is printed on the package |
+| `U33` | `JM83AB` over `S0002VB` | National logo, 16-pin |
+| `U16` | `CJAB 2995M` | National logo, 8-pin, beside the DDR |
+| (bottom right) | `X30` over `UF400` | a vertical part, logo like two overlapping Vs |
+
+`JM83AF` on the `U39` motor driver and `JM83AB` on `U33` share a prefix, so
+that field is a National lot code rather than part of either part number.
 
 ## Contributing
 
