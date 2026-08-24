@@ -6,21 +6,36 @@ printed, which parts are fitted, and what a reader will actually see when they
 open their own machine.
 
 Everything on this page is **one F-135+**, serial 16402, photographed from the
-component side of its main board on 24 August 2026. The base F-135 uses a
-different main board, PCB #125039A, which is a separate design rather than a
-revision of this one and has not been photographed at all. The reverse of this
-board and the CCD, light and motor sub-boards have not been photographed
-either.
+component side of its main board on 24 August 2026. Getting to that view needs
+the bottom plate off, which is four security screws, with the scanner
+unplugged. Nothing here requires the scanner to be powered, and there is no
+reason to power it with the plate off.
 
-Getting to this view needs the bottom plate off, which is four security
-screws, with the scanner unplugged. Nothing here requires the scanner to be
-powered, and there is no reason to power it with the plate off.
+## What is missing
+
+Most of the scanner. Nothing below has been photographed, and none of it can
+be inferred from what has:
+
+- **The CCD board.** The most valuable gap. Its part number would give the
+  sensor's total and masked pixel counts from a datasheet, which bears
+  directly on the `Offset` question in [calibration](../calibration.md).
+- **The light board**, which differs between the two models: the Plus has a
+  thermoelectric cooler and temperature sensing the base F-135 lacks, which is
+  why their LED current ceilings differ.
+- **The motor board.**
+- **The reverse of the main board**, so whether the two EEPROMs below are the
+  only ones in the scanner is not known.
+- **Any base F-135.** Its main board is PCB #125039A, a separate design rather
+  than a revision of the one here, so no part or marking on this page can be
+  assumed to apply to it.
+- **The DX sensor area**, where an open question about which detectors read
+  the barcode is still unresolved (see [DX barcode](../dx-barcode.md)).
 
 ## The main board
 
 PCB #125430 REV C, marked `© 2005 PAKON, INC`.
 
-![The component side of an F-135+ main board](hardware-images/f135plus-mainboard.jpg)
+[![The component side of an F-135+ main board](hardware-images/f135plus-mainboard.jpg)](hardware-images/f135plus-mainboard.jpg){ target=_blank rel=noopener }
 
 ## The board number
 
@@ -31,7 +46,7 @@ respectively, and the base F-135's `125039A` takes `02`. Putting a Plus image
 on a base board is the case the OEM readme warns about in capitals. See
 [per-unit data and safety](../per-unit-data-and-safety.md#recovery).
 
-![PCB #125430 REV C silkscreened on the board's bottom edge](hardware-images/f135plus-board-number.jpg)
+[![PCB #125430 REV C silkscreened on the board's bottom edge](hardware-images/f135plus-board-number.jpg)](hardware-images/f135plus-board-number.jpg){ target=_blank rel=noopener }
 
 ## The USB bridge
 
@@ -41,7 +56,7 @@ of the FPGA, with its crystal alongside. This is the bridge everything the
 host does passes through, described in
 [USB identity and firmware](../usb-identity-and-firmware.md).
 
-![The Cypress CY7C68013A at U6](hardware-images/f135plus-fx2-u6.jpg)
+[![The Cypress CY7C68013A at U6](hardware-images/f135plus-fx2-u6.jpg)](hardware-images/f135plus-fx2-u6.jpg){ target=_blank rel=noopener }
 
 ## The two I2C EEPROMs
 
@@ -53,10 +68,45 @@ readable here. The consequence for anyone archiving a scanner is on the
 [per-unit data and safety](../per-unit-data-and-safety.md) page: if the
 capacity is right, only a small part of either chip has ever been read.
 
-The text is rotated a quarter turn. The round dot at the upper left of each
-package marks pin 1.
+The round dot on each package marks pin 1, and the address is set by strapping
+pins 1, 2 and 3. Traces from each chip run to the decoupling capacitor beside
+it, `C19` for `U10` and `C25` for `U13`, and the two are wired differently,
+which is what two addresses on one bus requires. Which is which has not been
+worked out; it would take a continuity check rather than a photograph, and
+nothing in the software depends on the answer.
 
-![The 24LC64 EEPROMs at U10 and U13](hardware-images/f135plus-eeproms-u10-u13.jpg)
+[![The 24LC64 EEPROMs at U10 and U13](hardware-images/f135plus-eeproms-u10-u13.jpg)](hardware-images/f135plus-eeproms-u10-u13.jpg){ target=_blank rel=noopener }
+
+## Driving the light
+
+Five Allegro serial-input constant-current LED drivers sit on the main board,
+not on the light board: `A6277ELWT` at `U8`, `U25`, `U26` and `U29`, and an
+`A6275ELWT` at `U27`. So the illuminant is driven from here, through the
+connector, rather than by the light board's own controller.
+
+[![Allegro A6277 LED drivers at U8 and U25](hardware-images/f135plus-led-drivers-u8-u25.jpg)](hardware-images/f135plus-led-drivers-u8-u25.jpg){ target=_blank rel=noopener }
+
+Below them are **four `X9015U` digitally controlled potentiometers** at `U20`,
+`U21`, `U22` and one more, each with a `1001` resistor alongside. Four of them,
+on a scanner with four light channels, is a coincidence worth writing down: the
+OEM keeps `Current_R`, `Current_G`, `Current_B` and `Current_Ir` per resolution
+base and film mode, and a constant-current driver of this family sets its
+output from an external resistance. A digital pot in that position would be how
+a commanded current becomes an actual one.
+
+That is a reading of the layout, not a traced circuit. Nothing here has been
+followed with a meter, the pots could as easily trim the A/D rather than the
+LEDs, and the count could be coincidence. [INFERRED, and weakly: from the part
+functions and the channel count only.]
+
+[![Allegro drivers and four X9015U digital potentiometers](hardware-images/f135plus-led-drivers-digipots.jpg)](hardware-images/f135plus-led-drivers-digipots.jpg){ target=_blank rel=noopener }
+
+## Power
+
+`U15` is an `LP3965ES-2.5` and `U17` an `LP3964ES-1.8`, National low-dropout
+regulators supplying the 2.5 V and 1.8 V rails the FPGA and memory need.
+
+[![LP3965 and LP3964 regulators at U15 and U17](hardware-images/f135plus-regulators.jpg)](hardware-images/f135plus-regulators.jpg){ target=_blank rel=noopener }
 
 ## Also identified
 
@@ -69,17 +119,17 @@ Read off the same board, without a photograph good enough to reproduce here:
 | `U5` | IDT `71V124` | SRAM |
 | `U18` | Xilinx Spartan | the FPGA the scan-window and gain registers live behind |
 | `U34`, `U11` | `125506A`, `125507A` | Pakon-marked customs, function unknown |
+| `D13` | `B340LA` | Schottky rectifier |
 
 A vertical part at the bottom right reads `UF400` beneath a doubled-V logo and
-is not identified.
+is not identified. Note that `JM83AF` on the `U39` motor driver is a National
+lot code rather than part of the part number: `U33` carries `JM83AB` in the
+same position.
 
 ## Contributing
 
-Photographs of anything listed above as not covered would be welcome,
-particularly a base F-135 main board and the CCD board. The CCD's part number
-is the most valuable single thing still unphotographed: its datasheet would
-give the total and masked pixel counts, which bear directly on the `Offset`
-question in [calibration](../calibration.md).
+Photographs of anything under [what is missing](#what-is-missing) would be
+welcome, the CCD board most of all.
 
 Photographs here are by Ali Bosworth
 ([alibosworth](https://github.com/alibosworth)) and carry the same CC BY 4.0

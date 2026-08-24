@@ -231,7 +231,7 @@ versions `03`/`04`/`05` and `125039A` takes `02`; that pairing is what the OEM
 readme warns about in capitals. More photographs are on the
 [hardware photographs](resources/hardware-images.md) page.
 
-![PCB #125430 REV C on an F-135+ main board](resources/hardware-images/f135plus-board-number.jpg)
+[![PCB #125430 REV C on an F-135+ main board](resources/hardware-images/f135plus-board-number.jpg)](resources/hardware-images/f135plus-board-number.jpg){ target=_blank rel=noopener }
 
 ## Open questions
 
