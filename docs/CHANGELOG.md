@@ -24,6 +24,15 @@ published; each entry links the page it touched. Newest first.
   select instead. The distinction matters because the two are easy to conflate
   and only one of them produces a file that could restore anything.
 
+- **Addition, `per-unit-data-and-safety.md`:** both I2C EEPROMs are Microchip
+  **24LC64** parts, 8192 bytes each, read off a photograph of an F-135+
+  motherboard (PCB #125430 REV C). Neither chip's capacity had been
+  established. The consequence is that the parts of them anyone has read are
+  small: the calibration sections occupy the first `0xA24` of `0x52`, and only
+  the first 256 bytes of `0x51` have ever been read. What is in the rest of
+  either chip is unknown, and is now an open question rather than an
+  assumption that there is nothing there.
+
 - **Clarification, `usb-identity-and-firmware.md`:** "personality" was being
   used for three different things across the reference, which made the pages
   hard to reconcile: an 8-byte structure read over USB, the 9 bytes on the boot
