@@ -24,14 +24,16 @@ published; each entry links the page it touched. Newest first.
   select instead. The distinction matters because the two are easy to conflate
   and only one of them produces a file that could restore anything.
 
-- **Addition, `per-unit-data-and-safety.md`:** both I2C EEPROMs are Microchip
-  **24LC64** parts, 8192 bytes each, read off a photograph of an F-135+
-  motherboard (PCB #125430 REV C). Neither chip's capacity had been
-  established. The consequence is that the parts of them anyone has read are
-  small: the calibration sections occupy the first `0xA24` of `0x52`, and only
-  the first 256 bytes of `0x51` have ever been read. What is in the rest of
-  either chip is unknown, and is now an open question rather than an
-  assumption that there is nothing there.
+- **Addition, `per-unit-data-and-safety.md`:** a photograph of an F-135+
+  motherboard (PCB #125430 REV C) shows two 8-pin EEPROMs at `U10` and `U13`,
+  both marked **24LC64**, 8192 bytes each. Neither chip's capacity had been
+  established. Taking them to be the parts at `0x51` and `0x52`, which the
+  photograph supports but cannot prove, only a small fraction of either has
+  ever been read: the calibration sections end at `0xA24`, and just the first
+  256 bytes of the boot chip have been requested. What is in the rest is now
+  an open question rather than an assumption that there is nothing there. The
+  page also records what has *not* been looked at: the reverse of that board
+  and the CCD, light and motor sub-boards, any of which could carry storage.
 
 - **Clarification, `usb-identity-and-firmware.md`:** "personality" was being
   used for three different things across the reference, which made the pages
