@@ -1,0 +1,1461 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="An implementation-agnostic reference for how the Kodak/Pakon F-X35 film scanners work — protocol, image stream, calibration, and colour.">
+      
+      
+      
+        <link rel="canonical" href="https://pakon-reference.alibosworth.com/resources/hardware-images/">
+      
+      
+        <link rel="prev" href="../dx-product-code-table/">
+      
+      
+        <link rel="next" href="../eeprom/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Hardware photographs - Pakon F-X35 Reference</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+  <!-- Privacy-friendly analytics by Plausible (self-hosted), embedded
+       first-party via the alibosworth.com /p/* proxy per house convention.
+       Site: pakon-reference.alibosworth.com -->
+  <script async src="https://alibosworth.com/p/pa-DTdD4ieieV18xjvvRHyhh.js"></script>
+  <script>
+    window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+    plausible.init({ endpoint: "https://alibosworth.com/p/event" })
+  </script>
+
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#hardware-photographs" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Pakon F-X35 Reference" class="md-header__button md-logo" aria-label="Pakon F-X35 Reference" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pakon F-X35 Reference
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Hardware photographs
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Pakon F-X35 Reference" class="md-nav__button md-logo" aria-label="Pakon F-X35 Reference" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Pakon F-X35 Reference
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CONVENTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../per-unit-data-and-safety/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Per-unit data & safety
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../usb-identity-and-firmware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    USB identity & firmware
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ppb-protocol/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PPB protocol
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../command-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Command reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../image-stream/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Image stream
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../calibration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Calibration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../color-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Colour pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../film-transport/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Film transport
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dx-barcode/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DX barcode
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scanner-family/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scanner family
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_13" id="__nav_13_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resources
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_13">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Resources
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dx-product-code-table/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DX product-code table
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hardware photographs
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hardware photographs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-missing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is missing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-main-board" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The main board
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-board-number" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The board number
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-usb-bridge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The USB bridge
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-two-i2c-eeproms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The two I2C EEPROMs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#driving-the-light" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Driving the light
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Driving the light">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-fpga-holds-nothing-when-it-is-off" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The FPGA holds nothing when it is off
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#power" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Power
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#also-identified" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Also identified
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contributing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contributing
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_13_3" id="__nav_13_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EEPROM dumps
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_13_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_13_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    EEPROM dumps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../eeprom/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Comparison
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../eeprom/F135-2233/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    F-135, serial 2233
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../eeprom/F135plus-5963/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    F-135+, serial 5963
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../eeprom/F135plus-16402/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    F-135+, serial 16402
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../eeprom/F135plus-17157/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    F-135+, serial 17157
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CHANGELOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-missing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is missing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-main-board" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The main board
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-board-number" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The board number
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-usb-bridge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The USB bridge
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-two-i2c-eeproms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The two I2C EEPROMs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#driving-the-light" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Driving the light
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Driving the light">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-fpga-holds-nothing-when-it-is-off" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The FPGA holds nothing when it is off
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#power" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Power
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#also-identified" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Also identified
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contributing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contributing
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="hardware-photographs">Hardware photographs<a class="headerlink" href="#hardware-photographs" title="Permanent link">&para;</a></h1>
+<p>Photographs of the inside of a scanner, taken for this reference, so that
+claims about the hardware can be checked rather than taken on trust. They also
+give an owner something to compare against when they open their own machine.</p>
+<p>Everything on this page is <strong>one F-135+</strong>, serial 16402, photographed from the
+component side of its main board on 24 August 2026. Getting to that view needs
+the bottom plate off, which is four security screws, with the scanner
+unplugged. Nothing here requires the scanner to be powered, and there is no
+reason to power it with the plate off.</p>
+<h2 id="what-is-missing">What is missing<a class="headerlink" href="#what-is-missing" title="Permanent link">&para;</a></h2>
+<p>Most of the scanner. Nothing below has been photographed, and none of it can
+be inferred from what has:</p>
+<ul>
+<li><strong>The CCD board.</strong> The most valuable gap. Its part number would give the
+  sensor's total and masked pixel counts from a datasheet, which bears
+  directly on the <code>Offset</code> question in <a href="../../calibration/">calibration</a>.</li>
+<li><strong>The light board</strong>, which differs between the two models: the Plus has a
+  thermoelectric cooler and temperature sensing the base F-135 lacks, which is
+  why their LED current ceilings differ.</li>
+<li><strong>The motor board.</strong></li>
+<li><strong>The reverse of the main board</strong>, so whether the two EEPROMs below are the
+  only ones in the scanner is not known.</li>
+<li><strong>Any base F-135.</strong> Its main board is PCB #125039A, a separate design rather
+  than a revision of the one here, so no part or marking on this page can be
+  assumed to apply to it.</li>
+<li><strong>The DX sensor area</strong>, where an open question about which detectors read
+  the barcode is still unresolved (see <a href="../../dx-barcode/">DX barcode</a>).</li>
+</ul>
+<h2 id="the-main-board">The main board<a class="headerlink" href="#the-main-board" title="Permanent link">&para;</a></h2>
+<p>PCB #125430 REV C, marked <code>© 2005 PAKON, INC</code>.</p>
+<p><a href="f135plus-mainboard.jpg" rel="noopener" target="_blank"><img alt="The component side of an F-135+ main board" src="f135plus-mainboard.jpg" /></a></p>
+<h2 id="the-board-number">The board number<a class="headerlink" href="#the-board-number" title="Permanent link">&para;</a></h2>
+<p>Silkscreened along the bottom edge. This is the marking to check before
+reflashing a controller, because the OEM images are tied to it: <code>125430A</code>,
+<code>125430B</code> and <code>125430C</code> take hardware versions <code>03</code>, <code>04</code> and <code>05</code>
+respectively, and the base F-135's <code>125039A</code> takes <code>02</code>. Putting a Plus image
+on a base board is the case the OEM readme warns about in capitals. See
+<a href="../../per-unit-data-and-safety/#recovery">per-unit data and safety</a>.</p>
+<p><a href="f135plus-board-number.jpg" rel="noopener" target="_blank"><img alt="PCB #125430 REV C silkscreened on the board's bottom edge" src="f135plus-board-number.jpg" /></a></p>
+<h2 id="the-usb-bridge">The USB bridge<a class="headerlink" href="#the-usb-bridge" title="Permanent link">&para;</a></h2>
+<p><code>U6</code>, a Cypress <strong>CY7C68013A-128AXC</strong>: the EZ-USB FX2LP in the 128-pin
+package, date code <code>0801</code>. It sits on the right of the board, below and right
+of the FPGA, with its crystal alongside. This is the bridge everything the
+host does passes through, described in
+<a href="../../usb-identity-and-firmware/">USB identity and firmware</a>.</p>
+<p><a href="f135plus-fx2-u6.jpg" rel="noopener" target="_blank"><img alt="The Cypress CY7C68013A at U6" src="f135plus-fx2-u6.jpg" /></a></p>
+<h2 id="the-two-i2c-eeproms">The two I2C EEPROMs<a class="headerlink" href="#the-two-i2c-eeproms" title="Permanent link">&para;</a></h2>
+<p><code>U10</code> and <code>U13</code>, above the FPGA near the top right, both marked
+<code>24LC64I / SN 0614 / 1KS</code>. A 24LC64 is 8192 bytes. These are very likely the
+chips answering at <code>0x51</code> and <code>0x52</code>, though a photograph cannot say which
+designator carries which address, and the strapping that decides it is not
+readable here. The consequence for anyone archiving a scanner is on the
+<a href="../../per-unit-data-and-safety/">per-unit data and safety</a> page: if the
+capacity is right, only a small part of either chip has ever been read.</p>
+<p>The round dot on each package marks pin 1, and the address is set by strapping
+pins 1, 2 and 3. Traces from each chip run to the decoupling capacitor beside
+it, <code>C19</code> for <code>U10</code> and <code>C25</code> for <code>U13</code>, and the two are wired differently,
+which is what two addresses on one bus requires. Which is which has not been
+worked out; it would take a continuity check rather than a photograph, and
+nothing in the software depends on the answer.</p>
+<p><a href="f135plus-eeproms-u10-u13.jpg" rel="noopener" target="_blank"><img alt="The 24LC64 EEPROMs at U10 and U13" src="f135plus-eeproms-u10-u13.jpg" /></a></p>
+<h2 id="driving-the-light">Driving the light<a class="headerlink" href="#driving-the-light" title="Permanent link">&para;</a></h2>
+<p>Five Allegro serial-input constant-current LED drivers sit on the main board,
+not on the light board: <code>A6277ELWT</code> at <code>U8</code>, <code>U25</code>, <code>U26</code> and <code>U29</code>, and an
+<code>A6275ELWT</code> at <code>U27</code>. So the illuminant is driven from here, through the
+connector, rather than by the light board's own controller.</p>
+<p><a href="f135plus-led-drivers-u8-u25.jpg" rel="noopener" target="_blank"><img alt="Allegro A6277 LED drivers at U8 and U25" src="f135plus-led-drivers-u8-u25.jpg" /></a></p>
+<p>Below them are <strong>four <code>X9015U</code> digitally controlled potentiometers</strong> at <code>U20</code>,
+<code>U21</code>, <code>U22</code> and <code>U23</code>, each with a <code>1001</code> resistor alongside. <code>U23</code> is the
+leftmost and sits rotated a quarter turn from the other three, so its marking
+reads horizontally where theirs read vertically. Four of them,
+on a scanner with four light channels, is a coincidence worth writing down: the
+OEM keeps <code>Current_R</code>, <code>Current_G</code>, <code>Current_B</code> and <code>Current_Ir</code> per resolution
+base and film mode, and a constant-current driver of this family sets its
+output from an external resistance. A digital pot in that position would be how
+a commanded current becomes an actual one.</p>
+<p>That is a reading of the layout, not a traced circuit. Nothing here has been
+followed with a meter, the pots could as easily trim the A/D rather than the
+LEDs, and the count could be coincidence. [INFERRED, and weakly: from the part
+functions and the channel count only.]</p>
+<p><a href="f135plus-led-drivers-digipots.jpg" rel="noopener" target="_blank"><img alt="Allegro drivers and four X9015U digital potentiometers" src="f135plus-led-drivers-digipots.jpg" /></a></p>
+<h3 id="the-fpga-holds-nothing-when-it-is-off">The FPGA holds nothing when it is off<a class="headerlink" href="#the-fpga-holds-nothing-when-it-is-off" title="Permanent link">&para;</a></h3>
+<p>Spartan-IIE is SRAM-based, so <code>U18</code> has to be given its bitstream every time
+the scanner powers up, exactly as the FX2 is given <code>Pakon7.hex</code>. There is no
+configuration PROM beside it, and the FX2 image is far too small to contain a
+150K-gate bitstream, so the configuration arrives from somewhere else. The OEM
+package carries a "CCD FPGA file" alongside its controller images, which is the
+obvious candidate but is not documented here yet.</p>
+<p>The consequence for the rest of the reference: the scan-window and gain
+registers described in <a href="../../calibration/">calibration</a> are registers in logic
+the <strong>host itself loads</strong>, not fixed silicon. Whatever those banks mean is a
+property of the bitstream in use.</p>
+<h2 id="power">Power<a class="headerlink" href="#power" title="Permanent link">&para;</a></h2>
+<p><code>U15</code> is an <code>LP3965ES-2.5</code> and <code>U17</code> an <code>LP3964ES-1.8</code>, National low-dropout
+regulators supplying the 2.5 V and 1.8 V rails the FPGA and memory need.</p>
+<p><a href="f135plus-regulators.jpg" rel="noopener" target="_blank"><img alt="LP3965 and LP3964 regulators at U15 and U17" src="f135plus-regulators.jpg" /></a></p>
+<h2 id="also-identified">Also identified<a class="headerlink" href="#also-identified" title="Permanent link">&para;</a></h2>
+<p>Read off the same board, without a photograph good enough to reproduce here:</p>
+<table>
+<thead>
+<tr>
+<th>Designator</th>
+<th>Part</th>
+<th>What it is</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>U39</code></td>
+<td>LMD18200T</td>
+<td>National 3A/55V H-bridge, the transport motor driver</td>
+</tr>
+<tr>
+<td><code>U9</code></td>
+<td>Micron <code>MT46V16M16P-75 F</code></td>
+<td>256 Mbit DDR SDRAM, date code <code>0708</code></td>
+</tr>
+<tr>
+<td><code>U5</code></td>
+<td>IDT <code>71V124 SA12YG</code></td>
+<td>1 Mbit SRAM, date code <code>H0805P</code></td>
+</tr>
+<tr>
+<td><code>U18</code></td>
+<td>Xilinx <code>XC2S150E</code>, <code>FTG256</code>, speed <code>7C/6I</code></td>
+<td>Spartan-IIE FPGA, 150K system gates, 256-ball BGA. The scan-window and gain register banks live behind it</td>
+</tr>
+<tr>
+<td><code>U34</code>, <code>U11</code></td>
+<td><code>125506A</code>, <code>125507A</code>, both dated <code>2208</code></td>
+<td>44-pin QFPs whose Pakon number is printed on a <strong>white label stuck to the package</strong>, not moulded or laser-marked into it, which is why neither carries a manufacturer logo. The original marking is probably underneath. <code>U11</code> has a second line whose lower edge is just visible and could not be read</td>
+</tr>
+<tr>
+<td><code>D13</code></td>
+<td><code>B340LA</code></td>
+<td>Schottky rectifier</td>
+</tr>
+</tbody>
+</table>
+<p>Marks that have been read but not identified, in case someone recognises one:</p>
+<table>
+<thead>
+<tr>
+<th>Designator</th>
+<th>Mark</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>U14</code></td>
+<td><code>LTBBW e3</code></td>
+<td>Linear Tech logo. A top-mark code rather than a part number, so decodable from LTC's marking list by anyone who has it. Nothing else is printed on the package</td>
+</tr>
+<tr>
+<td><code>U33</code></td>
+<td><code>JM83AB</code> over <code>SOOO2VB</code></td>
+<td>National logo, 16-pin. The second line is where a part number belongs but does not resemble one, so this may be house-marked like <code>U34</code> and <code>U11</code>. Read as letter <code>O</code> rather than zero, though the two are hard to tell apart on a chip mark</td>
+</tr>
+<tr>
+<td><code>U16</code></td>
+<td><code>CJAB 2995M</code></td>
+<td>National logo, 8-pin, beside the DDR</td>
+</tr>
+<tr>
+<td>(bottom right)</td>
+<td><code>X30</code> over <code>UF400</code></td>
+<td>a vertical part, logo like two overlapping Vs</td>
+</tr>
+</tbody>
+</table>
+<p><code>JM83AF</code> on the <code>U39</code> motor driver and <code>JM83AB</code> on <code>U33</code> share a prefix, so
+that field is a National lot code rather than part of either part number.</p>
+<h2 id="contributing">Contributing<a class="headerlink" href="#contributing" title="Permanent link">&para;</a></h2>
+<p>Photographs of anything under <a href="#what-is-missing">what is missing</a> would be
+welcome, the CCD board most of all.</p>
+<p>Photographs here are by Ali Bosworth
+(<a href="https://github.com/alibosworth">alibosworth</a>) and carry the same CC BY 4.0
+licence as the rest of the reference. Contributed photographs need to be
+compatible with that.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      CC BY 4.0, <a href="https://alibosworth.com">Ali Bosworth</a> &middot; <a href="https://github.com/alibosworth/pakon-reference">View project on GitHub</a> &middot; Corrections welcome: <a href="https://github.com/alibosworth/pakon-reference/issues">open an issue</a>
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "toc.follow", "content.code.copy", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

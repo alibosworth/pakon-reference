@@ -1,0 +1,1514 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="An implementation-agnostic reference for how the Kodak/Pakon F-X35 film scanners work — protocol, image stream, calibration, and colour.">
+      
+      
+      
+        <link rel="canonical" href="https://pakon-reference.alibosworth.com/resources/eeprom/">
+      
+      
+        <link rel="prev" href="../hardware-images/">
+      
+      
+        <link rel="next" href="F135-2233/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Comparison - Pakon F-X35 Reference</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+  <!-- Privacy-friendly analytics by Plausible (self-hosted), embedded
+       first-party via the alibosworth.com /p/* proxy per house convention.
+       Site: pakon-reference.alibosworth.com -->
+  <script async src="https://alibosworth.com/p/pa-DTdD4ieieV18xjvvRHyhh.js"></script>
+  <script>
+    window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+    plausible.init({ endpoint: "https://alibosworth.com/p/event" })
+  </script>
+
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#eeprom-dumps" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Pakon F-X35 Reference" class="md-header__button md-logo" aria-label="Pakon F-X35 Reference" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pakon F-X35 Reference
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Comparison
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Pakon F-X35 Reference" class="md-nav__button md-logo" aria-label="Pakon F-X35 Reference" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Pakon F-X35 Reference
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CONVENTIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../per-unit-data-and-safety/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Per-unit data & safety
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../usb-identity-and-firmware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    USB identity & firmware
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ppb-protocol/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PPB protocol
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../command-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Command reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../image-stream/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Image stream
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../calibration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Calibration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../color-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Colour pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../film-transport/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Film transport
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dx-barcode/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DX barcode
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scanner-family/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scanner family
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_13" id="__nav_13_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resources
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_13">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Resources
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dx-product-code-table/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DX product-code table
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hardware-images/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hardware photographs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_13_3" id="__nav_13_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EEPROM dumps
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_13_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_13_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    EEPROM dumps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Comparison
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Comparison
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-units" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The units
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-a-field-by-field" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section A, field by field
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#per-unit-per-model-and-constant-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-unit, per-model, and constant fields
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-b" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section B
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#read-your-own-unit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Read your own unit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-someone-elses-dump" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using someone else's dump
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contributing-a-dump" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contributing a dump
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#layout-of-a-unit-folder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layout of a unit folder
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="F135-2233/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    F-135, serial 2233
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="F135plus-5963/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    F-135+, serial 5963
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="F135plus-16402/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    F-135+, serial 16402
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="F135plus-17157/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    F-135+, serial 17157
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CHANGELOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-units" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The units
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-a-field-by-field" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section A, field by field
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#per-unit-per-model-and-constant-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-unit, per-model, and constant fields
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-b" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section B
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#read-your-own-unit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Read your own unit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-someone-elses-dump" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using someone else's dump
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contributing-a-dump" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contributing a dump
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#layout-of-a-unit-folder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layout of a unit folder
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="eeprom-dumps">EEPROM dumps<a class="headerlink" href="#eeprom-dumps" title="Permanent link">&para;</a></h1>
+<p>Decoded per-unit EEPROM contents from every F-X35 unit read so far, side
+by side, with the raw dumps for each. The point of collecting them is that
+a single unit cannot tell you which fields a factory calibration actually
+measured, which are per-model defaults, and which are constant across the
+whole family, and that distinction is what you need in order to know what
+a dump is worth, what a fault looks like, and what would actually have to
+be restored.</p>
+<p>The layout these are decoded against is documented in
+<a href="../../calibration/#layout">calibration.md</a>. How to read your own chip is
+on the <a href="../../per-unit-data-and-safety/">per-unit data and safety</a> page.</p>
+<h2 id="the-units">The units<a class="headerlink" href="#the-units" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Unit</th>
+<th>Type (<code>0x00C</code>)</th>
+<th>Model</th>
+<th>Chip health</th>
+<th>Read by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="F135-2233/">2233</a></td>
+<td>1350</td>
+<td>F-135</td>
+<td>all four copies valid</td>
+<td>Mats Fagerberg (<a href="https://github.com/thetalkingdrum">thetalkingdrum</a>)</td>
+</tr>
+<tr>
+<td><a href="F135plus-5963/">5963</a></td>
+<td>1351</td>
+<td>F-135 Plus</td>
+<td>all four copies valid</td>
+<td>Mats Fagerberg (<a href="https://github.com/thetalkingdrum">thetalkingdrum</a>)</td>
+</tr>
+<tr>
+<td>16275</td>
+<td>1351</td>
+<td>F-135 Plus</td>
+<td>section A primary fails CRC</td>
+<td><a href="https://github.com/gazzdingo/pakon-mac">pakon-mac</a></td>
+</tr>
+<tr>
+<td><a href="F135plus-16402/">16402</a></td>
+<td>1351</td>
+<td>F-135 Plus</td>
+<td>section A primary fails CRC</td>
+<td>Ali Bosworth (<a href="https://github.com/alibosworth">alibosworth</a>)</td>
+</tr>
+<tr>
+<td><a href="F135plus-17157/">17157</a></td>
+<td>1351</td>
+<td>F-135 Plus</td>
+<td>all four copies valid</td>
+<td>Mats Fagerberg (<a href="https://github.com/thetalkingdrum">thetalkingdrum</a>)</td>
+</tr>
+</tbody>
+</table>
+<p>Unit 16275's values are decoded from
+<a href="https://github.com/gazzdingo/pakon-mac/blob/cd23ee5/backups/eeprom-i2c/eeprom_52_VERIFIED-20260818.bin"><code>eeprom_52_VERIFIED-20260818.bin</code></a>,
+a full 3072-byte read of that chip covering all four copies. The file is not
+reproduced here; it lives in that project's repository. An earlier file in
+the same directory, <code>eeprom_52.bin</code>, is a 256-byte partial read shifted by
+one byte and should not be used.</p>
+<p><strong>Two of these five units carry a damaged primary copy of section A with a
+good backup</strong>, and on both the OEM software had been reading the backup for
+years without saying so. The damage is different in each case: 16402 has a
+single corrupted byte at <code>0x0A5</code>, while 16275 has its length byte corrupted
+(<code>0x5A</code> where it should read <code>0x8E</code>) plus a 17-byte block at
+<code>0x100</code>–<code>0x110</code>, which is a 256-byte page boundary. No explanation for
+either. The three units read since are clean, so this is not universal, but
+two in five is frequent enough that reading only the primary copy would have
+missed it both times.</p>
+<h2 id="section-a-field-by-field">Section A, field by field<a class="headerlink" href="#section-a-field-by-field" title="Permanent link">&para;</a></h2>
+<p><code>Offset</code> / <code>MotorSpeed</code> / <code>MotorSpeed (IR)</code> per resolution base:</p>
+<table>
+<thead>
+<tr>
+<th>Unit</th>
+<th>Base 4</th>
+<th>Base 8</th>
+<th>Base 16</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2233 (F-135)</td>
+<td>27 / 8162 / 6119</td>
+<td>54 / 3627 / 2720</td>
+<td>54 / 2325 / 1530</td>
+</tr>
+<tr>
+<td>5963 (F-135+)</td>
+<td>29 / 25512 / 19117</td>
+<td>58 / 11338 / 7494</td>
+<td>59 / 5850 / 4796</td>
+</tr>
+<tr>
+<td>16275 (F-135+)</td>
+<td>27 / 25802 / 19335</td>
+<td>54 / 11467 / 7580</td>
+<td>55 / 5917 / 4850</td>
+</tr>
+<tr>
+<td>16402 (F-135+)</td>
+<td>30 / 25726 / 19278</td>
+<td>58 / 11434 / 7557</td>
+<td>60 / 5900 / 4836</td>
+</tr>
+<tr>
+<td>17157 (F-135+)</td>
+<td>34 / 25498 / 19107</td>
+<td>66 / 11332 / 7490</td>
+<td>68 / 5847 / 4793</td>
+</tr>
+</tbody>
+</table>
+<p>NegMatrix, reduced to the part that varies (the quadratic and cross-term
+columns are ≈ 0 on every unit, so each is in effect a 3×4 affine):</p>
+<table>
+<thead>
+<tr>
+<th>Unit</th>
+<th>Diagonal</th>
+<th>Constants</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2233 (F-135)</td>
+<td>0.27680 / 0.27967 / 0.26158</td>
+<td>163.4 / 441.4 / 651.0</td>
+</tr>
+<tr>
+<td>5963 (F-135+)</td>
+<td>0.28383 / 0.32009 / 0.33758</td>
+<td>145.6 / 386.7 / 602.9</td>
+</tr>
+<tr>
+<td>16275 (F-135+)</td>
+<td>0.28920 / 0.27583 / 0.27824</td>
+<td>159.6 / 444.8 / 635.5</td>
+</tr>
+<tr>
+<td>16402 (F-135+)</td>
+<td>0.29299 / 0.28521 / 0.32000</td>
+<td>165.8 / 429.8 / 638.2</td>
+</tr>
+<tr>
+<td>17157 (F-135+)</td>
+<td>0.28860 / 0.31628 / 0.32606</td>
+<td>162.1 / 401.3 / 607.7</td>
+</tr>
+</tbody>
+</table>
+<h2 id="per-unit-per-model-and-constant-fields">Per-unit, per-model, and constant fields<a class="headerlink" href="#per-unit-per-model-and-constant-fields" title="Permanent link">&para;</a></h2>
+<p><strong>Per-unit.</strong> The serial, the three <code>Offset</code> words, the six motor-speed
+words, and NegMatrix. These are the fields a factory calibration actually
+measured, and they are the reason a dump of your own unit is worth having.
+Motor speeds vary about 1% between units of the same model; <code>Offset</code> varies
+more than expected: 27 to 34 at base 4, and 54 to 68 at base 16, a spread
+of 14 px on a 2000 px line.</p>
+<p><strong>Per-model.</strong> Section B (below) and the scanner type at <code>0x00C</code>. Also the
+motor speeds, which differ by roughly 3.1× between the base F-135 and the
+Plus at bases 4 and 8, a mechanical difference between the models, not a
+per-unit one. The ratio of IR to normal motor speed within a unit is
+another: identical on all three Plus units (0.749 / 0.661 / 0.820 at bases
+4 / 8 / 16) and different on the base F-135 (0.750 / 0.750 / 0.658), which
+suggests these ratios are design constants rather than measurements.</p>
+<p><strong>Constant across everything read.</strong> PosMatrix, the plain 0.25 diagonal,
+bit-identical on all five units and across both models, so a
+shared constant and not a factory measurement. The revision word at <code>0x008</code>,
+400 everywhere.
+The 120-byte tail at <code>0x116</code>–<code>0x18D</code>, zero on every complete dump.</p>
+<h2 id="section-b">Section B<a class="headerlink" href="#section-b" title="Permanent link">&para;</a></h2>
+<p>Twelve motor-adjust words and a trailing <code>u32</code>. It is <strong>identical on all
+four F-135 Plus units</strong> (CRC <code>0x873e6ed3</code>, words alternating 1000 / 1008)
+and differs on the one base F-135 read in exactly one payload byte: the
+third word is <code>0x03F0</code> where the Plus has <code>0x03E8</code>, giving CRC
+<code>0x2a582d50</code>.</p>
+<p>So section B looks like a factory default scoped per model. Either the
+OEM's motor-speed calibration has never been run on any unit read so far,
+or it does not write here. The base-model reading rests on one unit; more
+base F-135 dumps would settle it.</p>
+<h2 id="read-your-own-unit">Read your own unit<a class="headerlink" href="#read-your-own-unit" title="Permanent link">&para;</a></h2>
+<p>The quickest route is
+<strong><a href="https://alibosworth.github.io/pakon-eeprom-backup-web/">pakon-eeprom-backup-web</a></strong>,
+which does the whole procedure from a Chrome or Edge tab with nothing to
+install: both copies of both sections, all four CRCs checked, primary
+compared with backup, and a zip of the results. It reads only. The
+procedure it follows, the two vendor requests involved, the command-line
+alternatives, and the reasons to read both copies are on the
+<a href="../../per-unit-data-and-safety/">per-unit data and safety</a> page.</p>
+<p>Do it while your scanner works. A chip fault is silent, and two of the five
+units here are carrying one: the OEM engine has been quietly routing around
+a bad primary copy for years on both, and nothing in the software ever said
+so. The only way to know is to read both copies and check the CRCs
+yourself.</p>
+<h2 id="using-someone-elses-dump">Using someone else's dump<a class="headerlink" href="#using-someone-elses-dump" title="Permanent link">&para;</a></h2>
+<p>These files are published so the decode can be checked and the spread can
+be seen, not as a substitute for your own backup. But if a chip is already
+lost, a donor dump from the <strong>same model</strong> is a reasonable last resort, and
+better than leaving it blank: when both copies of a section fail, the OEM
+engine does not stop: it raises a warning and runs on whatever it read, so
+a blank or corrupt chip means undefined motor speeds and an undefined CCD
+window, which is worse than slightly wrong ones.</p>
+<p>Roughly what a same-model donor would cost you. These figures are the
+differences <strong>observed between the few units read so far</strong> (four complete
+dumps, only three of them the same model), so treat them as an indication
+of scale, not as bounds. A donor could be further off than anything in this
+table, and how much a given error matters in practice has not been tested
+on hardware.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Difference seen between units</th>
+<th>Likely consequence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Offset</code></td>
+<td>up to 14 px of 2000</td>
+<td>image shifted along the frame height, under 1% on this sample</td>
+</tr>
+<tr>
+<td>MotorSpeed</td>
+<td>about 1% within a model</td>
+<td>aspect-ratio error of roughly the same order</td>
+</tr>
+<tr>
+<td>NegMatrix</td>
+<td>up to about 20% on a channel</td>
+<td>a colour cast, correctable downstream</td>
+</tr>
+<tr>
+<td>Serial</td>
+<td>wrong</td>
+<td>cosmetic; appears in logs and the registry</td>
+</tr>
+<tr>
+<td>PosMatrix, section B</td>
+<td>identical on every unit read, if the model matches</td>
+<td>none expected</td>
+</tr>
+</tbody>
+</table>
+<p>The last row is the one most likely to change as more units are read:
+"identical on every unit read" is a statement about four dumps, not a
+guarantee about the family.</p>
+<p>Match the scanner type at <code>0x00C</code> (1350 vs 1351) before considering it:
+that is the practical reason the field matters. Using a base F-135's
+section A on a Plus would set motor speeds to about a third of correct,
+which is not a cosmetic error. Re-run Light Correction afterwards, since
+that calibration is per-unit, lives in the registry rather than the EEPROM,
+and will be measured fresh on the actual hardware.</p>
+<p>Two cautions about the write itself, which are the real risk rather than
+the donor values. It needs the vendor <code>0xA2</code> request, which no tool
+published here issues. And it is irreversible: writing a donor over a chip
+that still had one valid copy destroys your unit's true values permanently
+if you never dumped them. Read your own chip first, whatever else you do:
+if it still validates, you never need any of this. See the
+<a href="../../per-unit-data-and-safety/">safety page</a> before going near a write.</p>
+<h2 id="contributing-a-dump">Contributing a dump<a class="headerlink" href="#contributing-a-dump" title="Permanent link">&para;</a></h2>
+<p>More units, and especially more base F-135 units, would firm up the
+per-model claims. Section B in particular rests on a single base-model
+dump. Both copies of both sections please, with the CRC results, and say
+whether the repeat read followed a power cycle.</p>
+<p>All dumps here were taken with the OEM engine's own read sequence,
+read-only, using <code>tools/eedump.py</code> from
+<a href="https://github.com/pablonavarrob/pakon-tlx-macos">pakon-tlx-macos</a>.</p>
+<h2 id="layout-of-a-unit-folder">Layout of a unit folder<a class="headerlink" href="#layout-of-a-unit-folder" title="Permanent link">&para;</a></h2>
+<p>Mirrors the archive these come from:</p>
+<div class="highlight"><pre><span></span><code>&lt;model&gt;-&lt;serial&gt;/
+  index.md                             what this unit's data showed
+  eeprom/
+    eeprom_0x52_sectionA_primary.bin   section A, primary copy (0x000)
+    eeprom_0x52_sectionA_backup.bin    section A, backup copy (0x400)
+    eeprom_0x52_sectionB_primary.bin   section B, primary copy (0x800)
+    eeprom_0x52_sectionB_backup.bin    section B, backup copy (0xA00)
+    eeprom_0x51_boot_personality.bin   boot EEPROM, where read
+    (any extra reads, named with read number and power cycle)
+    SHA256SUMS
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      CC BY 4.0, <a href="https://alibosworth.com">Ali Bosworth</a> &middot; <a href="https://github.com/alibosworth/pakon-reference">View project on GitHub</a> &middot; Corrections welcome: <a href="https://github.com/alibosworth/pakon-reference/issues">open an issue</a>
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "toc.follow", "content.code.copy", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
