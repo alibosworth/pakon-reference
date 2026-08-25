@@ -1,4 +1,5 @@
 site_name: Pakon F-X35 Reference
+site_url: https://pakon-reference.alibosworth.com/
 site_description: >-
   An implementation-agnostic reference for how the Kodak/Pakon F-X35 film
   scanners work — protocol, image stream, calibration, and colour.
