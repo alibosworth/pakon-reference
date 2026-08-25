@@ -28,7 +28,8 @@ a window start rather than reading this word will be furthest wrong here.
 ## Chip health
 
 Clean, and the only fully healthy F-135 Plus read so far. All four copies
-validate and the two reads of section A's primary are byte-identical.
+validate, and the two reads of section A's primary, taken in separate power
+cycles, are byte-identical.
 
 | Copy | CRC | Result |
 |---|---|---|
@@ -57,7 +58,9 @@ payload byte.
 | [`eeprom_0x52_sectionA_primary_read2.bin`](eeprom/eeprom_0x52_sectionA_primary_read2.bin) | 398 B | second read, identical |
 | [`SHA256SUMS`](eeprom/SHA256SUMS) | | hashes for the above |
 
-No boot personality (`0x51`) read for this unit. Whether the second read
-followed a power cycle is not recorded. Read on macOS via
+No boot personality (`0x51`) read for this unit. The scanner was
+power-cycled between the two reads, so the pair is a check across power
+cycles rather than two reads in one, which is the comparison that shows a
+dump is what the chip stores rather than what one read happened to return. Read on macOS via
 [pakon-tlx-macos](https://github.com/pablonavarrob/pakon-tlx-macos)
 (`tools/eedump.py`).
