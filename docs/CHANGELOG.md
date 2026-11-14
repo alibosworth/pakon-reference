@@ -6,6 +6,12 @@ carried a confidence marker and turned out wrong is a normal event here,
 and hiding it would defeat the markers. Dates are when the change was
 published; each entry links the page it touched. Newest first.
 
+## 2026-11-13 (models)
+
+- **Addition, `scanner-family.md`:** the F-135 vs F-135+ values: CCD clock,
+  LED period, motor speed range, LED current ceilings. From `TLB.dll`
+  3.1.0.28 and two units, via open-pakon (Jorge Rangel).
+
 ## 2026-08-24 (later)
 
 - **Addition, `resources/hardware-images.md`:** a new page with photographs of

@@ -176,8 +176,8 @@ that is taken as documented, not observed.
   DX reading into PICL+. On the host side both are driven by the same
   engine build, `TLB.dll`, which carries both address sets (see
   [above](#the-oem-host-software-stack)). [CONFIRMED on hardware, August 2026]: the shared FX2
-  firmware, the inverted presence probes, and the Plus init (TEC, per-channel
-  exposure) were all verified by the pakon-macos project by Jorge Rangel: https://github.com/jorshhh/pakon-macos,
+  firmware, the inverted presence probes, and the Plus init (TEC, temperature
+  bands) were all verified by the pakon-macos project by Jorge Rangel: https://github.com/jorshhh/pakon-macos,
   driving a real F-135+; see
   [ppb-protocol.md](ppb-protocol.md) and
   [usb-identity-and-firmware.md](usb-identity-and-firmware.md).
@@ -187,6 +187,36 @@ that is taken as documented, not observed.
   dialects, and image-stream geometry are **not documented here** (no captures
   of these models were available). [DOCUMENTED] board makeup from the
   firmware readmes (`ReadmeF235.txt`, `ReadmeF335.txt`) only.
+
+### F-135 vs F-135+ on the wire
+
+Same commands, same order. With the addresses mapped (`0x40`/`0x44` →
+`0x20`/`0x24`), a Base 16 scan is the same 55 commands on both. [CONFIRMED
+in captures] One engine build drives both; what changes is a handful of
+values. [CONFIRMED in `TLB.dll` 3.1.0.28 (sha256 5866ec56…); run on an F-135,
+serial 3054, and an F-135+, serial 138, in open-pakon:
+https://github.com/jorshhh/open-pakon]
+
+| | F-135 | F-135+ |
+|---|---|---|
+| Controller addresses (LOW / SCN) | `0x20` / `0x24` | `0x40` / `0x44` |
+| CCD clock | 833333.3 Hz | 2.5× faster |
+| LED period | integration × 0.6 | integration × 0.24 |
+| LED period word at init | `0x0997` | `0x03D6` |
+| Integration per mode | own table | the engine's base table |
+| Motor speed (`0xA5`) clamp | 400–9500 | 1000–32766 |
+| LED current ceiling, IR off (R/G/B/IR) | 6 / 8 / 8 / 0 | 4 / 20 / 20 / 0 |
+| LED current ceiling, IR on (R/G/B/IR) | 8 / 8 / 8 / 8 | 8 / 24 / 24 / 8 |
+| TEC (`0xD0`/`0xD1`) | no | yes |
+
+- The init period words are `0x0FFD` × 0.6 and × 0.24. The 2.5× clock also
+  fits every Plus `0x91` trigger value captured.
+- Plus speeds run past the F-135's maximum. Never send Plus speeds to an
+  F-135.
+- Advancing film on the Plus: the EEPROM's Base 4 motor speed, acquire on,
+  then acquire off before `0xA2`, as the OEM does. [CONFIRMED on serial 138]
+- Everything else in init is byte-identical, including the temperature bands
+  and the TEC values. [CONFIRMED in captures]
 
 ## Firmware prefixes
 
