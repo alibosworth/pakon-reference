@@ -6,6 +6,21 @@ carried a confidence marker and turned out wrong is a normal event here,
 and hiding it would defeat the markers. Dates are when the change was
 published; each entry links the page it touched. Newest first.
 
+## 2026-11-13 (commands)
+
+From open-pakon (Jorge Rangel): `TLB.dll` 3.1.0.28 and two units.
+
+- **Reversal, `command-reference.md`:** names from the OEM engine. Old
+  labels: SCN `0xA1` StopFilmDrive (it starts **reverse**), `0xA5`
+  SetMotorCalibration (speed), SCN `0x82`/`0x84` SetMotorSpeed/Config (FPGA
+  banks), LOW `0x81`/`0x82` SetCcdGainOffset/SetColorMatrix (LED currents,
+  duties), LOW `0x8A` AcquireLine and host `0x84` HostReady (FIFO reset).
+- **Reversal, `command-reference.md`:** no per-line commands during a scan;
+  teardown order from the engine.
+- **Reinterpretation, `film-transport.md`:** the motor stops on acquire off,
+  not an idle speed.
+- **Reversal, `film-transport.md`:** `0xA5` speed is not tenths of mm/s.
+
 ## 2026-08-24 (later)
 
 - **Addition, `resources/hardware-images.md`:** a new page with photographs of
