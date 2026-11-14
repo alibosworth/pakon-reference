@@ -231,27 +231,30 @@ that each CCD column's gain and offset are individually normalised.
 multiplication are visible in the OEM line processor; the exact
 gain-computation formula was reverse-engineered later (documented below).
 
-A practical constraint worth recording: on this hardware the lamp only
-illuminates while the film transport is running, so the bright calibration pass
-must be taken with the motor moving: the calibration is driven, not a
-motor-off measurement. [INFERRED] from the lamp/transport behaviour.
+Calibration is **static**: open gate, motor stopped. The LEDs are switched
+on directly; the motor does not gate them. [CONFIRMED in `TLB.dll` 3.1.0.28
+(sha256 5866ec56…) and on an F-135, serial 3054, November 2026, open-pakon:
+https://github.com/jorshhh/open-pakon]
 
-### The per-column gain formula (partial)
+*Reversed, November 2026:* this page said the lamp only lit while the
+transport ran.
 
-The per-column gain computation was reverse-engineered from the OEM
-`CiConfigFixedPatternCorrection` routine. The known form is:
+### The per-column gain formula
+
+From 128-line sums of a dark pass `D` and an open-gate pass `B`, per column
+`c`:
 
 ```
-gain[column] = (125 · 2^32) / (bright[column] − dark[column] − <prefix terms>)
+den[c]  = (B[c] − D[c]) − (B_mask − D_mask)
+gain[c] = min(125 · 2^32 / den[c], 0x3FFFF)      IR: 0x7530000000
+out     = (raw − dark[c]) · gain[c] / 2^18
 ```
 
-with a dark target near 300 and a bright target near 64000, and the result
-clamped to a maximum. **This is a partial formula**: the `<prefix terms>` in
-the denominator and the exact clamp value are not independently established
-here, so it is not yet implementable as written. What is solid is the constant
-`125 · 2^32` (= `0x7d00000000`), which was independently cross-confirmed
-against the same constant in Stefan Dierauf's libpakon, and the dark/bright
-targets. [DOCUMENTED, partial; June 2026]
+`B_mask − D_mask` is the drift of the masked pixels between the passes: the
+term the earlier partial form lacked. The open gate lands at 16000 (14-bit).
+A smear term, `65536 · (B_mask − D_mask) / (B_active − D_active)`, is used
+only within 1..699. [CONFIRMED in `TLB.dll`; run on an F-135 and an F-135+]
+`125 · 2^32` also matches Stefan Dierauf's libpakon.
 
 ## Colour vs. calibration
 
@@ -262,7 +265,6 @@ stage documented in [color-pipeline.md](color-pipeline.md).
 
 ## Open questions
 
-- The fixed-pattern-correction formula is partial (prefix terms and clamp).
 - The two unnamed u32 words at the top of section A and the one at the end
   of section B, and the 120 unused bytes.
 - The register banks are only partially mapped.

@@ -6,6 +6,18 @@ carried a confidence marker and turned out wrong is a normal event here,
 and hiding it would defeat the markers. Dates are when the change was
 published; each entry links the page it touched. Newest first.
 
+## 2026-11-13
+
+From open-pakon (Jorge Rangel): `TLB.dll` 3.1.0.28 and two units, an F-135
+and an F-135+.
+
+- **Reversal, `film-transport.md`:** the scanner never ends the scan; the
+  host does, from the line level.
+- **Addition, `film-transport.md`:** film-sense flags in `0x90`, which `0x93`
+  bytes are which sensor, measured levels.
+- **Reversal, `calibration.md`:** calibration is static, motor stopped.
+- **Addition, `calibration.md`:** the complete per-column gain formula.
+
 ## 2026-08-24 (later)
 
 - **Addition, `resources/hardware-images.md`:** a new page with photographs of
