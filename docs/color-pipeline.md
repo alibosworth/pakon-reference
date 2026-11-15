@@ -114,8 +114,8 @@ step.
 One point in this space is verified: measured linear-domain Dmin
 normalisation, then the LUT, then sRGB, with the matrix omitted entirely,
 reproduces the OEM positive closely on real scans. [CONFIRMED on hardware,
-August 2026, in the pakon-macos project by Jorge Rangel:
-https://github.com/jorshhh/pakon-macos] The full OEM matrix path has not been
+August 2026, in the open-pakon project by Jorge Rangel:
+https://github.com/jorshhh/open-pakon] The full OEM matrix path has not been
 reproduced outside the OEM software.
 
 ## Rendering profiles
