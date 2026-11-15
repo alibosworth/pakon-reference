@@ -6,6 +6,17 @@ carried a confidence marker and turned out wrong is a normal event here,
 and hiding it would defeat the markers. Dates are when the change was
 published; each entry links the page it touched. Newest first.
 
+## 2026-11-15
+
+- **Addition, `CONVENTIONS.md`:** a Writing section. The reference now
+  follows the writing rules of ASD-STE100 (Simplified Technical English), but
+  not its dictionary. Until now the reference had no written style, and
+  contributors had no way to know how its pages were meant to read. Some
+  pages warn people what not to send to a scanner, and a short sentence with
+  one meaning is hard to misread. The section also sets where corrections go: the page states the
+  current fact, and the changelog says what was replaced and why. A note stays
+  on the page only when the old claim was unsafe to act on.
+
 ## 2026-08-24 (later)
 
 - **Addition, `resources/hardware-images.md`:** a new page with photographs of
