@@ -82,7 +82,7 @@ scan modes. The visible width is `stride / 3` when there is no IR lane and
 | Lowest, no IR | 3000 | RGB | 1000 px |
 | Lowest, IR on | 4000 | RGB + IR block | 1000 px |
 
-Measured in the pakon-macos project by Jorge Rangel: https://github.com/jorshhh/pakon-macos.
+Measured in the open-pakon project by Jorge Rangel: https://github.com/jorshhh/open-pakon.
 An 8000-sample row (2000 px × 4, RGB + IR) is observed on the F-135 with IR
 on, and is the expected, but not yet measured, F-135+ highest-resolution
 IR-on layout. [INFERRED for the F-135+ case]
@@ -120,8 +120,8 @@ row-origin recovery, an arbitrarily chunked capture has a floating phase, and
 phase-zero readings historically produced a spurious `B, R, G` assignment. This
 marker-bit behaviour is a property of the scanner firmware; using it for
 row-origin recovery was first shown to Ali Bosworth by Stefan Dierauf. It was
-applied in a decoder (the pakon-macos project by Jorge Rangel:
-https://github.com/jorshhh/pakon-macos) and [CONFIRMED on hardware,
+applied in a decoder (the open-pakon project by Jorge Rangel:
+https://github.com/jorshhh/open-pakon) and [CONFIRMED on hardware,
 August 2026] phase-invariant across many simulated capture starts.
 
 ## Open questions
