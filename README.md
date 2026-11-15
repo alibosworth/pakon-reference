@@ -129,7 +129,8 @@ issue or a pull request. That applies whether you are a person or an agent
 reading this to build or check an implementation. A useful report says what
 was observed, on which model and firmware, and how (a capture, a live
 experiment, a disassembly). See
-[Conventions](docs/CONVENTIONS.md) for what a pull request may contain.
+[Conventions](docs/CONVENTIONS.md) for what a pull request may contain
+and how its text should be written.
 
 ## License
 
