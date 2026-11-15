@@ -2,7 +2,7 @@ site_name: Pakon F-X35 Reference
 site_url: https://pakon-reference.alibosworth.com/
 site_description: >-
   An implementation-agnostic reference for how the Kodak/Pakon F-X35 film
-  scanners work — protocol, image stream, calibration, and colour.
+  scanners work: protocol, image stream, calibration, and colour.
 copyright: >-
   CC BY 4.0, <a href="https://alibosworth.com">Ali Bosworth</a> &middot;
   <a href="https://github.com/alibosworth/pakon-reference">View project on GitHub</a> &middot;
