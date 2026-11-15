@@ -130,7 +130,8 @@ reading this to build or check an implementation. A useful report says what
 was observed, on which model and firmware, and how (a capture, a live
 experiment, a disassembly). See
 [Conventions](docs/CONVENTIONS.md) for what a pull request may contain
-and how its text should be written.
+and how its text should be written. Agents should also read
+[AGENTS.md](AGENTS.md).
 
 ## License
 

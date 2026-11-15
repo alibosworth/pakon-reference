@@ -196,3 +196,7 @@ Each document's facts are dated to when the underlying research established
 them (see the [project timeline](index.md#provenance-and-timeline)). Commit dates track that research
 history, not the transcription date; this is a redacted public view of a
 private repository whose real commit history cannot be published.
+
+A date in a confidence marker or in the changelog must come from a record: a
+capture's timestamp, a commit, a log line, or a dated note. Do not estimate a
+date. If there is no record, give no date.

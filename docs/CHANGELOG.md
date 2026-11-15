@@ -17,6 +17,11 @@ published; each entry links the page it touched. Newest first.
   current fact, and the changelog says what was replaced and why. A note stays
   on the page only when the old claim was unsafe to act on.
 
+- **Addition, `CONVENTIONS.md`:** a date in a confidence marker or in the
+  changelog must come from a record, such as a capture's timestamp or a
+  commit. An estimated date looks the same as a recorded one, and a reader
+  cannot tell them apart.
+
 ## 2026-08-24 (later)
 
 - **Addition, `resources/hardware-images.md`:** a new page with photographs of
