@@ -6,11 +6,19 @@ carried a confidence marker and turned out wrong is a normal event here,
 and hiding it would defeat the markers. Dates are when the change was
 published; each entry links the page it touched. Newest first.
 
-## 2026-11-13 (models)
+## 2026-11-17 (models)
 
-- **Addition, `scanner-family.md`:** the F-135 vs F-135+ values: CCD clock,
-  LED period, motor speed range, LED current ceilings. From `TLB.dll`
-  3.1.0.28 and two units, via open-pakon (Jorge Rangel).
+- **Addition, `scanner-family.md`:** a table of the values that differ
+  between the F-135 and the F-135+ on the wire. Both models receive the same
+  commands in the same order. The table gives the CCD clock, the LED period,
+  the motor speed range, the LED current ceilings and the TEC. The values
+  come from `TLB.dll` 3.1.0.28 and the serial 16402 captures. Jorge Rangel
+  ran them on an F-135 (serial 3054) and an F-135+ (serial 138) in
+  open-pakon. PakonX found the same LED ceilings, LED period factor, init
+  period word and speed clamps independently, on F-135+ serial 17373.
+- **Correction, `scanner-family.md`:** the F-135+ init was said to set
+  "per-channel exposure". Those writes are the temperature bands (see the
+  `command-reference.md` entry of the same date).
 
 ## 2026-11-15
 
