@@ -176,8 +176,8 @@ that is taken as documented, not observed.
   DX reading into PICL+. On the host side both are driven by the same
   engine build, `TLB.dll`, which carries both address sets (see
   [above](#the-oem-host-software-stack)). [CONFIRMED on hardware, August 2026]: the shared FX2
-  firmware, the inverted presence probes, and the Plus init (TEC, per-channel
-  exposure) were all verified by the pakon-macos project by Jorge Rangel: https://github.com/jorshhh/pakon-macos,
+  firmware, the inverted presence probes, and the Plus init (TEC, temperature
+  bands) were all verified by the pakon-macos project by Jorge Rangel: https://github.com/jorshhh/pakon-macos,
   driving a real F-135+; see
   [ppb-protocol.md](ppb-protocol.md) and
   [usb-identity-and-firmware.md](usb-identity-and-firmware.md).
@@ -187,6 +187,56 @@ that is taken as documented, not observed.
   dialects, and image-stream geometry are **not documented here** (no captures
   of these models were available). [DOCUMENTED] board makeup from the
   firmware readmes (`ReadmeF235.txt`, `ReadmeF335.txt`) only.
+
+### F-135 vs F-135+ on the wire
+
+Both models receive the same commands in the same order. With the addresses
+mapped (`0x40`/`0x44` to `0x20`/`0x24`), a Base 16 scan is the same 55
+commands on both. [CONFIRMED in captures] One engine build, `TLB.dll`
+3.1.0.28 (sha256 5866ec56…), drives both models, and only the values below
+change. open-pakon (https://github.com/jorshhh/open-pakon) used these values
+to scan on an F-135 (serial 3054) and an F-135+ (serial 138). [CONFIRMED on
+hardware]
+
+| | F-135 | F-135+ | Source |
+|---|---|---|---|
+| Controller addresses (LOW / SCN) | `0x20` / `0x24` | `0x40` / `0x44` | [CONFIRMED in captures] |
+| CCD clock | 833333.3 Hz | 2083333.3 Hz (2.5 × the F-135) | [INFERRED] see below |
+| LED period | integration × 0.6, truncated | integration × 0.24, truncated | [DOCUMENTED] in `TLB.dll`; [CONFIRMED in captures] on the F-135+ |
+| LED period word at init | `0x0997` | `0x03D6` | [CONFIRMED in captures] |
+| Integration per mode | the engine's F-135 values | the engine's base table | [DOCUMENTED] in `TLB.dll`; see below |
+| Motor speed (`0xA5`) clamp | 400–9500 | 1000–32766 | [DOCUMENTED] in `TLB.dll` |
+| LED current ceiling, IR off (B / IR / R / G) | 8 / 0 / 6 / 8 | 20 / 0 / 4 / 20 | [DOCUMENTED] in `TLB.dll` |
+| LED current ceiling, IR on (B / IR / R / G) | 8 / 8 / 8 / 8 | 24 / 8 / 8 / 24 | [DOCUMENTED] in `TLB.dll` |
+| TEC (`0xD0` = `00`, `0xD1` = `01`) | no | yes | [CONFIRMED in captures] |
+
+- The LED ceilings use the order of the `0x81` payload: B, IR, R, G. The
+  payload has a zero byte between R and G.
+- The OEM drops the fraction of the LED period. On the F-135+, integration
+  2498 gives 599, and 2128 gives 510. [CONFIRMED in captures, all six
+  configurations]
+- The init period words are `0x0FFD` × 0.6 and `0x0FFD` × 0.24.
+- The engine has one table of scan settings per resolution. The F-135+ uses
+  it as it is. On the F-135 the engine replaces only the integration times
+  with its own values. The other settings in the table are the same on both
+  models.
+- The clock ratio comes from the `TLB.dll` formula for the `0x91` value. With
+  a clock of 2.5 × 833333.3 Hz, the formula gives every Plus `0x91` value in
+  the captures. The ratio of the two LED factors (0.6 / 0.24) is also 2.5.
+- The `0xA5` speeds in the captures run from 4836 (Base 16 with IR) to 25726
+  (Base 4). [CONFIRMED in captures] These are above the F-135 maximum of
+  9500. Do not send an F-135+ speed to an F-135. What the F-135 board does
+  with it is not known.
+- On the F-135+, the scan's own transport starts the motor with `0xA5` set to
+  the mode's speed and `0xA0`, with acquire off. The OEM sets acquire about
+  140 ms later. Before `0xA2` it clears acquire. [CONFIRMED in captures,
+  serial 16402] open-pakon advances film on the F-135+ the same way, at the
+  Base 4 speed. [CONFIRMED on serial 138] This is not the path of PSI's
+  Advance Film button. PakonX traces that button to `0xA5` = 1000, then
+  `0xA0` or `0xA1`, then `0xA2`, with the lamp and acquire off. [DOCUMENTED]
+  in `PSI.exe` and `TLB.dll` by PakonX; not yet seen in a capture.
+- Everything else in init is byte-identical, including the temperature bands
+  and the TEC values. [CONFIRMED in captures]
 
 ## Firmware prefixes
 
