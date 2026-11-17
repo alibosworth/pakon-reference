@@ -97,8 +97,8 @@ below were established by replaying substituted replies through that bridge,
 as described above; that is noted where it applies, and no scanner firmware or
 OEM binary is modified._
 
-**The trigger names the resolution and IR state.** [CONFIRMED live, six
-configurations] The scan-line trigger `WRITE PICL 0x91` (SetScanLineParams)
+**The DX start value names the resolution and IR state.** [CONFIRMED live,
+six configurations] DxStart, `WRITE PICL 0x91`,
 carries a 16-bit little-endian value identifying which of the six
 combinations of scan resolution and Digital ICE the host is about to run. It
 is issued twice per scan, once for the pre-scan calibration and once for the
@@ -143,7 +143,7 @@ delivered.
 The engine sign-extends the 16-bit position with its own wrap counter. On
 the reference unit the idle reply is count 1, type 0 (a "no entry" entry);
 the position counter is live in every reply, and restarts at the `0x91`
-trigger.
+DxStart.
 
 **Type-3 entry: the decoded barcode.** [CONFIRMED by decompilation and by
 live acceptance of a substituted entry] Bytes after the type byte, for the

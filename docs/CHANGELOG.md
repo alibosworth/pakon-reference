@@ -6,6 +6,78 @@ carried a confidence marker and turned out wrong is a normal event here,
 and hiding it would defeat the markers. Dates are when the change was
 published; each entry links the page it touched. Newest first.
 
+## 2026-11-17
+
+Command names from the OEM engine, `TLB.dll` 3.1.0.28 (sha256 5866ec56…),
+read in open-pakon (Jorge Rangel) and checked on an F-135 and an F-135+.
+Timings come from the pakon-captures recordings of F-135+ serial 16402, all
+eleven sessions. [PakonX](https://github.com/amstrd-cpc/PakonX) reached the
+same names independently, from `TLB.dll` and F-135+ serial 17373. The old
+labels were assigned from payload size and position in the trace, and the
+page said so. The OEM engine names each command, and these names replace
+them.
+
+- **Reversal, `command-reference.md`:** SCN `0xA1` was StopFilmDrive, "immediate
+  stop". It is MotorReverse: it starts the motor in reverse. A host that sent
+  it to stop the film turned the motor backwards. The page keeps a warning
+  about the old name, because the old claim was unsafe to act on.
+- **Reversal, `command-reference.md`:** SCN `0xA5` was SetMotorCalibration,
+  "home/adjust parameters". It is SetMotorSpeed. The OEM computes its value
+  from the motor speed and adjust word in the per-unit EEPROM.
+- **Reversal, `command-reference.md`:** SCN `0x82` and `0x84` were
+  SetMotorSpeed and SetMotorConfig. They write the CCD's FPGA register banks:
+  `0x82` is timing and control, and `0x84` is the analog front end. They were
+  taken for motor commands because the SCN controller also drives the motor.
+  Bank `0x82` reg 0 bit 0 is acquire.
+- **Reversal, `command-reference.md`:** SCN `0xA2` was DisengageFilmDrive,
+  "release the drive". The OEM name is MotorStop. It stops the motor, but only
+  when acquire is off.
+- **Reversal, `command-reference.md`:** SCN `0x00` was ResetMotor, "reset
+  controller to initial state". It is FindController, a presence probe. In the
+  captures the OEM sends it twice to `0x44` at every start, and the reply is
+  always `07 02 44 00` (present). It moved from the open questions to the
+  table.
+- **Reversal, `command-reference.md`:** the light controller labels. `0x80`
+  SetCcdConfig is LedEnable. `0x81` SetCcdGainOffset is SetLedCurrents. `0x82`
+  SetColorMatrix is SetLedDuties. `0x83` ReadCcdStatus is ReadLampFlags.
+  `0x84` ReadLightStatus is ReadLampSetpoint. `0x89` EnableScan is
+  ResolutionFlag. `0x8B`/`0x8C`/`0x8D` SetCcdExposure B/G/R and `0x8F`
+  SetLightConfig are the board and lamp temperature bands. `0x87`
+  SetLightPower is now unnamed: LED power is set by `0x81` and `0x82`.
+- **Reversal, `command-reference.md`:** LOW `0x8A` was AcquireLine, and host
+  `0x84` was HostReady, "readiness for the next scan line". Together they reset
+  the FIFOs. The page said that one pair came before each scan line, because
+  the counts matched in the trace. They match because the two commands are
+  always sent as a pair. The OEM sends no per-line commands during the film
+  pass, and the pairs in the trace come from calibration.
+- **Reversal, `command-reference.md`:** LOW `0x91` was SetScanLineParams, a
+  scan-line trigger. It is DxStart. In the captures, setting acquire starts the
+  image data within 3 to 6 ms. `0x91` sent with acquire off starts no data.
+  `dx-barcode.md` now uses the new name.
+- **Reversal, `command-reference.md`:** LOW `0x92` was EndAcquisition. It is
+  DxStop. In the captures the image data stops about 1 ms after acquire is
+  cleared, and `0x92` comes 31 to 51 ms later. So `0x92` does not end the
+  acquisition.
+- **Reversal, `command-reference.md`:** the scan and teardown sequences. The
+  page described a loop of HostReady and AcquireLine pairs during the scan,
+  and a teardown that ended acquisition with `0x92`. The scan now ends its
+  setup with acquire on and sends no per-line commands. The teardown clears
+  acquire first. All sequences are now numbered lists.
+- **Addition, `command-reference.md`:** a warning not to reset the FIFOs
+  during the film pass. On an F-135 this stopped the bus until the scanner was
+  turned off and on (open-pakon, May 2026). The OEM resets the FIFOs 128 times
+  during calibration, with acquire on and the motor stopped, and never during
+  the film pass.
+- **Reinterpretation, `film-transport.md`:** the page said that the motor
+  stops when the host returns the speed register (SCN `0x82` sub-register 0) to
+  its idle value. That register is bank `0x82` reg 0, the CCD control word.
+  The value that stopped the motor cleared bit 0, acquire. The August 2026
+  observation is unchanged. Only its explanation changed.
+- **Reversal, `film-transport.md`:** the page said that advance speed is a
+  16-bit value in tenths of mm/s, 10 to 355 in the OEM UI. The `0xA5` values
+  in the captures run from 1557 to 25726, which is outside that range. The page
+  now gives the OEM's formula from the per-unit EEPROM.
+
 ## 2026-11-15
 
 - **Addition, `CONVENTIONS.md`:** a Writing section. The reference now

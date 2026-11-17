@@ -11,34 +11,31 @@ addresses are 0x24 (F-135) / 0x44 (F-135+)._
 
 ## Engage, run, stop
 
-A transport run is:
+The OEM software runs the transport in this order:
 
-1. `SetMotorCalibration` (0xA5): home/adjust parameters
-2. `EngageFilmDrive` (0xA0): start the drive
-3. `SetMotorSpeed` (0x82): set the run speed (16-bit tenths of mm/s + mode)
-4. ... motion ...
-5. return the speed register to its idle value
-6. `DisengageFilmDrive` (0xA2): release the drive
+1. SetMotorSpeed (`0xA5`): the run speed.
+2. MotorForward (`0xA0`), or MotorReverse (`0xA1`).
+3. The film moves.
+4. Acquire off: bank `0x82` reg 0 bit 0 clear.
+5. MotorStop (`0xA2`).
 
-[DOCUMENTED] from the advance and scan sequences in the trace.
+[DOCUMENTED] from the trace. The names are from `TLB.dll` 3.1.0.28.
 
-An important behavioural detail: the run/stop state is carried by the speed
-register (the sub-register-0 `SetMotorSpeed` value), **not** by
-DisengageFilmDrive alone. Disengaging releases the drive clutch; if the speed
-register is left at a running value the motor keeps turning. A clean stop
-returns the speed register to its idle value first, then disengages.
-[CONFIRMED on hardware, August 2026, in the pakon-macos project by Jorge
-Rangel: https://github.com/jorshhh/pakon-macos] observed directly: a `0xA2`
-disengage without first restoring the idle speed left the motor running, and
-writing the idle speed stopped it. This causal fact was not visible in the
-transmit-only OEM captures; it was learned by driving the transport.
+`0xA2` does not stop the motor while the CCD acquires. Clear the acquire bit
+before you send `0xA2`. [CONFIRMED on hardware, August 2026, open-pakon:
+https://github.com/jorshhh/open-pakon] The OEM teardown also clears acquire
+first.
 
 ## Speed
 
-Advance speed is a 16-bit value in tenths of mm/s. The OEM UI allows forward
-10–355 (1.0–35.5 mm/s) and reverse −10 to −355; 0 is invalid. The scanner does
-not reverse film unless explicitly commanded. [DOCUMENTED] from the OEM UI and
-the trace.
+`0xA5` takes a u16. The OEM software computes it from the per-unit EEPROM:
+the motor speed for the mode, times the adjust word, divided by 1000. It
+clamps the result to 400–9500 on the F-135 and 1000–32766 on the F-135+.
+[DOCUMENTED] in `TLB.dll`. The values in the captures run from 1557 to 25726.
+[CONFIRMED in captures] These values are not tenths of mm/s. The mapping from
+the OEM UI's advance setting (10–355) to `0xA5` is not known. The scanner
+reverses film only when the host sends `0xA1`. A scan never sends `0xA1` or a
+motor speed of 0. [CONFIRMED in captures, F-135+]
 
 ## Frame advance vs. continuous scan
 
