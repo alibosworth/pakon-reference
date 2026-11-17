@@ -21,6 +21,22 @@ From open-pakon (Jorge Rangel): `TLB.dll` 3.1.0.28 and two units.
   not an idle speed.
 - **Reversal, `film-transport.md`:** `0xA5` speed is not tenths of mm/s.
 
+## 2026-11-15
+
+- **Addition, `CONVENTIONS.md`:** a Writing section. The reference now
+  follows the writing rules of ASD-STE100 (Simplified Technical English), but
+  not its dictionary. Until now the reference had no written style, and
+  contributors had no way to know how its pages were meant to read. Some
+  pages warn people what not to send to a scanner, and a short sentence with
+  one meaning is hard to misread. The section also sets where corrections go: the page states the
+  current fact, and the changelog says what was replaced and why. A note stays
+  on the page only when the old claim was unsafe to act on.
+
+- **Addition, `CONVENTIONS.md`:** a date in a confidence marker or in the
+  changelog must come from a record, such as a capture's timestamp or a
+  commit. An estimated date looks the same as a recorded one, and a reader
+  cannot tell them apart.
+
 ## 2026-08-24 (later)
 
 - **Addition, `resources/hardware-images.md`:** a new page with photographs of

@@ -113,6 +113,70 @@ as usual; behavioural claims about the OEM software are frequently [INFERRED]
 and should be marked so honestly (a plausible-sounding tuning rule may be
 wrong until verified).
 
+## Writing
+
+The reference follows the writing rules of ASD-STE100 (Simplified Technical
+English). A short sentence with one meaning is hard to misread, and some pages
+tell people what not to send to a scanner. The STE dictionary is not used: the
+ASD issues the specification only on request, so contributors cannot be
+expected to check every word against it. These rules apply to new and edited
+text. Older pages are brought into line when they are next changed.
+
+### Sentences
+
+- Write one fact or one instruction in each sentence.
+- Keep an instruction to 20 words or fewer, and a description to 25 or fewer.
+  A longer sentence usually holds two facts. Split it.
+- Write full sentences, with their articles and verbs. "Not a stop." is a
+  fragment. "This command does not stop the motor." is a sentence.
+- Use the active voice when the actor is known. "The host sends `0x92`" is
+  clearer than "`0x92` is sent".
+- Write an instruction as an imperative: "Read the EEPROM before you change it."
+- Write a sequence of steps as a numbered list, not a chain of arrows.
+
+### Terms
+
+- Use one word for one thing, and one meaning for each word. If a page
+  defines a term, use it only with that meaning. Do not change words for
+  variety.
+- Use the name the reference already uses for a command or a register. If a
+  new source gives a better name, change it everywhere in the same change,
+  and say so in the changelog.
+- Say which thing does an action. "The scanner" and "the OEM software" are
+  different actors. A sentence about when a scan ends must say which of them
+  ends it.
+
+### Numbers and claims
+
+- Give the value, not a comparison. "2083333 Hz" is better than "2.5× faster".
+  If the ratio matters, give both.
+- Make the words match the evidence. The confidence marker gives the level,
+  and the sentence must not claim more than the marker does.
+- Do not use words that add emphasis and no information: "clearly",
+  "critical", "simply", "robust".
+
+### Warnings
+
+- Put a warning before the step it applies to, not after.
+- Say what happens if the reader ignores it: "Do not reset the FIFOs during a
+  scan. The bus stops responding until you turn the scanner off and on."
+
+### Punctuation
+
+- Do not use em dashes. Use a colon before an explanation. Otherwise use a
+  comma, a full stop or parentheses.
+- Do not start every bullet with a bold label.
+
+### Corrections and the changelog
+
+- A page states the current fact. Do not leave notes such as "this page used
+  to say" on the page. The history goes in the [changelog](CHANGELOG.md).
+- A note stays on the page only when a reader may have acted on the old
+  claim, and the old claim was unsafe. An example is a command documented as a
+  stop that turns the motor in reverse.
+- A changelog entry says what the page said before, what it says now, and why
+  the old claim was wrong. One line is not enough for a reversal.
+
 ## Model names
 
 `F-135`, `F-135+` (the "Plus" / "Hybrid"), `F-235`, `F-335`. "F-X35" refers to
@@ -132,3 +196,7 @@ Each document's facts are dated to when the underlying research established
 them (see the [project timeline](index.md#provenance-and-timeline)). Commit dates track that research
 history, not the transcription date; this is a redacted public view of a
 private repository whose real commit history cannot be published.
+
+A date in a confidence marker or in the changelog must come from a record: a
+capture's timestamp, a commit, a log line, or a dated note. Do not estimate a
+date. If there is no record, give no date.

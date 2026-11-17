@@ -42,8 +42,8 @@ Timeline of the underlying work:
   IOCTL capture decode. Stefan Dierauf granted access to his libpakon project
   (a private codebase); the F-135+ was first driven live using it, moving the
   work from analysis of captures to interacting with the scanner directly.
-- **August 12–13, 2026**: the F-135+ driven end to end in the pakon-macos
-  project by Jorge Rangel (https://github.com/jorshhh/pakon-macos), verifying
+- **August 12–13, 2026**: the F-135+ driven end to end in the open-pakon
+  project by Jorge Rangel (https://github.com/jorshhh/open-pakon), verifying
   much of the corpus on live hardware and settling several open questions.
   Beyond verification, driving
   the scanner produced genuinely new facts that transmit-only captures could
@@ -53,7 +53,7 @@ Timeline of the underlying work:
   the **motor run/stop register** behaviour. Facts confirmed on hardware are
   marked and dated accordingly.
 - **August 14–17, 2026**: the reference compared against the other open
-  Pakon clients (pakon-mac, pakon-macos, pakon-tlx-macos, psix, PakonClient)
+  Pakon clients (pakon-mac, open-pakon, pakon-tlx-macos, psix, PakonClient)
   and against the shipped OEM binaries directly. Settled which OEM engine DLL
   serves which model (`TLB.dll` for the F-135 and F-135+, `TLA.dll` for the
   F-235, `TLC.dll` for the F-335), from `tlx.dll`'s own dispatch and the
@@ -64,7 +64,7 @@ Timeline of the underlying work:
   names, per-resolution strides and the motor stop sequence, held back for
   verification.
 
-Cross-confirmation with independent projects (pakon-macos, the FX35 Windows
+Cross-confirmation with independent projects (open-pakon, the FX35 Windows
 driver, and Stefan Dierauf's libpakon) is cited throughout where it exists.
 Facts verified on
 real hardware in August 2026 are marked `[CONFIRMED on hardware, August 2026]`.
@@ -93,7 +93,7 @@ A list of emerging third-party Pakon clients:
 | Project | Approach | Models driven | License |
 |---|---|---|---|
 | [PakonClient](https://github.com/eatfrog/PakonClient) by Henri Toivonen | C# client that drives the OEM COM server (`tlx.dll`) on Windows, plus research notes. | F-135+ (via the OEM stack) | not stated at time of writing |
-| [pakon-macos](https://github.com/jorshhh/pakon-macos) by Jorge Rangel | Userspace driver plus web app; capture replay of the OEM sequences with its own decoder and C-41 inversion. Linux and macOS. Protocol and imaging notes. | F-135; F-135+ via a pending contribution | AGPL-3.0 |
+| [open-pakon](https://github.com/jorshhh/open-pakon) (formerly pakon-macos) by Jorge Rangel | Userspace driver plus web app; capture replay of the OEM sequences with its own decoder and C-41 inversion. Linux and macOS. Protocol and imaging notes. | F-135; F-135+ via a pending contribution | AGPL-3.0 |
 | [pakon-mac](https://github.com/gazzdingo/pakon-mac) by Guy Langford-Lee | Userspace driver, Electron app, and a reimplementation of the OEM colour engine checked against the vendor DLLs under emulation; regenerable per-unit calibration. macOS, Windows, Linux. Extensive research notes. | F-135+ | MIT with a non-commercial restriction |
 | [pakon-tlx-macos](https://github.com/pablonavarrob/pakon-tlx-macos) by Pablo Navarro | Runs the unmodified OEM Windows software under Wine on macOS, replacing only the kernel driver with a shim to libusb. Kodak's own colour science and Digital ICE, no reimplementation. Notes on the OEM's driver contract and behaviour. | F-135 | MIT |
 | [psix](https://github.com/veroc/psix) by Oliver Roch | Userspace driver and local web app on Linux: firmware load, transport, C-41 inversion, IR dust removal. | F-135+ | not stated at time of writing |
@@ -109,7 +109,7 @@ each source contributed:
 - libpakon by Stefan Dierauf: an independent C++ driver and "Pakon Studio"
   app (private); the marker-bit row-origin technique was shown to Ali Bosworth
   by its author.
-- [pakon-macos](https://github.com/jorshhh/pakon-macos) by jorshhh: the F-135 and F-135+ were verified working there, and the
+- [open-pakon](https://github.com/jorshhh/open-pakon) by jorshhh: the F-135 and F-135+ were verified working there, and the
   hardware-only facts here were derived by driving a real scanner with it.
 - [pakon-mac](https://github.com/gazzdingo/pakon-mac) by gazzdingo: stated the TLA/TLB/TLC = F-235/F-135/F-335 file mapping before it was
   established here; that the one 135-line build also serves the F-135+ is
@@ -129,7 +129,9 @@ issue or a pull request. That applies whether you are a person or an agent
 reading this to build or check an implementation. A useful report says what
 was observed, on which model and firmware, and how (a capture, a live
 experiment, a disassembly). See
-[Conventions](docs/CONVENTIONS.md) for what a pull request may contain.
+[Conventions](docs/CONVENTIONS.md) for what a pull request may contain
+and how its text should be written. Agents should also read
+[AGENTS.md](AGENTS.md).
 
 ## License
 
