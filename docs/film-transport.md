@@ -11,30 +11,31 @@ addresses are 0x24 (F-135) / 0x44 (F-135+)._
 
 ## Engage, run, stop
 
-A transport run is:
+The OEM software runs the transport in this order:
 
-1. `SetMotorSpeed` (0xA5): the run speed
-2. `MotorForward` (0xA0), or `MotorReverse` (0xA1)
-3. ... motion ...
-4. acquire off: bank `0x82` reg 0 bit 0 clear
-5. `DisengageFilmDrive` (0xA2)
+1. SetMotorSpeed (`0xA5`): the run speed.
+2. MotorForward (`0xA0`), or MotorReverse (`0xA1`).
+3. The film moves.
+4. Acquire off: bank `0x82` reg 0 bit 0 clear.
+5. MotorStop (`0xA2`).
 
-[DOCUMENTED] from the trace; names from `TLB.dll`.
+[DOCUMENTED] from the trace. The names are from `TLB.dll` 3.1.0.28.
 
-`0xA2` does not stop the motor while the CCD is acquiring: clear the acquire
-bit first. [CONFIRMED on hardware, August 2026, open-pakon:
-https://github.com/jorshhh/open-pakon; the OEM teardown does the same]
-
-*Reinterpreted, November 2026:* this was recorded as "restore the idle speed".
-The register is the CCD control word; bit 0 is acquire.
+`0xA2` does not stop the motor while the CCD acquires. Clear the acquire bit
+before you send `0xA2`. [CONFIRMED on hardware, August 2026, open-pakon:
+https://github.com/jorshhh/open-pakon] The OEM teardown also clears acquire
+first.
 
 ## Speed
 
-`0xA5` takes a u16: the EEPROM motor speed for the mode, times its adjust
-word / 1000, clamped to 400–9500 (F-135) or 1000–32766 (F-135+). Values seen
-run from 1557 to 25726, so it is not tenths of mm/s. [CONFIRMED in `TLB.dll`
-and captures] The OEM UI's advance setting (10–355) maps to it in a way not
-yet known. The scanner does not reverse film unless sent `0xA1`.
+`0xA5` takes a u16. The OEM software computes it from the per-unit EEPROM:
+the motor speed for the mode, times the adjust word, divided by 1000. It
+clamps the result to 400–9500 on the F-135 and 1000–32766 on the F-135+.
+[DOCUMENTED] in `TLB.dll`. The values in the captures run from 1557 to 25726.
+[CONFIRMED in captures] These values are not tenths of mm/s. The mapping from
+the OEM UI's advance setting (10–355) to `0xA5` is not known. The scanner
+reverses film only when the host sends `0xA1`. A scan never sends `0xA1` or a
+motor speed of 0. [CONFIRMED in captures, F-135+]
 
 ## Frame advance vs. continuous scan
 
