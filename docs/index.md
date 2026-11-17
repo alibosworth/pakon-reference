@@ -38,15 +38,19 @@ to when the underlying research established it:
   libpakon)
 - **June-July 2026**: the fixed-pattern-correction constant; the exact ColNeg
   inversion formula
-- **August 12-13, 2026**: the F-135+ driven end to end in the
-  [open-pakon](https://github.com/jorshhh/open-pakon) project, verifying
-  much of the corpus on hardware and adding the reply direction,
-  per-resolution strides, and motor behaviour
+- **August 12-13, 2026**: the reference's own F-135+, serial 16402, driven
+  end to end with the code of the
+  [open-pakon](https://github.com/jorshhh/open-pakon) project (then called
+  pakon-macos), verifying much of the corpus on hardware and adding the reply
+  direction and the per-resolution strides
 - **August 14-17, 2026**: compared against the other open Pakon clients
   and the shipped OEM binaries; settled which engine DLL serves which model
   (TLB = 135 line, TLA = F-235, TLC = F-335), confirmed by decompiling
   TLB.dll that the 135-line engine never calls the LUT+matrix colour kernel,
   and added the OEM F235 SDK manuals to the sources
+
+The [changelog](CHANGELOG.md) lists every change to the reference, including
+everything since August 2026.
 
 ## Where to start
 

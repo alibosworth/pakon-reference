@@ -99,8 +99,9 @@ contain a status byte carries no status; it must not be read as success.
 The reverse-engineering captures were **transmit-only** (the OEM driver logs
 recorded host→device frames but not the device's replies), so the exact bytes
 of the reply direction were unknown until open-source code drove a real scanner
-and read them back. [CONFIRMED on hardware, August 2026, in the open-pakon
-project by Jorge Rangel: https://github.com/jorshhh/open-pakon]
+and read them back. [CONFIRMED on hardware, August 2026, on F-135+ serial
+16402, driven with the code of the open-pakon project by Jorge Rangel:
+https://github.com/jorshhh/open-pakon]
 
 - Reply types mirror the request: READ replies come back with type `0x01`
   (`01 <count> <addr> <status/flags> <data…>`), status polls with `0x03`, and
@@ -140,9 +141,9 @@ absent. Because the F-135 and F-135+ place their controllers at different
 addresses, the two models answer these probes with opposite results. This is
 how the OEM tells them apart. [CONFIRMED on hardware, August 2026] a real
 F-135+ answers the Plus motor address (0x44) present and the F-135 address
-(0x24) absent, exactly inverted from an F-135, verified by the open-pakon
-project by Jorge Rangel: https://github.com/jorshhh/open-pakon, driving the
-scanner. (The reply bytes and the open handshake's first-open-only reply timing
+(0x24) absent, exactly inverted from an F-135, verified on serial 16402
+driven with the code of the open-pakon project by Jorge Rangel:
+https://github.com/jorshhh/open-pakon. (The reply bytes and the open handshake's first-open-only reply timing
 are detailed under "Reply structure" above.)
 
 ## Command channel

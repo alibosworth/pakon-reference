@@ -42,16 +42,15 @@ Timeline of the underlying work:
   IOCTL capture decode. Stefan Dierauf granted access to his libpakon project
   (a private codebase); the F-135+ was first driven live using it, moving the
   work from analysis of captures to interacting with the scanner directly.
-- **August 12–13, 2026**: the F-135+ driven end to end in the open-pakon
-  project by Jorge Rangel (https://github.com/jorshhh/open-pakon), verifying
-  much of the corpus on live hardware and settling several open questions.
-  Beyond verification, driving
-  the scanner produced genuinely new facts that transmit-only captures could
-  not: the **reply (RX) direction** of the protocol (reply-frame structure, the
-  `0x88` READ marker byte, first-open-only handshake replies), the
-  **per-resolution image strides** and that IR-off scans carry no IR lane, and
-  the **motor run/stop register** behaviour. Facts confirmed on hardware are
-  marked and dated accordingly.
+- **August 12–13, 2026**: the reference's own F-135+, serial 16402, driven end
+  to end with the code of the open-pakon project by Jorge Rangel
+  (https://github.com/jorshhh/open-pakon), then called pakon-macos. This
+  verified much of the corpus on live hardware and settled several open
+  questions. Driving the scanner also produced facts that transmit-only
+  captures could not: the **reply (RX) direction** of the protocol
+  (reply-frame structure, the `0x88` READ marker byte) and the
+  **per-resolution image strides**, including that IR-off scans carry no IR
+  lane. Facts confirmed on hardware are marked and dated accordingly.
 - **August 14–17, 2026**: the reference compared against the other open
   Pakon clients (pakon-mac, open-pakon, pakon-tlx-macos, psix, PakonClient)
   and against the shipped OEM binaries directly. Settled which OEM engine DLL

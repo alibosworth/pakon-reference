@@ -82,7 +82,10 @@ scan modes. The visible width is `stride / 3` when there is no IR lane and
 | Lowest, no IR | 3000 | RGB | 1000 px |
 | Lowest, IR on | 4000 | RGB + IR block | 1000 px |
 
-Measured in the open-pakon project by Jorge Rangel: https://github.com/jorshhh/open-pakon.
+Measured on F-135+ serial 16402. PakonX (https://github.com/amstrd-cpc/PakonX)
+streams film at these strides on F-135+ serial 17373 with no resyncs, which
+confirms them on a second unit. [CONFIRMED on hardware, October 2026, PakonX
+`docs/STATUS.md`]
 An 8000-sample row (2000 px × 4, RGB + IR) is observed on the F-135 with IR
 on, and is the expected, but not yet measured, F-135+ highest-resolution
 IR-on layout. [INFERRED for the F-135+ case]
