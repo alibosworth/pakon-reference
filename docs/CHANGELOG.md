@@ -8,6 +8,12 @@ published; each entry links the page it touched. Newest first.
 
 ## 2026-11-17
 
+- **Addition, `CONVENTIONS.md` and `AGENTS.md`:** a "What to leave out" part
+  of the Writing section. The STE rules set how a sentence is written, but not
+  what a page should say. The new rules cover what to leave out: text that
+  describes the page, sentences that repeat what a table holds, clause
+  headings, detail a reader does not need, and policy on fact pages.
+
 - **Correction, `index.md`, `ppb-protocol.md`, `image-stream.md` and
   `scanner-family.md`:** the August 2026 hardware confirmations were credited
   to the open-pakon project (then called pakon-macos) driving an F-135+. That

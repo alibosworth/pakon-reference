@@ -30,6 +30,9 @@ Every rule below comes from it.
 - Take dates from a record. Do not estimate them.
 - Follow the "Writing" section of the conventions: short sentences, one fact
   in each, full sentences, no em dashes.
+- Write only the facts. Do not describe the page, introduce a table with a
+  sentence, or explain policy on a fact page. See "What to leave out" in the
+  conventions.
 
 ## When a fact changes
 

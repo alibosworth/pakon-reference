@@ -116,7 +116,8 @@ wrong until verified).
 ## Writing
 
 The reference follows the writing rules of ASD-STE100 (Simplified Technical
-English). A short sentence with one meaning is hard to misread, and some pages
+English). Plain language keeps the reference useful to as many people as
+possible. A short sentence with one meaning is hard to misread, and some pages
 tell people what not to send to a scanner. The STE dictionary is not used: the
 ASD issues the specification only on request, so contributors cannot be
 expected to check every word against it. These rules apply to new and edited
@@ -166,6 +167,23 @@ text. Older pages are brought into line when they are next changed.
 - Do not use em dashes. Use a colon before an explanation. Otherwise use a
   comma, a full stop or parentheses.
 - Do not start every bullet with a bold label.
+
+### What to leave out
+
+- Do not describe the page. A page does not say what it covers, what it does
+  not do, or how to use it. The title, headings and tables show that. Start
+  with the first fact.
+- Do not introduce a link or a table with a sentence that repeats what it
+  holds. Put the link after the content it relates to.
+- Name a heading with a plain noun phrase, such as "Overview" or "Firmware,
+  colour and per-unit data". Do not write a heading as a clause or a question
+  ("What each client is"), or as a pair ("What it does and does not do").
+- Give a detail only when a reader needs it to choose or to act. A language
+  version (C99), a project's former title, or how a column was compiled is not
+  needed.
+- Do not explain policy on a fact page: what is excluded, what was
+  considered, or how to add something. Policy goes in this file or in an
+  issue template.
 
 ### Corrections and the changelog
 
