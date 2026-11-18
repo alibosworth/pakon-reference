@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://pakon-reference.alibosworth.com/sitemap.xml
