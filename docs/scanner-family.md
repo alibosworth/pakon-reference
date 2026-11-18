@@ -177,8 +177,9 @@ that is taken as documented, not observed.
   engine build, `TLB.dll`, which carries both address sets (see
   [above](#the-oem-host-software-stack)). [CONFIRMED on hardware, August 2026]: the shared FX2
   firmware, the inverted presence probes, and the Plus init (TEC, per-channel
-  exposure) were all verified by the pakon-macos project by Jorge Rangel: https://github.com/jorshhh/pakon-macos,
-  driving a real F-135+; see
+  exposure) were all verified on the reference's own F-135+, serial 16402,
+  driven with the code of the open-pakon project by Jorge Rangel:
+  https://github.com/jorshhh/open-pakon; see
   [ppb-protocol.md](ppb-protocol.md) and
   [usb-identity-and-firmware.md](usb-identity-and-firmware.md).
 - **F-235 / F-335:** a different, multi-board architecture with dedicated motor,

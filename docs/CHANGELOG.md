@@ -6,6 +6,27 @@ carried a confidence marker and turned out wrong is a normal event here,
 and hiding it would defeat the markers. Dates are when the change was
 published; each entry links the page it touched. Newest first.
 
+## 2026-11-17
+
+- **Correction, `index.md`, `ppb-protocol.md`, `image-stream.md` and
+  `scanner-family.md`:** the August 2026 hardware confirmations were credited
+  to the open-pakon project (then called pakon-macos) driving an F-135+. That
+  project's own scanner at the time was an original F-135. The F-135+ that was
+  driven was the reference's own unit, serial 16402, using open-pakon's code,
+  as open-pakon's README now also says. The facts are unchanged, and their
+  source is now stated correctly. The strides now also cite PakonX, which
+  streams film at the same strides on a second F-135+, serial 17373.
+
+- **Correction, `index.md` and the README:** the timeline no longer lists
+  first-open-only handshake replies or the motor run/stop register among the
+  August results. No record of the first-open-only observation has been
+  found, and the run/stop finding is being reinterpreted: the register that
+  was written is the CCD control word, whose bit 0 turns acquisition on and
+  off. The pages that state these facts are unchanged for now.
+
+- **Addition, `index.md`:** the timeline now links to this changelog for
+  changes since August 2026.
+
 ## 2026-11-15
 
 - **Addition, `CONVENTIONS.md`:** a Writing section. The reference now

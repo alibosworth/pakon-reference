@@ -42,16 +42,15 @@ Timeline of the underlying work:
   IOCTL capture decode. Stefan Dierauf granted access to his libpakon project
   (a private codebase); the F-135+ was first driven live using it, moving the
   work from analysis of captures to interacting with the scanner directly.
-- **August 12–13, 2026**: the F-135+ driven end to end in the open-pakon
-  project by Jorge Rangel (https://github.com/jorshhh/open-pakon), verifying
-  much of the corpus on live hardware and settling several open questions.
-  Beyond verification, driving
-  the scanner produced genuinely new facts that transmit-only captures could
-  not: the **reply (RX) direction** of the protocol (reply-frame structure, the
-  `0x88` READ marker byte, first-open-only handshake replies), the
-  **per-resolution image strides** and that IR-off scans carry no IR lane, and
-  the **motor run/stop register** behaviour. Facts confirmed on hardware are
-  marked and dated accordingly.
+- **August 12–13, 2026**: the reference's own F-135+, serial 16402, driven end
+  to end with the code of the open-pakon project by Jorge Rangel
+  (https://github.com/jorshhh/open-pakon), then called pakon-macos. This
+  verified much of the corpus on live hardware and settled several open
+  questions. Driving the scanner also produced facts that transmit-only
+  captures could not: the **reply (RX) direction** of the protocol
+  (reply-frame structure, the `0x88` READ marker byte) and the
+  **per-resolution image strides**, including that IR-off scans carry no IR
+  lane. Facts confirmed on hardware are marked and dated accordingly.
 - **August 14–17, 2026**: the reference compared against the other open
   Pakon clients (pakon-mac, open-pakon, pakon-tlx-macos, psix, PakonClient)
   and against the shipped OEM binaries directly. Settled which OEM engine DLL
@@ -93,10 +92,11 @@ A list of emerging third-party Pakon clients:
 | Project | Approach | Models driven | License |
 |---|---|---|---|
 | [PakonClient](https://github.com/eatfrog/PakonClient) by Henri Toivonen | C# client that drives the OEM COM server (`tlx.dll`) on Windows, plus research notes. | F-135+ (via the OEM stack) | not stated at time of writing |
-| [open-pakon](https://github.com/jorshhh/open-pakon) (formerly pakon-macos) by Jorge Rangel | Userspace driver plus web app; capture replay of the OEM sequences with its own decoder and C-41 inversion. Linux and macOS. Protocol and imaging notes. | F-135; F-135+ via a pending contribution | AGPL-3.0 |
-| [pakon-mac](https://github.com/gazzdingo/pakon-mac) by Guy Langford-Lee | Userspace driver, Electron app, and a reimplementation of the OEM colour engine checked against the vendor DLLs under emulation; regenerable per-unit calibration. macOS, Windows, Linux. Extensive research notes. | F-135+ | MIT with a non-commercial restriction |
-| [pakon-tlx-macos](https://github.com/pablonavarrob/pakon-tlx-macos) by Pablo Navarro | Runs the unmodified OEM Windows software under Wine on macOS, replacing only the kernel driver with a shim to libusb. Kodak's own colour science and Digital ICE, no reimplementation. Notes on the OEM's driver contract and behaviour. | F-135 | MIT |
-| [psix](https://github.com/veroc/psix) by Oliver Roch | Userspace driver and local web app on Linux: firmware load, transport, C-41 inversion, IR dust removal. | F-135+ | not stated at time of writing |
+| [open-pakon](https://github.com/jorshhh/open-pakon) (formerly pakon-macos) by Jorge Rangel | Native app in Rust: USB driver, image pipeline and web service. Uses Kodak's colour engine (`PakonIMAu.dll`) and its scene-balance data for colour. macOS, Windows and Linux. Protocol and imaging notes. | F-135, F-135+ | AGPL-3.0 |
+| [pakon-mac](https://github.com/gazzdingo/pakon-mac) by Guy Langford-Lee | Driver library and command line in C99 (titled libpakon in its README). Needs the user's own PSI 3.0.4.27 install for firmware and colour data. Colour and Digital ICE are not in the public tree yet. | F-135+ (F-235, F-335 in beta) | none chosen; all rights reserved |
+| [pakon-tlx-macos](https://github.com/pablonavarrob/pakon-tlx-macos) by Pablo Navarro | Runs the unmodified OEM Windows software under Wine on macOS, replacing only the kernel driver with a shim to libusb. Kodak's own colour science and Digital ICE, no reimplementation. Notes on the OEM's driver contract and behaviour. | F-135, F-135+ | MIT |
+| [PakonX](https://github.com/amstrd-cpc/PakonX) by amstrd-cpc | Userspace driver in C++ and a desktop app. Its own C-41 pipeline, or on Windows the OEM colour engine (`PakonIMAu.dll`) driven directly. Windows, macOS and Linux. Protocol and OEM reverse-engineering notes. | F-135+ | GPL-3.0 |
+| [psix](https://github.com/veroc/psix) by Oliver Roch | Userspace driver and local web app on Linux: firmware load, transport, C-41 inversion, IR dust removal. | F-135+ | LGPL-3.0 |
 
 ## Sources and credit
 

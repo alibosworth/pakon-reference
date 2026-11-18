@@ -38,15 +38,19 @@ to when the underlying research established it:
   libpakon)
 - **June-July 2026**: the fixed-pattern-correction constant; the exact ColNeg
   inversion formula
-- **August 12-13, 2026**: the F-135+ driven end to end in the
-  [open-pakon](https://github.com/jorshhh/open-pakon) project, verifying
-  much of the corpus on hardware and adding the reply direction,
-  per-resolution strides, and motor behaviour
+- **August 12-13, 2026**: the reference's own F-135+, serial 16402, driven
+  end to end with the code of the
+  [open-pakon](https://github.com/jorshhh/open-pakon) project (then called
+  pakon-macos), verifying much of the corpus on hardware and adding the reply
+  direction and the per-resolution strides
 - **August 14-17, 2026**: compared against the other open Pakon clients
   and the shipped OEM binaries; settled which engine DLL serves which model
   (TLB = 135 line, TLA = F-235, TLC = F-335), confirmed by decompiling
   TLB.dll that the 135-line engine never calls the LUT+matrix colour kernel,
   and added the OEM F235 SDK manuals to the sources
+
+The [changelog](CHANGELOG.md) lists every change to the reference, including
+everything since August 2026.
 
 ## Where to start
 
@@ -63,15 +67,18 @@ to when the underlying research established it:
 
 ## Open-source Pakon clients
 
-A list of emerging third-party Pakon clients:
+Third-party Pakon clients are emerging. [Open-source clients
+compared](clients.md) says where each one gets its firmware and colour, and
+whether it writes the per-unit EEPROM.
 
 | Project | Approach | Models driven | License |
 |---|---|---|---|
 | [PakonClient](https://github.com/eatfrog/PakonClient) by Henri Toivonen | C# client that drives the OEM COM server (`tlx.dll`) on Windows, plus research notes. | F-135+ (via the OEM stack) | not stated at time of writing |
-| [open-pakon](https://github.com/jorshhh/open-pakon) (formerly pakon-macos) by Jorge Rangel | Userspace driver plus web app; capture replay of the OEM sequences with its own decoder and C-41 inversion. Linux and macOS. Protocol and imaging notes. | F-135; F-135+ via a pending contribution | AGPL-3.0 |
-| [pakon-mac](https://github.com/gazzdingo/pakon-mac) by Guy Langford-Lee | Userspace driver, Electron app, and a reimplementation of the OEM colour engine checked against the vendor DLLs under emulation; regenerable per-unit calibration. macOS, Windows, Linux. Extensive research notes. | F-135+ | MIT with a non-commercial restriction |
-| [pakon-tlx-macos](https://github.com/pablonavarrob/pakon-tlx-macos) by Pablo Navarro | Runs the unmodified OEM Windows software under Wine on macOS, replacing only the kernel driver with a shim to libusb. Kodak's own colour science and Digital ICE, no reimplementation. Notes on the OEM's driver contract and behaviour. | F-135 | MIT |
-| [psix](https://github.com/veroc/psix) by Oliver Roch | Userspace driver and local web app on Linux: firmware load, transport, C-41 inversion, IR dust removal. | F-135+ | not stated at time of writing |
+| [open-pakon](https://github.com/jorshhh/open-pakon) (formerly pakon-macos) by Jorge Rangel | Native app in Rust: USB driver, image pipeline and web service. Uses Kodak's colour engine (`PakonIMAu.dll`) and its scene-balance data for colour. macOS, Windows and Linux. Protocol and imaging notes. | F-135, F-135+ | AGPL-3.0 |
+| [pakon-mac](https://github.com/gazzdingo/pakon-mac) by Guy Langford-Lee | Driver library and command line in C99 (titled libpakon in its README). Needs the user's own PSI 3.0.4.27 install for firmware and colour data. Colour and Digital ICE are not in the public tree yet. | F-135+ (F-235, F-335 in beta) | none chosen; all rights reserved |
+| [pakon-tlx-macos](https://github.com/pablonavarrob/pakon-tlx-macos) by Pablo Navarro | Runs the unmodified OEM Windows software under Wine on macOS, replacing only the kernel driver with a shim to libusb. Kodak's own colour science and Digital ICE, no reimplementation. Notes on the OEM's driver contract and behaviour. | F-135, F-135+ | MIT |
+| [PakonX](https://github.com/amstrd-cpc/PakonX) by amstrd-cpc | Userspace driver in C++ and a desktop app. Its own C-41 pipeline, or on Windows the OEM colour engine (`PakonIMAu.dll`) driven directly. Windows, macOS and Linux. Protocol and OEM reverse-engineering notes. | F-135+ | GPL-3.0 |
+| [psix](https://github.com/veroc/psix) by Oliver Roch | Userspace driver and local web app on Linux: firmware load, transport, C-41 inversion, IR dust removal. | F-135+ | LGPL-3.0 |
 
 ## Sources and credit
 
