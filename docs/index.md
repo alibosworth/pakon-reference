@@ -67,7 +67,9 @@ everything since August 2026.
 
 ## Open-source Pakon clients
 
-A list of emerging third-party Pakon clients:
+Third-party Pakon clients are emerging. [Open-source clients
+compared](clients.md) says where each one gets its firmware and colour, and
+whether it writes the per-unit EEPROM.
 
 | Project | Approach | Models driven | License |
 |---|---|---|---|
