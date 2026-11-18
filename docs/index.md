@@ -67,10 +67,6 @@ everything since August 2026.
 
 ## Open-source Pakon clients
 
-Third-party Pakon clients are emerging. [Open-source clients
-compared](clients.md) says where each one gets its firmware and colour, and
-whether it writes the per-unit EEPROM.
-
 | Project | Approach | Models driven | License |
 |---|---|---|---|
 | [PakonClient](https://github.com/eatfrog/PakonClient) by Henri Toivonen | C# client that drives the OEM COM server (`tlx.dll`) on Windows, plus research notes. | F-135+ (via the OEM stack) | not stated at time of writing |
@@ -79,6 +75,9 @@ whether it writes the per-unit EEPROM.
 | [pakon-tlx-macos](https://github.com/pablonavarrob/pakon-tlx-macos) by Pablo Navarro | Runs the unmodified OEM Windows software under Wine on macOS, replacing only the kernel driver with a shim to libusb. Kodak's own colour science and Digital ICE, no reimplementation. Notes on the OEM's driver contract and behaviour. | F-135, F-135+ | MIT |
 | [PakonX](https://github.com/amstrd-cpc/PakonX) by amstrd-cpc | Userspace driver in C++ and a desktop app. Its own C-41 pipeline, or on Windows the OEM colour engine (`PakonIMAu.dll`) driven directly. Windows, macOS and Linux. Protocol and OEM reverse-engineering notes. | F-135+ | GPL-3.0 |
 | [psix](https://github.com/veroc/psix) by Oliver Roch | Userspace driver and local web app on Linux: firmware load, transport, C-41 inversion, IR dust removal. | F-135+ | LGPL-3.0 |
+
+The [open-source clients](clients.md) page has more details about each
+client.
 
 ## Sources and credit
 
